@@ -75,10 +75,10 @@ public abstract class Entity
     {
         switch(this.direction)
         {
-            case Direction.UP: setWorldY(getWorldY() - getSpeed()); break;
-            case Direction.DOWN: setWorldY(getWorldY() + getSpeed()); break;
-            case Direction.LEFT: setWorldX(getWorldX() - getSpeed()); break;
-            case Direction.RIGHT: setWorldX(getWorldX() + getSpeed()); break;
+            case Direction.UP: worldY = worldY - speed; break;
+            case Direction.DOWN: worldY = worldY + speed; break;
+            case Direction.LEFT: worldX = worldX - speed; break;
+            case Direction.RIGHT: worldX = worldX + speed; break;
         }
 
         //Synchronize hitbox with entity position
