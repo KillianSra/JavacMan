@@ -4,6 +4,7 @@ import main.GamePanel;
 import main.KeyHandler;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class Player extends Entity
 {
@@ -20,6 +21,7 @@ public class Player extends Entity
         hitboxDefaultY = hitbox.y;
 
         setStartPosition();
+        getImage();
     }
 
     public void setStartPosition()
@@ -56,27 +58,92 @@ public class Player extends Entity
             setDirection(previousDirection);
             gp.collisionManager.checkTileCollision(this);
 
-            // Move in the previous direction if there's no collision
+            //Move in the previous direction if there's no collision
             if (!isCollision())
             {
                 super.move();
             }
+            //Otherwise, reset the counter and stop the animation
+            else
+            {
+                spriteNum = 2;
+                spriteCounter = 0;
+            }
         }
+
+        //Handle player's sprite animation
+        spriteCounter++;
+        if(spriteCounter > 20)
+        {
+            if(spriteNum == 1)
+            {
+                spriteNum = 2;
+            }
+            else if(spriteNum == 2)
+            {
+                spriteNum = 1;
+            }
+            spriteCounter = 0;
+        }
+    }
+
+    @Override
+    protected void getImage()
+    {
+        up1 = setup("player/player_up_1", gp.tileSize, gp.tileSize);
+        up2 = setup("player/player_up_2", gp.tileSize, gp.tileSize);
+        down1 = setup("player/player_down_1", gp.tileSize, gp.tileSize);
+        down2 = setup("player/player_down_2", gp.tileSize, gp.tileSize);
+        left1 = setup("player/player_left_1", gp.tileSize, gp.tileSize);
+        left2 = setup("player/player_left_2", gp.tileSize, gp.tileSize);
+        right1 = setup("player/player_right_1", gp.tileSize, gp.tileSize);
+        right2 = setup("player/player_right_2", gp.tileSize, gp.tileSize);
+    }
+
+    /**
+     * Determines the appropriate image to display based on the entity's current direction
+     * and animation frame (sprite number).
+     *
+     * @return A BufferedImage representing the current frame of the entity's animation.
+     */
+    private BufferedImage setDisplayedImage()
+    {
+        BufferedImage displayedImage = null;
+
+        //Select the appropriate sprite based on the direction and sprite number
+        switch(direction)
+        {
+            case Direction.UP:
+                if(spriteNum == 1) { displayedImage = up1; }
+                else if(spriteNum == 2) { displayedImage = up2; }
+                break;
+            case Direction.DOWN:
+                if(spriteNum == 1) { displayedImage = down1; }
+                else if(spriteNum == 2) { displayedImage = down2; }
+                break;
+            case Direction.LEFT:
+                if(spriteNum == 1) { displayedImage = left1; }
+                else if(spriteNum == 2) { displayedImage = left2; }
+                break;
+            case Direction.RIGHT:
+                if(spriteNum == 1) { displayedImage = right1; }
+                else if(spriteNum == 2) { displayedImage = right2; }
+                break;
+        }
+
+        return displayedImage;
     }
 
     @Override
     public void draw(Graphics2D g2)
     {
-        //PLACEHOLDER
-        //This will be replaced with the player's sprites
-        g2.setColor(Color.YELLOW);
-        g2.fillOval(getWorldX(), getWorldY(), gp.tileSize, gp.tileSize);
+        g2.drawImage(setDisplayedImage(), worldX, worldY, null);
 
 
         //DEBUG
 
-        g2.setColor(Color.WHITE);
         //Display player's hitbox
+        g2.setColor(Color.WHITE);
         //g2.drawRect(getHitboxX(), getHitboxY(), getHitboxWidth(), getHitboxHeight());
 
         //Display player coordinates
