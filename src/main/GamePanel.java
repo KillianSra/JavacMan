@@ -1,5 +1,6 @@
 package main;
 
+import entity.Player;
 import tile.TileManager;
 
 import javax.swing.*;
@@ -19,13 +20,11 @@ public class GamePanel extends JPanel implements Runnable
     //System
     public TileManager tileManager = new TileManager(this);
     public KeyHandler keyHandler = new KeyHandler(this);
+    public CollisionManager collisionManager = new CollisionManager(this);
     Thread gameThread;
 
-    //TODO: delete this after player class implementation
-    int playerX = this.tileSize * 4;
-    int playerY = this.tileSize * 5;
-    int playerSpeed = 3;
-
+    //Entity
+    public Player player = new Player(this, keyHandler);
 
     public GamePanel()
     {
@@ -97,23 +96,7 @@ public class GamePanel extends JPanel implements Runnable
      */
     private void update()
     {
-        if(keyHandler.upPressed)
-        {
-            playerY -= playerSpeed;
-        }
-        else if(keyHandler.downPressed)
-        {
-            playerY += playerSpeed;
-        }
-        else if(keyHandler.leftPressed)
-        {
-            playerX -= playerSpeed;
-        }
-        else if(keyHandler.rightPressed)
-        {
-            playerX += playerSpeed;
-        }
-
+        player.update();
     }
 
     @Override
@@ -125,9 +108,8 @@ public class GamePanel extends JPanel implements Runnable
         //Draw the game board
         this.tileManager.draw(g2);
 
-        //TODO : delete this after player class implementation
-        g2.setColor(Color.WHITE);
-        g2.fillRect(playerX, playerY, tileSize, tileSize);
+        //Draw the player
+        this.player.draw(g2);
 
         g2.dispose();
     }
