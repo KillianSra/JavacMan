@@ -1,6 +1,7 @@
 package tile;
 
 import main.GamePanel;
+import main.Tools;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -79,7 +80,7 @@ public class TileManager
         {
             tiles[index] = new Tile();
             tiles[index].setImage(ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("tiles/" + imageName + ".png"))));
-            tiles[index].setImage(tiles[index].scaleImage(tiles[index].getImage(), gp.tileSize, gp.tileSize));
+            tiles[index].setImage(Tools.scaleImage(tiles[index].getImage(), gp.tileSize, gp.tileSize));
             tiles[index].setCollision(collision);
         }
         catch(IOException e)
