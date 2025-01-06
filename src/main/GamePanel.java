@@ -1,10 +1,12 @@
 package main;
 
 import entity.Player;
+import object.Object;
 import tile.TileManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class GamePanel extends JPanel implements Runnable
 {
@@ -22,10 +24,14 @@ public class GamePanel extends JPanel implements Runnable
     public KeyHandler keyHandler = new KeyHandler(this);
     public CollisionManager collisionManager = new CollisionManager(this);
     public EventManager eventManager = new EventManager(this);
+    public AssetSetter assetSetter = new AssetSetter(this);
     Thread gameThread;
 
     //Entity
     public Player player = new Player(this, keyHandler);
+
+    //Object
+    public ArrayList<Object> objects = new ArrayList<>();
 
     //Debug
     public final boolean isDebuggingEnabled = false;
@@ -37,6 +43,8 @@ public class GamePanel extends JPanel implements Runnable
         this.setDoubleBuffered(true);
         this.setFocusable(true);
         this.addKeyListener(keyHandler);
+
+        setupGame();
     }
 
     /**
@@ -48,6 +56,14 @@ public class GamePanel extends JPanel implements Runnable
 
         //automatically call run() method
         this.gameThread.start();
+    }
+
+    /**
+     * Configures the initial game state by setting up assets.
+     */
+    private void setupGame()
+    {
+        assetSetter.setObjects();
     }
 
     @Override
@@ -111,6 +127,12 @@ public class GamePanel extends JPanel implements Runnable
 
         //Draw the game board
         this.tileManager.draw(g2);
+
+        //Draw objects
+        for (Object object : objects)
+        {
+            object.draw(g2);
+        }
 
         //Draw the player
         this.player.draw(g2);
