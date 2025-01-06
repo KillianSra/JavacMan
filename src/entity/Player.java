@@ -1,5 +1,6 @@
 package entity;
 
+import annotation.DebugOnly;
 import main.GamePanel;
 import main.KeyHandler;
 
@@ -35,6 +36,9 @@ public class Player extends Entity
     @Override
     public void update()
     {
+        //Check event
+        gp.eventManager.checkEvent();
+
         //Store the current direction
         Direction previousDirection = getDirection();
 
@@ -139,12 +143,20 @@ public class Player extends Entity
     {
         g2.drawImage(setDisplayedImage(), worldX, worldY, null);
 
+        if(gp.isDebuggingEnabled)
+        {
+            drawCoordinatesAndPlayerHitbox(g2);
+        }
 
-        //DEBUG
+    }
+
+    @DebugOnly
+    private void drawCoordinatesAndPlayerHitbox(Graphics2D g2)
+    {
+        g2.setColor(Color.WHITE);
 
         //Display player's hitbox
-        g2.setColor(Color.WHITE);
-        //g2.drawRect(getHitboxX(), getHitboxY(), getHitboxWidth(), getHitboxHeight());
+        g2.drawRect(getHitboxX(), getHitboxY(), getHitboxWidth(), getHitboxHeight());
 
         //Display player coordinates
         g2.drawString("x: " + getWorldX(), gp.tileSize * 2, gp.tileSize * 25);

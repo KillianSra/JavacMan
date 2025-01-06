@@ -39,6 +39,7 @@ public abstract class Entity
     public int getWorldX() { return this.worldX; }
     public int getWorldY() { return this.worldY; }
     public int getSpeed() { return this.speed; }
+    public Rectangle getHitbox() { return this.hitbox; }
     public int getHitboxX() { return this.hitbox.x; }
     public int getHitboxY() { return this.hitbox.y; }
     public int getHitboxHeight() { return this.hitbox.height; }

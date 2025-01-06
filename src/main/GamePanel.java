@@ -21,10 +21,14 @@ public class GamePanel extends JPanel implements Runnable
     public TileManager tileManager = new TileManager(this);
     public KeyHandler keyHandler = new KeyHandler(this);
     public CollisionManager collisionManager = new CollisionManager(this);
+    public EventManager eventManager = new EventManager(this);
     Thread gameThread;
 
     //Entity
     public Player player = new Player(this, keyHandler);
+
+    //Debug
+    public final boolean isDebuggingEnabled = false;
 
     public GamePanel()
     {
@@ -110,6 +114,12 @@ public class GamePanel extends JPanel implements Runnable
 
         //Draw the player
         this.player.draw(g2);
+
+        if(isDebuggingEnabled)
+        {
+            //Draw the triggers event area
+            this.eventManager.draw(g2);
+        }
 
         g2.dispose();
     }
