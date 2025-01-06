@@ -70,7 +70,7 @@ public class AssetSetter
         //Row 14
         for(int i = 6; i < 23; i++)
         {
-            if(i <= 12 || i >= 16)
+            if(i <= 11 || i >= 17)
             {
                 gp.objects.add(new Javacgum(gp, gp.tileSize * i, gp.tileSize * 17));
             }
