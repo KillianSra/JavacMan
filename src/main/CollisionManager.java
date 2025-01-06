@@ -1,0 +1,133 @@
+package main;
+
+import entity.Direction;
+import entity.Entity;
+
+public class CollisionManager
+{
+    GamePanel gp;
+
+    public CollisionManager(GamePanel gp)
+    {
+        this.gp = gp;
+    }
+
+    /**
+     * Checks for collisions between an entity and solid tiles on the map.
+     * Updates the entity's collision state based on the result.
+     *
+     * @param entity The entity to check for collisions.
+     */
+    public void checkTileCollision(Entity entity)
+    {
+        //Reset the entity's collision state
+        entity.setCollision(false);
+
+        // Calculate the grid column and row indices for the entity's current hitbox position
+        int entityLeftCol = entity.getHitboxX() / gp.tileSize;
+        int entityRightCol = (entity.getHitboxX() + entity.getHitboxWidth()) / gp.tileSize;
+        int entityTopRow = entity.getHitboxY() / gp.tileSize;
+        int entityBottomRow = (entity.getHitboxY() + entity.getHitboxHeight()) / gp.tileSize;
+
+        int tileNum1, tileNum2;
+
+        //Handle collision checks based on the entity's movement direction.
+        switch (entity.getDirection()) {
+            case Direction.UP:
+                //Calculate the top row the entity will occupy after moving up.
+                entityTopRow = (entity.getHitboxY() - entity.getSpeed()) / gp.tileSize;
+
+                //Get the tile indices for the top-left and top-right corners of the hitbox.
+                tileNum1 = gp.tileManager.mapTileNum[entityLeftCol][entityTopRow];
+
+                //If the entity is perfectly aligned on X-axis, check only the tile above
+                if(entity.getWorldX() % gp.tileSize == 0)
+                {
+                    tileNum2 = tileNum1;
+                }
+                //Otherwise, check the top-left and top-right tiles
+                else
+                {
+                    tileNum2 = gp.tileManager.mapTileNum[entityRightCol][entityTopRow];
+                }
+
+                //If either tile is solid, mark the entity as colliding.
+                if (gp.tileManager.tiles[tileNum1].isCollision() || gp.tileManager.tiles[tileNum2].isCollision()) {
+                    entity.setCollision(true);
+                }
+                break;
+
+            case Direction.DOWN:
+                //Calculate the bottom row the entity will occupy after moving down.
+                entityBottomRow = (entity.getHitboxY() + entity.getHitboxHeight() + entity.getSpeed() - 1) / gp.tileSize;
+
+                //Get the tile indices for the bottom-left and bottom-right corners of the hitbox.
+                tileNum1 = gp.tileManager.mapTileNum[entityLeftCol][entityBottomRow];
+
+                //If the entity is perfectly aligned on the X-axis, check only the tile below
+                if(entity.getWorldX() % gp.tileSize == 0)
+                {
+                    tileNum2 = tileNum1;
+                }
+                //Otherwise, check the bottom-left and bottom-right tiles
+                else
+                {
+                    tileNum2 = gp.tileManager.mapTileNum[entityRightCol][entityBottomRow];
+                }
+
+                //If either tile is solid, mark the entity as colliding.
+                if (gp.tileManager.tiles[tileNum1].isCollision() || gp.tileManager.tiles[tileNum2].isCollision()) {
+                    entity.setCollision(true);
+                }
+                break;
+
+            case Direction.LEFT:
+                //Calculate the left column the entity will occupy after moving left.
+                entityLeftCol = (entity.getHitboxX() - entity.getSpeed()) / gp.tileSize;
+
+                //Get the tile indices for the top-left and bottom-left corners of the hitbox.
+                tileNum1 = gp.tileManager.mapTileNum[entityLeftCol][entityTopRow];
+
+                //If the entity is perfectly aligned on the Y-axis, check only the tile to the left
+                if(entity.getWorldY() % gp.tileSize == 0)
+                {
+                    tileNum2 = tileNum1;
+                }
+                //Otherwise, check the top-left and bottom-left tiles
+                else
+                {
+                    tileNum2 = gp.tileManager.mapTileNum[entityLeftCol][entityBottomRow];
+                }
+
+                //If either tile is solid, mark the entity as colliding.
+                if (gp.tileManager.tiles[tileNum1].isCollision() || gp.tileManager.tiles[tileNum2].isCollision()) {
+                    entity.setCollision(true);
+                }
+                break;
+
+            case Direction.RIGHT:
+                //Calculate the right column the entity will occupy after moving right.
+                entityRightCol = (entity.getHitboxX() + entity.getHitboxWidth() + entity.getSpeed() - 1) / gp.tileSize;
+
+                //Get the tile indices for the top-right and bottom-right corners of the hitbox.
+                tileNum1 = gp.tileManager.mapTileNum[entityRightCol][entityTopRow];
+
+                //If the entity is perfectly aligned on the Y-axis, check only the tile to the right
+                if(entity.getWorldY() % gp.tileSize == 0)
+                {
+                    tileNum2 = tileNum1;
+                }
+                //Otherwise, check the top-right and bottom-right tiles
+                else
+                {
+                    tileNum2 = gp.tileManager.mapTileNum[entityRightCol][entityBottomRow];
+                }
+
+                //If either tile is solid, mark the entity as colliding.
+                if (gp.tileManager.tiles[tileNum1].isCollision() || gp.tileManager.tiles[tileNum2].isCollision()) {
+                    entity.setCollision(true);
+                }
+                break;
+        }
+    }
+}
