@@ -32,6 +32,10 @@ public class GamePanel extends JPanel implements Runnable
 
     //Object
     public Object[] objects = new Object[167];
+    public int nbCollectibleItem = 1;
+
+    //UI
+    public UI UI = new UI(this);
 
     //Debug
     public final boolean isDebuggingEnabled = false;
@@ -139,6 +143,9 @@ public class GamePanel extends JPanel implements Runnable
 
         //Draw the player
         this.player.draw(g2);
+
+        //Draw UI
+        this.UI.draw(g2);
 
         //DEBUG
         if(isDebuggingEnabled)

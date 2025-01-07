@@ -17,6 +17,9 @@ public abstract class Object extends Renderable
         this.gp = gp;
     }
 
+    //Getter
+    public BufferedImage getObjectImage() { return this.image; }
+
     @Override
     public void draw(Graphics2D g2)
     {

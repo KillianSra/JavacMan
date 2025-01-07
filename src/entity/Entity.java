@@ -31,6 +31,7 @@ public abstract class Entity extends Renderable
     //Getters
     public int getSpeed() { return this.speed; }
     public Direction getDirection() { return this.direction; }
+    public BufferedImage getLeft2() { return this.left2; }
 
     //Setters
     public void setDirection(Direction direction) { this.direction = direction; }
