@@ -147,6 +147,7 @@ public class CollisionManager
             if(objects[i] != null && player.hitbox.intersects(objects[i].hitbox))
             {
                 objects[i] = null;
+                gp.player.setScore(gp.player.getScore() + 10);
             }
         }
     }
