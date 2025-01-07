@@ -27,8 +27,8 @@ public class Player extends Entity
 
     public void setStartPosition()
     {
-        worldX = gp.tileSize * 4;
-        worldY = gp.tileSize * 5;
+        worldX = gp.tileSize * 14;
+        worldY = gp.tileSize * 19;
         speed = 1;
         defaultSpeed = speed;
     }
@@ -50,6 +50,7 @@ public class Player extends Entity
 
         //Check collisions
         gp.collisionManager.checkTileCollision(this);
+        gp.collisionManager.checkObjectCollision(this, gp.objects);
 
         if(!isCollision())
         {

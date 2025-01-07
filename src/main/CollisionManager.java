@@ -2,6 +2,8 @@ package main;
 
 import entity.Direction;
 import entity.Entity;
+import entity.Player;
+import object.Object;
 
 public class CollisionManager
 {
@@ -128,6 +130,24 @@ public class CollisionManager
                     entity.setCollision(true);
                 }
                 break;
+        }
+    }
+
+    /**
+     * Checks for collisions between the player and the objects in the provided array.
+     * If a collision is detected, the corresponding object is removed (set to null).
+     *
+     * @param player  The player object whose hitbox is checked for collisions.
+     * @param objects The array of objects to check for collisions with the player.
+     */
+    public void checkObjectCollision(Player player, Object[] objects)
+    {
+        for(int i = 0; i < objects.length; i++)
+        {
+            if(objects[i] != null && player.hitbox.intersects(objects[i].hitbox))
+            {
+                objects[i] = null;
+            }
         }
     }
 }

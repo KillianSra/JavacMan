@@ -13,7 +13,7 @@ public abstract class Entity extends Renderable
     public int hitboxDefaultY;
 
     //State
-    protected Direction direction = Direction.DOWN;
+    protected Direction direction = Direction.LEFT;
     protected int spriteNum = 1;
 
     //Counter

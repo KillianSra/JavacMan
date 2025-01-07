@@ -31,7 +31,7 @@ public class GamePanel extends JPanel implements Runnable
     public Player player = new Player(this, keyHandler);
 
     //Object
-    public ArrayList<Object> objects = new ArrayList<>();
+    public Object[] objects = new Object[167];
 
     //Debug
     public final boolean isDebuggingEnabled = false;
@@ -131,12 +131,16 @@ public class GamePanel extends JPanel implements Runnable
         //Draw objects
         for (Object object : objects)
         {
-            object.draw(g2);
+            if (object != null)
+            {
+                object.draw(g2);
+            }
         }
 
         //Draw the player
         this.player.draw(g2);
 
+        //DEBUG
         if(isDebuggingEnabled)
         {
             //Draw the triggers event area
