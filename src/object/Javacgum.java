@@ -8,7 +8,7 @@ public class Javacgum extends Object
 {
     public Javacgum(GamePanel gp, int x, int y)
     {
-        super(gp);
+        super(gp, 10);
         super.worldX = x;
         super.worldY = y;
 

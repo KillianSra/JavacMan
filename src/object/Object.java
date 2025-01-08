@@ -11,14 +11,17 @@ public abstract class Object extends Renderable
 {
     protected GamePanel gp;
     protected BufferedImage image;
+    private final int point;
 
-    public Object(GamePanel gp)
+    public Object(GamePanel gp, int point)
     {
         this.gp = gp;
+        this.point = point;
     }
 
     //Getter
     public BufferedImage getObjectImage() { return this.image; }
+    public int getPoint() { return this.point; }
 
     @Override
     public void draw(Graphics2D g2)

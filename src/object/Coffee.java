@@ -6,7 +6,7 @@ public class Coffee extends Object
 {
     public Coffee(GamePanel gp, int x, int y)
     {
-        super(gp);
+        super(gp, 100);
         super.worldX = x;
         super.worldY = y;
 
