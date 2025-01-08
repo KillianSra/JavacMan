@@ -3,7 +3,9 @@ package main;
 import entity.Direction;
 import entity.Entity;
 import entity.Player;
+import object.Javacgum;
 import object.Object;
+import object.SuperJavacgum;
 
 public class CollisionManager
 {
@@ -147,6 +149,12 @@ public class CollisionManager
             if(objects[i] != null && player.hitbox.intersects(objects[i].hitbox))
             {
                 gp.player.setScore(gp.player.getScore() + objects[i].getPoint());
+
+                if(objects[i] instanceof Javacgum || objects[i] instanceof SuperJavacgum)
+                {
+                    gp.javacgumCollected++;
+                }
+
                 objects[i] = null;
             }
         }

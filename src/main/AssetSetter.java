@@ -1,5 +1,6 @@
 package main;
 
+import object.Coffee;
 import object.Javacgum;
 import object.SuperJavacgum;
 
@@ -17,7 +18,6 @@ public class AssetSetter
      */
     public void setObjects()
     {
-
         int index = 0;
 
         // Row 1
@@ -128,6 +128,26 @@ public class AssetSetter
         for(int i = 4; i < 25; i++)
         {
             gp.objects[index++] = new Javacgum(gp, gp.tileSize * i, gp.tileSize * 23);
+        }
+    }
+
+    /**
+     * Places a special collectible in the game grid.
+     */
+    public void setSpecialCollectible()
+    {
+        boolean exit = false;
+        int index = 0;
+        //Scan the array for finding an empty slot
+        while(index < gp.objects.length && !exit)
+        {
+            //When an empty slot is found, create an instance at this location
+            if(gp.objects[index] == null)
+            {
+                gp.objects[index] = new Coffee(gp, gp.tileSize * 14, gp.tileSize * 15, index);
+                exit = true;
+            }
+            index++;
         }
     }
 }

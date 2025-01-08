@@ -6,7 +6,6 @@ import tile.TileManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class GamePanel extends JPanel implements Runnable
 {
@@ -27,8 +26,10 @@ public class GamePanel extends JPanel implements Runnable
     public AssetSetter assetSetter = new AssetSetter(this);
     Thread gameThread;
 
-    //Game settings
+    //Game state
     public int currentRound = 1;
+    public int javacgumCollected = 0;
+    public int nbSpecialCollectible = 2;
 
     //Entity
     public Player player = new Player(this, keyHandler);
@@ -123,6 +124,22 @@ public class GamePanel extends JPanel implements Runnable
     private void update()
     {
         player.update();
+
+        //Handle special collectibles spawn
+        if((javacgumCollected == 48 && nbSpecialCollectible == 2) || (javacgumCollected == 116 && nbSpecialCollectible == 1))
+        {
+            assetSetter.setSpecialCollectible();
+            nbSpecialCollectible--;
+        }
+
+        //Handle special collectible life span
+        for(int i = 0; i < objects.length; i++)
+        {
+            if(objects[i] != null && objects[i].getHasLimitedLifeSpan())
+            {
+                objects[i].checkLifeSpan(i);
+            }
+        }
     }
 
     @Override

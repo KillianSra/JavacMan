@@ -31,7 +31,7 @@ public class UI
         //Initialize HUD objects
         playerLife = gp.player.getLeft2();
 
-        Coffee coffee = new Coffee(this.gp, 0, 0);
+        Coffee coffee = new Coffee(this.gp, 0, 0, 0);
         collectibleItem = coffee.getObjectImage();
     }
 
