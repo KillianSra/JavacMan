@@ -4,11 +4,11 @@ import main.GamePanel;
 
 import java.awt.*;
 
-public class Coffee extends Object
+public class Mug extends Object
 {
-    public Coffee(GamePanel gp, int x, int y, int arrayIndex)
+    public Mug(GamePanel gp, int x, int y, int arrayIndex)
     {
-        super(gp, 500, true);
+        super(gp, 300, true);
         super.worldX = x;
         super.worldY = y;
         super.arrayIndex = arrayIndex;
@@ -16,9 +16,9 @@ public class Coffee extends Object
         //Hitbox settings
         hitbox = new Rectangle();
         hitbox.x = worldX + 2;
-        hitbox.y = worldY;
-        hitbox.width = gp.tileSize - 4;
-        hitbox.height = gp.tileSize;
+        hitbox.y = worldY + 4;
+        hitbox.width = gp.tileSize - 6;
+        hitbox.height = gp.tileSize - 8;
 
         getImage();
     }
@@ -26,6 +26,6 @@ public class Coffee extends Object
     @Override
     protected void getImage()
     {
-        image = setup("collectible/coffee", gp.tileSize, gp.tileSize);
+        image = setup("collectible/mug", gp.tileSize, gp.tileSize);
     }
 }

@@ -1,8 +1,6 @@
 package main;
 
-import object.Coffee;
-import object.Javacgum;
-import object.SuperJavacgum;
+import object.*;
 
 public class AssetSetter
 {
