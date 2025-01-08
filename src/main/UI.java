@@ -68,10 +68,11 @@ public class UI
         x = gp.tileSize * 23;
         g2.drawImage(this.collectibleItem, x, y, null);
 
+        //Number of round done
         x += (int) (gp.tileSize * 1.3);
         g2.setColor(Color.LIGHT_GRAY);
         g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 25F));
-        g2.drawString(String.valueOf(gp.nbCollectibleItem), x, y + gp.tileSize);
+        g2.drawString(String.valueOf(gp.currentRound), x, y + gp.tileSize);
     }
 
     /**

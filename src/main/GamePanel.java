@@ -27,12 +27,14 @@ public class GamePanel extends JPanel implements Runnable
     public AssetSetter assetSetter = new AssetSetter(this);
     Thread gameThread;
 
+    //Game settings
+    public int currentRound = 1;
+
     //Entity
     public Player player = new Player(this, keyHandler);
 
     //Object
     public Object[] objects = new Object[167];
-    public int nbCollectibleItem = 1;
 
     //UI
     public UI UI = new UI(this);
