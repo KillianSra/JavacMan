@@ -27,6 +27,7 @@ public class GamePanel extends JPanel implements Runnable
     Thread gameThread;
 
     //Game state
+    private final int JAVACGUMS_IN_LEVELS = 167;
     public int currentRound = 1;
     public int javacgumCollected = 0;
     public int nbSpecialCollectible = 2;
@@ -123,34 +124,46 @@ public class GamePanel extends JPanel implements Runnable
      */
     private void update()
     {
-        player.update();
-
-        //Handle special collectibles spawn
-        if((javacgumCollected == 48 && nbSpecialCollectible == 2) || (javacgumCollected == 116 && nbSpecialCollectible == 1))
+        if(javacgumCollected == JAVACGUMS_IN_LEVELS)
         {
-            assetSetter.setSpecialCollectible();
-            nbSpecialCollectible--;
+            setupGame();
+            player.setStartPosition();
+            keyHandler.reset();
+            javacgumCollected = 0;
+            nbSpecialCollectible = 2;
+            currentRound++;
         }
-
-        //Manage special collectibles:
-        //1. Check if the object has a limited life span and update it using `checkLifeSpan()`.
-        //2. If the object is displaying points, manage its display duration with `checkDisplayedPoint()`.
-        //3. Remove the object if it is marked for deletion.
-        for(int i = 0; i < objects.length; i++)
+        else
         {
-            if(objects[i] != null)
+            player.update();
+
+            //Handle special collectibles spawn
+            if((javacgumCollected == 48 && nbSpecialCollectible == 2) || (javacgumCollected == 116 && nbSpecialCollectible == 1))
             {
-                if(objects[i].getDelete())
+                assetSetter.setSpecialCollectible();
+                nbSpecialCollectible--;
+            }
+
+            //Manage special collectibles:
+            //1. Check if the object has a limited life span and update it using `checkLifeSpan()`.
+            //2. If the object is displaying points, manage its display duration with `checkDisplayedPoint()`.
+            //3. Remove the object if it is marked for deletion.
+            for(int i = 0; i < objects.length; i++)
+            {
+                if(objects[i] != null)
                 {
-                    objects[i] = null;
-                }
-                else if(objects[i].getHasLimitedLifeSpan() && !objects[i].getDisplayPoint())
-                {
-                    objects[i].checkLifeSpan(i);
-                }
-                else if(objects[i].getDisplayPoint())
-                {
-                    objects[i].checkDisplayedPoint();
+                    if(objects[i].getDelete())
+                    {
+                        objects[i] = null;
+                    }
+                    else if(objects[i].getHasLimitedLifeSpan() && !objects[i].getDisplayPoint())
+                    {
+                        objects[i].checkLifeSpan(i);
+                    }
+                    else if(objects[i].getDisplayPoint())
+                    {
+                        objects[i].checkDisplayedPoint();
+                    }
                 }
             }
         }

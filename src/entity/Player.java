@@ -40,6 +40,7 @@ public class Player extends Entity
     //Methods
     public void setStartPosition()
     {
+        direction = Direction.LEFT;
         worldX = gp.tileSize * 14;
         worldY = gp.tileSize * 19;
         speed = 1;

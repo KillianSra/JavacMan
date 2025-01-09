@@ -142,7 +142,18 @@ public class AssetSetter
             //When an empty slot is found, create an instance at this location
             if(gp.objects[index] == null)
             {
-                gp.objects[index] = new Coffee(gp, gp.tileSize * 14, gp.tileSize * 15, index);
+                switch(gp.currentRound)
+                {
+                    case 1: gp.objects[index] = new Bean(gp, gp.tileSize * 14, gp.tileSize * 15, index); break;
+                    case 2: gp.objects[index] = new Mug(gp, gp.tileSize * 14, gp.tileSize * 15, index); break;
+                    case 3:
+                    case 4: gp.objects[index] = new Coffee(gp, gp.tileSize * 14, gp.tileSize * 15, index); break;
+                    case 5:
+                    case 6: gp.objects[index] = new Computer(gp, gp.tileSize * 14, gp.tileSize * 15, index); break;
+                    case 7:
+                    case 8: gp.objects[index] = new IDE(gp, gp.tileSize * 14, gp.tileSize * 15, index); break;
+                    default: gp.objects[index] = new Lightbulb(gp, gp.tileSize * 14, gp.tileSize * 15, index);
+                }
                 exit = true;
             }
             index++;
