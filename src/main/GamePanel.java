@@ -132,12 +132,26 @@ public class GamePanel extends JPanel implements Runnable
             nbSpecialCollectible--;
         }
 
-        //Handle special collectible life span
+        //Manage special collectibles:
+        //1. Check if the object has a limited life span and update it using `checkLifeSpan()`.
+        //2. If the object is displaying points, manage its display duration with `checkDisplayedPoint()`.
+        //3. Remove the object if it is marked for deletion.
         for(int i = 0; i < objects.length; i++)
         {
-            if(objects[i] != null && objects[i].getHasLimitedLifeSpan())
+            if(objects[i] != null)
             {
-                objects[i].checkLifeSpan(i);
+                if(objects[i].getDelete())
+                {
+                    objects[i] = null;
+                }
+                else if(objects[i].getHasLimitedLifeSpan() && !objects[i].getDisplayPoint())
+                {
+                    objects[i].checkLifeSpan(i);
+                }
+                else if(objects[i].getDisplayPoint())
+                {
+                    objects[i].checkDisplayedPoint();
+                }
             }
         }
     }
