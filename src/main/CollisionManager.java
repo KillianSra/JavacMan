@@ -2,6 +2,12 @@ package main;
 
 import entity.Direction;
 import entity.Entity;
+import entity.Player;
+import object.Javacgum;
+import object.Object;
+import object.SuperJavacgum;
+
+import java.awt.*;
 
 public class CollisionManager
 {
@@ -128,6 +134,49 @@ public class CollisionManager
                     entity.setCollision(true);
                 }
                 break;
+        }
+    }
+
+    /**
+     * Checks for collisions between the player and the objects in the provided array.
+     * If a collision is detected:
+     * <ul>
+     * <li>The player's score is updated based on the points of the collided object.</li>
+     * <li>If the object is a Javacgum or SuperJavacgum:</li>
+     *   <ol>
+     *      <li>Increments the count of collected Javacgums.</li>
+     *      <li>Removes the object (sets it to null).</li>
+     *   </ol>
+     * <li>For other objects:</li>
+     *   <ol>
+     *      <li>Marks the object to display its point value.</li>
+     *      <li>Disables its hitbox by setting it to a zero-sized rectangle.</li>
+     *   </ol>
+     * </ul>
+     *
+     * @param player  The player object whose hitbox is checked for collisions.
+     * @param objects The array of objects to check for collisions with the player.
+     */
+    public void checkObjectCollision(Player player, Object[] objects)
+    {
+        for(int i = 0; i < objects.length; i++)
+        {
+            if(objects[i] != null && player.hitbox.intersects(objects[i].hitbox))
+            {
+                gp.player.setScore(gp.player.getScore() + objects[i].getPoint());
+
+                if(objects[i] instanceof Javacgum || objects[i] instanceof SuperJavacgum)
+                {
+                    gp.javacgumCollected++;
+                    objects[i] = null;
+                }
+                else
+                {
+                    objects[i].setDisplayPoint(true);
+                    //Disable hitbox
+                    objects[i].hitbox = new Rectangle(0, 0 , 0 , 0);
+                }
+            }
         }
     }
 }

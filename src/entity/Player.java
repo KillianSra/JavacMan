@@ -11,6 +11,10 @@ public class Player extends Entity
 {
     private final KeyHandler keyHandler;
 
+    //Attribute
+    private int life = 3;
+    private int score = 0;
+
     public Player(GamePanel gp, KeyHandler keyHandler)
     {
         super(gp);
@@ -25,10 +29,20 @@ public class Player extends Entity
         getImage();
     }
 
+    //Getters
+    public int getScore() { return this.score; }
+    public int getLife() { return this.life; }
+
+    //Setters
+    public void setScore(int score) { this.score = score; }
+    public void setLife(int life) { this.life = life; }
+
+    //Methods
     public void setStartPosition()
     {
-        worldX = gp.tileSize * 4;
-        worldY = gp.tileSize * 5;
+        direction = Direction.LEFT;
+        worldX = gp.tileSize * 14;
+        worldY = gp.tileSize * 19;
         speed = 1;
         defaultSpeed = speed;
     }
@@ -50,6 +64,7 @@ public class Player extends Entity
 
         //Check collisions
         gp.collisionManager.checkTileCollision(this);
+        gp.collisionManager.checkObjectCollision(this, gp.objects);
 
         if(!isCollision())
         {

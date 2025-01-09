@@ -55,4 +55,15 @@ public class KeyHandler implements KeyListener
 
     @Override
     public void keyReleased(KeyEvent e) { /* Not used */ }
+
+    /**
+     * Resets all directional inputs to their default state.
+     */
+    public void reset()
+    {
+        this.upPressed = false;
+        this.downPressed = false;
+        this.rightPressed = false;
+        this.leftPressed = false;
+    }
 }

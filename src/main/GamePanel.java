@@ -1,6 +1,7 @@
 package main;
 
 import entity.Player;
+import object.Object;
 import tile.TileManager;
 
 import javax.swing.*;
@@ -22,10 +23,23 @@ public class GamePanel extends JPanel implements Runnable
     public KeyHandler keyHandler = new KeyHandler(this);
     public CollisionManager collisionManager = new CollisionManager(this);
     public EventManager eventManager = new EventManager(this);
+    public AssetSetter assetSetter = new AssetSetter(this);
     Thread gameThread;
+
+    //Game state
+    private final int JAVACGUMS_IN_LEVELS = 167;
+    public int currentRound = 1;
+    public int javacgumCollected = 0;
+    public int nbSpecialCollectible = 2;
 
     //Entity
     public Player player = new Player(this, keyHandler);
+
+    //Object
+    public Object[] objects = new Object[167];
+
+    //UI
+    public UI UI = new UI(this);
 
     //Debug
     public final boolean isDebuggingEnabled = false;
@@ -37,6 +51,8 @@ public class GamePanel extends JPanel implements Runnable
         this.setDoubleBuffered(true);
         this.setFocusable(true);
         this.addKeyListener(keyHandler);
+
+        setupGame();
     }
 
     /**
@@ -48,6 +64,14 @@ public class GamePanel extends JPanel implements Runnable
 
         //automatically call run() method
         this.gameThread.start();
+    }
+
+    /**
+     * Configures the initial game state by setting up assets.
+     */
+    private void setupGame()
+    {
+        assetSetter.setObjects();
     }
 
     @Override
@@ -100,7 +124,49 @@ public class GamePanel extends JPanel implements Runnable
      */
     private void update()
     {
-        player.update();
+        if(javacgumCollected == JAVACGUMS_IN_LEVELS)
+        {
+            setupGame();
+            player.setStartPosition();
+            keyHandler.reset();
+            javacgumCollected = 0;
+            nbSpecialCollectible = 2;
+            currentRound++;
+        }
+        else
+        {
+            player.update();
+
+            //Handle special collectibles spawn
+            if((javacgumCollected == 48 && nbSpecialCollectible == 2) || (javacgumCollected == 116 && nbSpecialCollectible == 1))
+            {
+                assetSetter.setSpecialCollectible();
+                nbSpecialCollectible--;
+            }
+
+            //Manage special collectibles:
+            //1. Check if the object has a limited life span and update it using `checkLifeSpan()`.
+            //2. If the object is displaying points, manage its display duration with `checkDisplayedPoint()`.
+            //3. Remove the object if it is marked for deletion.
+            for(int i = 0; i < objects.length; i++)
+            {
+                if(objects[i] != null)
+                {
+                    if(objects[i].getDelete())
+                    {
+                        objects[i] = null;
+                    }
+                    else if(objects[i].getHasLimitedLifeSpan() && !objects[i].getDisplayPoint())
+                    {
+                        objects[i].checkLifeSpan(i);
+                    }
+                    else if(objects[i].getDisplayPoint())
+                    {
+                        objects[i].checkDisplayedPoint();
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -112,9 +178,22 @@ public class GamePanel extends JPanel implements Runnable
         //Draw the game board
         this.tileManager.draw(g2);
 
+        //Draw objects
+        for (Object object : objects)
+        {
+            if (object != null)
+            {
+                object.draw(g2);
+            }
+        }
+
         //Draw the player
         this.player.draw(g2);
 
+        //Draw UI
+        this.UI.draw(g2);
+
+        //DEBUG
         if(isDebuggingEnabled)
         {
             //Draw the triggers event area
