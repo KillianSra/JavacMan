@@ -6,6 +6,8 @@ import java.awt.*;
 
 public class Lightbulb extends Object
 {
+    public static final String name = "Lightbulb";
+
     public Lightbulb(GamePanel gp, int x, int y, int arrayIndex)
     {
         super(gp, 2000, true);
@@ -27,5 +29,11 @@ public class Lightbulb extends Object
     protected void getImage()
     {
         image = setup("collectible/lightbulb", gp.tileSize, gp.tileSize);
+    }
+
+    @Override
+    public String getName()
+    {
+        return name;
     }
 }

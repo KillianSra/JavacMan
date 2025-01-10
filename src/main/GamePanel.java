@@ -6,6 +6,7 @@ import tile.TileManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class GamePanel extends JPanel implements Runnable
 {
@@ -31,6 +32,7 @@ public class GamePanel extends JPanel implements Runnable
     public int currentRound = 1;
     public int javacgumCollected = 0;
     public int nbSpecialCollectible = 2;
+    public ArrayList<String> collectedItems = new ArrayList<>();
 
     //Entity
     public Player player = new Player(this, keyHandler);

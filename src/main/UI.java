@@ -1,6 +1,6 @@
 package main;
 
-import object.Coffee;
+import object.Object;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -11,7 +11,7 @@ public class UI
 {
     GamePanel gp;
     Font maruMonica;
-    BufferedImage playerLife, collectibleItem;
+    BufferedImage playerLife;
 
     public UI(GamePanel gp)
     {
@@ -30,9 +30,6 @@ public class UI
 
         //Initialize HUD objects
         playerLife = gp.player.getLeft2();
-
-        Coffee coffee = new Coffee(this.gp, 0, 0, 0);
-        collectibleItem = coffee.getObjectImage();
     }
 
     /**
@@ -66,7 +63,14 @@ public class UI
 
         //Collectible items
         x = gp.tileSize * 23;
-        g2.drawImage(this.collectibleItem, x, y, null);
+        int tempX = x;
+        for(int i = 0; i < gp.collectedItems.size(); i++)
+        {
+            Object obj = Tools.getObjectByName(gp, gp.collectedItems.get(i));
+            g2.drawImage(obj.getObjectImage(), tempX, y, null);
+            tempX -= gp.tileSize - 2;
+        }
+
 
         //Number of round done
         x += (int) (gp.tileSize * 1.3);

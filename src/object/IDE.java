@@ -6,6 +6,8 @@ import java.awt.*;
 
 public class IDE extends Object
 {
+    public static final String name = "IDE";
+
     public IDE(GamePanel gp, int x, int y, int arrayIndex)
     {
         super(gp, 1000, true);
@@ -27,5 +29,11 @@ public class IDE extends Object
     protected void getImage()
     {
         image = setup("collectible/eclipse", gp.tileSize, gp.tileSize);
+    }
+
+    @Override
+    public String getName()
+    {
+        return name;
     }
 }

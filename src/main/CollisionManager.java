@@ -172,6 +172,7 @@ public class CollisionManager
                 }
                 else
                 {
+                    gp.collectedItems.add(objects[i].getName());
                     objects[i].setDisplayPoint(true);
                     //Disable hitbox
                     objects[i].hitbox = new Rectangle(0, 0 , 0 , 0);
