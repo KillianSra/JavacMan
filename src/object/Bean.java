@@ -25,6 +25,13 @@ public class Bean extends Object
         getImage();
     }
 
+    public Bean(GamePanel gp)
+    {
+        super(gp, 0, false);
+
+        getImage();
+    }
+
     @Override
     protected void getImage()
     {

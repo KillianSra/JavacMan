@@ -25,6 +25,13 @@ public class Coffee extends Object
         getImage();
     }
 
+    public Coffee(GamePanel gp)
+    {
+        super(gp, 0, false);
+
+        getImage();
+    }
+
     @Override
     protected void getImage()
     {

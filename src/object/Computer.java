@@ -25,6 +25,13 @@ public class Computer extends Object
         getImage();
     }
 
+    public Computer(GamePanel gp)
+    {
+        super(gp, 0, false);
+
+        getImage();
+    }
+
     @Override
     protected void getImage()
     {

@@ -25,6 +25,13 @@ public class Lightbulb extends Object
         getImage();
     }
 
+    public Lightbulb(GamePanel gp)
+    {
+        super(gp, 0, false);
+
+        getImage();
+    }
+
     @Override
     protected void getImage()
     {

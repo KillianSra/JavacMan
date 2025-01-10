@@ -25,6 +25,13 @@ public class Mug extends Object
         getImage();
     }
 
+    public Mug(GamePanel gp)
+    {
+        super(gp, 0, false);
+
+        getImage();
+    }
+
     @Override
     protected void getImage()
     {

@@ -25,6 +25,13 @@ public class IDE extends Object
         getImage();
     }
 
+    public IDE(GamePanel gp)
+    {
+        super(gp, 0, false);
+
+        getImage();
+    }
+
     @Override
     protected void getImage()
     {

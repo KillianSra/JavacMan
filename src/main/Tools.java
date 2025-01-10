@@ -38,12 +38,12 @@ public class Tools
 
         switch(name)
         {
-            case Bean.name : obj = new Bean(gp, 0, 0, 0); break;
-            case Coffee.name : obj = new Coffee(gp, 0, 0, 0); break;
-            case Computer.name : obj = new Computer(gp, 0, 0, 0); break;
-            case IDE.name : obj = new IDE(gp, 0, 0, 0); break;
-            case Lightbulb.name : obj = new Lightbulb(gp, 0, 0, 0); break;
-            case Mug.name : obj = new Mug(gp, 0, 0, 0); break;
+            case Bean.name : obj = new Bean(gp); break;
+            case Coffee.name : obj = new Coffee(gp); break;
+            case Computer.name : obj = new Computer(gp); break;
+            case IDE.name : obj = new IDE(gp); break;
+            case Lightbulb.name : obj = new Lightbulb(gp); break;
+            case Mug.name : obj = new Mug(gp); break;
         }
 
         return obj;
