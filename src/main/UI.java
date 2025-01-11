@@ -13,6 +13,12 @@ public class UI
     Font maruMonica;
     BufferedImage playerLife;
 
+    //Selection menu
+    final int pauseState = 1;
+    int subState;
+
+    int commandNb;
+
     public UI(GamePanel gp)
     {
         this.gp = gp;
@@ -104,5 +110,49 @@ public class UI
         g2.setColor(Color.WHITE);
 
         drawHUD(g2);
+
+        //If the game is in the pause state, draw the pause menu
+        if(gp.state == gp.pauseState)
+        {
+            drawPauseMenu(g2);
+
+        }
+    }
+
+    /**
+     * Draws the pause menu on the screen.
+     *
+     * @param g2 Graphics2D instance used for rendering the pause menu
+     */
+    private void drawPauseMenu(Graphics2D g2)
+    {
+        //Darkened the screen
+        g2.setColor(new Color(0, 0, 0));
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7F));
+        g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
+
+        //Draw the "PAUSED" title at the center of the screen
+        g2.setColor(Color.WHITE);
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 65F));
+        g2.drawString("PAUSED", getXCentered("PAUSED", g2, 2), gp.tileSize * 10);
+
+        //Draw the "RESUME" option
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 35F));
+        int x = getXCentered("RESUME", g2, 2);
+        int y = gp.tileSize * 15;
+        g2.drawString("RESUME",x , y);
+        if(commandNb == 0)
+        {
+            g2.drawRoundRect(x - gp.tileSize * 2, (int) (y - gp.tileSize * 1.80), gp.tileSize * 8, (int) (gp.tileSize * 2.5), 70, 70);
+        }
+
+        // Draw the "QUIT" option
+        y += gp.tileSize * 3;
+        g2.drawString("QUIT", getXCentered("QUIT", g2, 2), y);
+        if(commandNb == 1)
+        {
+            g2.drawRoundRect(x - gp.tileSize * 2, (int) (y - gp.tileSize * 1.80), gp.tileSize * 8, (int) (gp.tileSize * 2.5), 70, 70);
+        }
     }
 }

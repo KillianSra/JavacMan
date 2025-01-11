@@ -22,34 +22,30 @@ public class KeyHandler implements KeyListener
     {
         int code = e.getKeyCode();
 
-        //Handle player movements
-        if(code == KeyEvent.VK_Z || code == KeyEvent.VK_UP)
+        //Handle the logic based on the current game state
+        if(gp.state == gp.playState)
         {
-            this.upPressed = true;
-            this.downPressed = false;
-            this.leftPressed = false;
-            this.rightPressed = false;
+            playState(code);
         }
-        else if(code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN)
+        else if(gp.state == gp.pauseState)
         {
-            this.upPressed = false;
-            this.downPressed = true;
-            this.leftPressed = false;
-            this.rightPressed = false;
+            pauseState(code);
         }
-        else if(code == KeyEvent.VK_Q || code == KeyEvent.VK_LEFT)
+
+        //Toggle between play and pause states when the Escape key is pressed
+        if(code == KeyEvent.VK_ESCAPE)
         {
-            this.upPressed = false;
-            this.downPressed = false;
-            this.leftPressed = true;
-            this.rightPressed = false;
-        }
-        else if(code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT)
-        {
-            this.upPressed = false;
-            this.downPressed = false;
-            this.rightPressed = true;
-            this.leftPressed = false;
+            if(gp.state == gp.playState)
+            {
+                gp.state = gp.pauseState;
+                //Reset
+                gp.UI.subState = gp.UI.pauseState;
+                gp.UI.commandNb = 0;
+            }
+            else
+            {
+                gp.state = gp.playState;
+            }
         }
     }
 
@@ -65,5 +61,87 @@ public class KeyHandler implements KeyListener
         this.downPressed = false;
         this.rightPressed = false;
         this.leftPressed = false;
+    }
+
+    /**
+     * Handles key inputs during gameplay.
+     *
+     * @param code the keycode of the pressed key
+     */
+    private void playState(int code)
+    {
+        //Handle player movements
+        //Move up
+        if(code == KeyEvent.VK_Z || code == KeyEvent.VK_UP)
+        {
+            this.upPressed = true;
+            this.downPressed = false;
+            this.leftPressed = false;
+            this.rightPressed = false;
+        }
+        //Move down
+        else if(code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN)
+        {
+            this.upPressed = false;
+            this.downPressed = true;
+            this.leftPressed = false;
+            this.rightPressed = false;
+        }
+        //Move left
+        else if(code == KeyEvent.VK_Q || code == KeyEvent.VK_LEFT)
+        {
+            this.upPressed = false;
+            this.downPressed = false;
+            this.leftPressed = true;
+            this.rightPressed = false;
+        }
+        //Move right
+        else if(code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT)
+        {
+            this.upPressed = false;
+            this.downPressed = false;
+            this.rightPressed = true;
+            this.leftPressed = false;
+        }
+    }
+
+    /**
+     * Handles key inputs while the game is paused.
+     *
+     * @param code the keycode of the pressed key
+     */
+    private void pauseState(int code)
+    {
+        //Navigate the pause menu using the up and down keys
+        //Move up in the menu
+        if(code == KeyEvent.VK_Z || code == KeyEvent.VK_UP)
+        {
+            gp.UI.commandNb--;
+            if(gp.UI.commandNb < 0)
+            {
+                gp.UI.commandNb = 1;
+            }
+        }
+        //Move down in the menu
+        else if(code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN)
+        {
+            gp.UI.commandNb++;
+            if(gp.UI.commandNb > 1)
+            {
+                gp.UI.commandNb = 0;
+            }
+        }
+
+        //Execute the selected command when the Enter key is pressed
+        if(code == KeyEvent.VK_ENTER)
+        {
+            switch(gp.UI.commandNb)
+            {
+                //Resume gameplay
+                case 0: gp.state = gp.playState; break;
+                //Exit the game
+                case 1: System.exit(0); break;
+            }
+        }
     }
 }
