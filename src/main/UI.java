@@ -86,40 +86,6 @@ public class UI
     }
 
     /**
-     * Calculates the x-coordinate to center the given text on the screen based on the position factor.
-     *
-     * @param text The text to be centered
-     * @param g2 Graphics2D instance used for text measurement
-     * @param position A position factor that adjusts the centering
-     * @return The x-coordinate where the text should be drawn
-     */
-    private int getXCentered(String text, Graphics2D g2, int position)
-    {
-        int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
-        return gp.screenWidth / position - length / position;
-    }
-
-    /**
-     * Draws UI elements on the screen.
-     *
-     * @param g2 Graphics2D instance used for rendering the UI elements
-     */
-    public void draw(Graphics2D g2)
-    {
-        g2.setFont(maruMonica);
-        g2.setColor(Color.WHITE);
-
-        drawHUD(g2);
-
-        //If the game is in the pause state, draw the pause menu
-        if(gp.state == gp.pauseState)
-        {
-            drawPauseMenu(g2);
-
-        }
-    }
-
-    /**
      * Draws the pause menu on the screen.
      *
      * @param g2 Graphics2D instance used for rendering the pause menu
@@ -153,6 +119,80 @@ public class UI
         if(commandNb == 1)
         {
             g2.drawRoundRect(x - gp.tileSize * 2, (int) (y - gp.tileSize * 1.80), gp.tileSize * 8, (int) (gp.tileSize * 2.5), 70, 70);
+        }
+    }
+
+    /**
+     * Draws the title screen of the game.
+     *
+     * @param g2 Graphics2D instance used for rendering the title screen elements
+     */
+    private void drawTitleSceen(Graphics2D g2)
+    {
+        //Draw the title text
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 65F));
+        g2.drawString("JavacMan", getXCentered("JavacMan", g2, 2), gp.tileSize * 8);
+
+        //Render the animation (player avatar moving on the title screen)
+        gp.playerAvatar.draw(g2);
+
+        //Draw the "PLAY" option
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 35F));
+        int x = getXCentered("PLAY", g2, 2);
+        int y = gp.tileSize * 17;
+        g2.drawString("PLAY", x, y);
+        if(commandNb == 0)
+        {
+            g2.drawRoundRect((int) (x - gp.tileSize * 2.75), (int) (y - gp.tileSize * 1.80), gp.tileSize * 8, (int) (gp.tileSize * 2.5), 70, 70);
+        }
+
+        //Draw the "QUIT" option
+        y += gp.tileSize * 3;
+        g2.drawString("QUIT", getXCentered("QUIT", g2, 2), y);
+        if(commandNb == 1)
+        {
+            g2.drawRoundRect((int) (x - gp.tileSize * 2.75), (int) (y - gp.tileSize * 1.80), gp.tileSize * 8, (int) (gp.tileSize * 2.5), 70, 70);
+        }
+    }
+
+    /**
+     * Calculates the x-coordinate to center the given text on the screen based on the position factor.
+     *
+     * @param text The text to be centered
+     * @param g2 Graphics2D instance used for text measurement
+     * @param position A position factor that adjusts the centering
+     * @return The x-coordinate where the text should be drawn
+     */
+    private int getXCentered(String text, Graphics2D g2, int position)
+    {
+        int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
+        return gp.screenWidth / position - length / position;
+    }
+
+    /**
+     * Draws UI elements on the screen.
+     *
+     * @param g2 Graphics2D instance used for rendering the UI elements
+     */
+    public void draw(Graphics2D g2)
+    {
+        g2.setFont(maruMonica);
+        g2.setColor(Color.WHITE);
+
+
+        if(gp.state == gp.playState)
+        {
+            drawHUD(g2);
+        }
+        //If the game is in the pause state, draw the pause menu
+        else if(gp.state == gp.pauseState)
+        {
+            drawHUD(g2);
+            drawPauseMenu(g2);
+        }
+        else if(gp.state == gp.titleState)
+        {
+            drawTitleSceen(g2);
         }
     }
 }

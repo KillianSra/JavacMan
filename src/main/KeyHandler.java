@@ -22,30 +22,37 @@ public class KeyHandler implements KeyListener
     {
         int code = e.getKeyCode();
 
-        //Handle the logic based on the current game state
-        if(gp.state == gp.playState)
+        if(gp.state == gp.playState || gp.state == gp.pauseState)
         {
-            playState(code);
-        }
-        else if(gp.state == gp.pauseState)
-        {
-            pauseState(code);
-        }
-
-        //Toggle between play and pause states when the Escape key is pressed
-        if(code == KeyEvent.VK_ESCAPE)
-        {
+            //Handle the logic based on the current game state
             if(gp.state == gp.playState)
             {
-                gp.state = gp.pauseState;
-                //Reset
-                gp.UI.subState = gp.UI.pauseState;
-                gp.UI.commandNb = 0;
+                playState(code);
             }
             else
             {
-                gp.state = gp.playState;
+                pauseState(code);
             }
+
+            //Toggle between play and pause states when the Escape key is pressed
+            if(code == KeyEvent.VK_ESCAPE)
+            {
+                if(gp.state == gp.playState)
+                {
+                    gp.state = gp.pauseState;
+                    //Reset
+                    gp.UI.subState = gp.UI.pauseState;
+                    gp.UI.commandNb = 0;
+                }
+                else
+                {
+                    gp.state = gp.playState;
+                }
+            }
+        }
+        else if(gp.state == gp.titleState)
+        {
+            titleState(code);
         }
     }
 
@@ -112,25 +119,7 @@ public class KeyHandler implements KeyListener
      */
     private void pauseState(int code)
     {
-        //Navigate the pause menu using the up and down keys
-        //Move up in the menu
-        if(code == KeyEvent.VK_Z || code == KeyEvent.VK_UP)
-        {
-            gp.UI.commandNb--;
-            if(gp.UI.commandNb < 0)
-            {
-                gp.UI.commandNb = 1;
-            }
-        }
-        //Move down in the menu
-        else if(code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN)
-        {
-            gp.UI.commandNb++;
-            if(gp.UI.commandNb > 1)
-            {
-                gp.UI.commandNb = 0;
-            }
-        }
+        handleMenuMovements(code, 1);
 
         //Execute the selected command when the Enter key is pressed
         if(code == KeyEvent.VK_ENTER)
@@ -140,7 +129,66 @@ public class KeyHandler implements KeyListener
                 //Resume gameplay
                 case 0: gp.state = gp.playState; break;
                 //Exit the game
+                case 1:
+                    gp.state = gp.titleState;
+                    gp.UI.commandNb = 0;
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Handles the logic for the title screen state based on user input.
+     *
+     * @param code Key code representing the user input
+     */
+    private void titleState(int code)
+    {
+        handleMenuMovements(code, 1);
+
+        //Execute the selected command when the Enter key is pressed
+        if(code == KeyEvent.VK_ENTER)
+        {
+            switch(gp.UI.commandNb)
+            {
+                //Start or resume gameplay
+                case 0:
+                    gp.player.setStartPosition();
+                    reset();
+                    gp.restart = true;
+                    gp.state = gp.playState;
+                    break;
+                //Exit the game
                 case 1: System.exit(0); break;
+            }
+        }
+    }
+
+    /**
+     * Handles menu navigation based on user input.
+     *
+     * @param code Key code representing the user input
+     * @param max  Maximum index for the menu options
+     */
+    private void handleMenuMovements(int code, int max)
+    {
+        //Navigate the title menu using the up and down keys
+        //Move up in the menu
+        if(code == KeyEvent.VK_Z || code == KeyEvent.VK_UP)
+        {
+            gp.UI.commandNb--;
+            if(gp.UI.commandNb < 0)
+            {
+                gp.UI.commandNb = max;
+            }
+        }
+        //Move down in the menu
+        else if(code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN)
+        {
+            gp.UI.commandNb++;
+            if(gp.UI.commandNb > max)
+            {
+                gp.UI.commandNb = 0;
             }
         }
     }

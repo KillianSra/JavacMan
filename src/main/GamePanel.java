@@ -1,6 +1,7 @@
 package main;
 
 import entity.Player;
+import entity.PlayerAvatar;
 import object.Object;
 import tile.TileManager;
 
@@ -29,18 +30,22 @@ public class GamePanel extends JPanel implements Runnable
 
     //State
     public int state;
+    public final int titleState = 0;
     public final int playState = 1;
     public final int pauseState = 2;
 
     //Game state
     private final int JAVACGUMS_IN_LEVELS = 167;
     public int currentRound = 1;
-    public int javacgumCollected = 0;
-    public int nbSpecialCollectible = 2;
+    public int javacgumCollected;
+    public int nbSpecialCollectible;
     public ArrayList<String> collectedItems = new ArrayList<>();
+    public boolean restart;
 
     //Entity
     public Player player = new Player(this, keyHandler);
+    //Animation in the title screen
+    PlayerAvatar playerAvatar = new PlayerAvatar(this);
 
     //Object
     public Object[] objects = new Object[167];
@@ -58,7 +63,7 @@ public class GamePanel extends JPanel implements Runnable
         this.setDoubleBuffered(true);
         this.setFocusable(true);
         this.addKeyListener(keyHandler);
-        this.state = this.playState;
+        this.state = this.titleState;
 
         setupGame();
     }
@@ -77,9 +82,16 @@ public class GamePanel extends JPanel implements Runnable
     /**
      * Configures the initial game state by setting up assets.
      */
-    private void setupGame()
+    public void setupGame()
     {
         assetSetter.setObjects();
+        javacgumCollected = 0;
+        nbSpecialCollectible = 2;
+        if(restart)
+        {
+            collectedItems.clear();
+            currentRound = 1;
+        }
     }
 
     @Override
@@ -134,6 +146,7 @@ public class GamePanel extends JPanel implements Runnable
     {
         if(this.state == this.playState)
         {
+            //If the round is finished, go to the next one
             if(javacgumCollected == JAVACGUMS_IN_LEVELS)
             {
                 setupGame();
@@ -178,6 +191,17 @@ public class GamePanel extends JPanel implements Runnable
                 }
             }
         }
+        //Title screen animation
+        else if(state == titleState)
+        {
+            playerAvatar.update();
+        }
+
+        if(restart)
+        {
+            setupGame();
+            restart = false;
+        }
     }
 
     @Override
@@ -186,20 +210,23 @@ public class GamePanel extends JPanel implements Runnable
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        //Draw the game board
-        this.tileManager.draw(g2);
-
-        //Draw objects
-        for (Object object : objects)
+        if(state == playState || state == pauseState)
         {
-            if (object != null)
-            {
-                object.draw(g2);
-            }
-        }
+            //Draw the game board
+            this.tileManager.draw(g2);
 
-        //Draw the player
-        this.player.draw(g2);
+            //Draw objects
+            for (Object object : objects)
+            {
+                if (object != null)
+                {
+                    object.draw(g2);
+                }
+            }
+
+            //Draw the player
+            this.player.draw(g2);
+        }
 
         //Draw UI
         this.UI.draw(g2);
