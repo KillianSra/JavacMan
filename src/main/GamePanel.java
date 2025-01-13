@@ -1,11 +1,13 @@
 package main;
 
 import entity.Player;
+import entity.PlayerAvatar;
 import object.Object;
 import tile.TileManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class GamePanel extends JPanel implements Runnable
 {
@@ -26,14 +28,24 @@ public class GamePanel extends JPanel implements Runnable
     public AssetSetter assetSetter = new AssetSetter(this);
     Thread gameThread;
 
+    //State
+    public int state;
+    public final int titleState = 0;
+    public final int playState = 1;
+    public final int pauseState = 2;
+
     //Game state
     private final int JAVACGUMS_IN_LEVELS = 167;
     public int currentRound = 1;
-    public int javacgumCollected = 0;
-    public int nbSpecialCollectible = 2;
+    public int javacgumCollected;
+    public int nbSpecialCollectible;
+    public ArrayList<String> collectedItems = new ArrayList<>();
+    public boolean restart;
 
     //Entity
     public Player player = new Player(this, keyHandler);
+    //Animation in the title screen
+    PlayerAvatar playerAvatar = new PlayerAvatar(this);
 
     //Object
     public Object[] objects = new Object[167];
@@ -51,6 +63,7 @@ public class GamePanel extends JPanel implements Runnable
         this.setDoubleBuffered(true);
         this.setFocusable(true);
         this.addKeyListener(keyHandler);
+        this.state = this.titleState;
 
         setupGame();
     }
@@ -69,9 +82,16 @@ public class GamePanel extends JPanel implements Runnable
     /**
      * Configures the initial game state by setting up assets.
      */
-    private void setupGame()
+    public void setupGame()
     {
         assetSetter.setObjects();
+        javacgumCollected = 0;
+        nbSpecialCollectible = 2;
+        if(restart)
+        {
+            collectedItems.clear();
+            currentRound = 1;
+        }
     }
 
     @Override
@@ -124,48 +144,63 @@ public class GamePanel extends JPanel implements Runnable
      */
     private void update()
     {
-        if(javacgumCollected == JAVACGUMS_IN_LEVELS)
+        if(this.state == this.playState)
         {
-            setupGame();
-            player.setStartPosition();
-            keyHandler.reset();
-            javacgumCollected = 0;
-            nbSpecialCollectible = 2;
-            currentRound++;
-        }
-        else
-        {
-            player.update();
-
-            //Handle special collectibles spawn
-            if((javacgumCollected == 48 && nbSpecialCollectible == 2) || (javacgumCollected == 116 && nbSpecialCollectible == 1))
+            //If the round is finished, go to the next one
+            if(javacgumCollected == JAVACGUMS_IN_LEVELS)
             {
-                assetSetter.setSpecialCollectible();
-                nbSpecialCollectible--;
+                setupGame();
+                player.setStartPosition();
+                keyHandler.reset();
+                javacgumCollected = 0;
+                nbSpecialCollectible = 2;
+                currentRound++;
             }
-
-            //Manage special collectibles:
-            //1. Check if the object has a limited life span and update it using `checkLifeSpan()`.
-            //2. If the object is displaying points, manage its display duration with `checkDisplayedPoint()`.
-            //3. Remove the object if it is marked for deletion.
-            for(int i = 0; i < objects.length; i++)
+            else
             {
-                if(objects[i] != null)
+                player.update();
+
+                //Handle special collectibles spawn
+                if((javacgumCollected == 48 && nbSpecialCollectible == 2) || (javacgumCollected == 116 && nbSpecialCollectible == 1))
                 {
-                    if(objects[i].getDelete())
+                    assetSetter.setSpecialCollectible();
+                    nbSpecialCollectible--;
+                }
+
+                //Manage special collectibles:
+                //1. Check if the object has a limited life span and update it using `checkLifeSpan()`.
+                //2. If the object is displaying points, manage its display duration with `checkDisplayedPoint()`.
+                //3. Remove the object if it is marked for deletion.
+                for(int i = 0; i < objects.length; i++)
+                {
+                    if(objects[i] != null)
                     {
-                        objects[i] = null;
-                    }
-                    else if(objects[i].getHasLimitedLifeSpan() && !objects[i].getDisplayPoint())
-                    {
-                        objects[i].checkLifeSpan(i);
-                    }
-                    else if(objects[i].getDisplayPoint())
-                    {
-                        objects[i].checkDisplayedPoint();
+                        if(objects[i].getDelete())
+                        {
+                            objects[i] = null;
+                        }
+                        else if(objects[i].getHasLimitedLifeSpan() && !objects[i].getDisplayPoint())
+                        {
+                            objects[i].checkLifeSpan(i);
+                        }
+                        else if(objects[i].getDisplayPoint())
+                        {
+                            objects[i].checkDisplayedPoint();
+                        }
                     }
                 }
             }
+        }
+        //Title screen animation
+        else if(state == titleState)
+        {
+            playerAvatar.update();
+        }
+
+        if(restart)
+        {
+            setupGame();
+            restart = false;
         }
     }
 
@@ -175,20 +210,23 @@ public class GamePanel extends JPanel implements Runnable
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        //Draw the game board
-        this.tileManager.draw(g2);
-
-        //Draw objects
-        for (Object object : objects)
+        if(state == playState || state == pauseState)
         {
-            if (object != null)
-            {
-                object.draw(g2);
-            }
-        }
+            //Draw the game board
+            this.tileManager.draw(g2);
 
-        //Draw the player
-        this.player.draw(g2);
+            //Draw objects
+            for (Object object : objects)
+            {
+                if (object != null)
+                {
+                    object.draw(g2);
+                }
+            }
+
+            //Draw the player
+            this.player.draw(g2);
+        }
 
         //Draw UI
         this.UI.draw(g2);

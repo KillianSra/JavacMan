@@ -1,6 +1,6 @@
 package main;
 
-import object.Coffee;
+import object.Object;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -11,7 +11,13 @@ public class UI
 {
     GamePanel gp;
     Font maruMonica;
-    BufferedImage playerLife, collectibleItem;
+    BufferedImage playerLife;
+
+    //Selection menu
+    final int pauseState = 1;
+    int subState;
+
+    int commandNb;
 
     public UI(GamePanel gp)
     {
@@ -30,9 +36,6 @@ public class UI
 
         //Initialize HUD objects
         playerLife = gp.player.getLeft2();
-
-        Coffee coffee = new Coffee(this.gp, 0, 0, 0);
-        collectibleItem = coffee.getObjectImage();
     }
 
     /**
@@ -66,13 +69,90 @@ public class UI
 
         //Collectible items
         x = gp.tileSize * 23;
-        g2.drawImage(this.collectibleItem, x, y, null);
+        int tempX = x;
+        for(int i = 0; i < gp.collectedItems.size(); i++)
+        {
+            Object obj = Tools.getObjectByName(gp, gp.collectedItems.get(i));
+            g2.drawImage(obj.getObjectImage(), tempX, y, null);
+            tempX -= gp.tileSize - 2;
+        }
+
 
         //Number of round done
         x += (int) (gp.tileSize * 1.3);
         g2.setColor(Color.LIGHT_GRAY);
         g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 25F));
         g2.drawString(String.valueOf(gp.currentRound), x, y + gp.tileSize);
+    }
+
+    /**
+     * Draws the pause menu on the screen.
+     *
+     * @param g2 Graphics2D instance used for rendering the pause menu
+     */
+    private void drawPauseMenu(Graphics2D g2)
+    {
+        //Darkened the screen
+        g2.setColor(new Color(0, 0, 0));
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7F));
+        g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
+
+        //Draw the "PAUSED" title at the center of the screen
+        g2.setColor(Color.WHITE);
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 65F));
+        g2.drawString("PAUSED", getXCentered("PAUSED", g2, 2), gp.tileSize * 10);
+
+        //Draw the "RESUME" option
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 35F));
+        int x = getXCentered("RESUME", g2, 2);
+        int y = gp.tileSize * 15;
+        g2.drawString("RESUME",x , y);
+        if(commandNb == 0)
+        {
+            g2.drawRoundRect(x - gp.tileSize * 2, (int) (y - gp.tileSize * 1.80), gp.tileSize * 8, (int) (gp.tileSize * 2.5), 70, 70);
+        }
+
+        // Draw the "QUIT" option
+        y += gp.tileSize * 3;
+        g2.drawString("QUIT", getXCentered("QUIT", g2, 2), y);
+        if(commandNb == 1)
+        {
+            g2.drawRoundRect(x - gp.tileSize * 2, (int) (y - gp.tileSize * 1.80), gp.tileSize * 8, (int) (gp.tileSize * 2.5), 70, 70);
+        }
+    }
+
+    /**
+     * Draws the title screen of the game.
+     *
+     * @param g2 Graphics2D instance used for rendering the title screen elements
+     */
+    private void drawTitleSceen(Graphics2D g2)
+    {
+        //Draw the title text
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 65F));
+        g2.drawString("JavacMan", getXCentered("JavacMan", g2, 2), gp.tileSize * 8);
+
+        //Render the animation (player avatar moving on the title screen)
+        gp.playerAvatar.draw(g2);
+
+        //Draw the "PLAY" option
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 35F));
+        int x = getXCentered("PLAY", g2, 2);
+        int y = gp.tileSize * 17;
+        g2.drawString("PLAY", x, y);
+        if(commandNb == 0)
+        {
+            g2.drawRoundRect((int) (x - gp.tileSize * 2.75), (int) (y - gp.tileSize * 1.80), gp.tileSize * 8, (int) (gp.tileSize * 2.5), 70, 70);
+        }
+
+        //Draw the "QUIT" option
+        y += gp.tileSize * 3;
+        g2.drawString("QUIT", getXCentered("QUIT", g2, 2), y);
+        if(commandNb == 1)
+        {
+            g2.drawRoundRect((int) (x - gp.tileSize * 2.75), (int) (y - gp.tileSize * 1.80), gp.tileSize * 8, (int) (gp.tileSize * 2.5), 70, 70);
+        }
     }
 
     /**
@@ -99,6 +179,20 @@ public class UI
         g2.setFont(maruMonica);
         g2.setColor(Color.WHITE);
 
-        drawHUD(g2);
+
+        if(gp.state == gp.playState)
+        {
+            drawHUD(g2);
+        }
+        //If the game is in the pause state, draw the pause menu
+        else if(gp.state == gp.pauseState)
+        {
+            drawHUD(g2);
+            drawPauseMenu(g2);
+        }
+        else if(gp.state == gp.titleState)
+        {
+            drawTitleSceen(g2);
+        }
     }
 }

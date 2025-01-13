@@ -1,5 +1,7 @@
 package main;
 
+import object.*;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -21,5 +23,29 @@ public class Tools
         g2.dispose();
 
         return scaledImage;
+    }
+
+    /**
+     * Returns an instance of the object corresponding to the given name.
+     *
+     * @param gp   The GamePanel instance required to create the object.
+     * @param name The name of the object to create.
+     * @return A new instance of the corresponding object, or null if no match is found.
+     */
+    public static object.Object getObjectByName(GamePanel gp, String name)
+    {
+        object.Object obj = null;
+
+        switch(name)
+        {
+            case Bean.name : obj = new Bean(gp); break;
+            case Coffee.name : obj = new Coffee(gp); break;
+            case Computer.name : obj = new Computer(gp); break;
+            case IDE.name : obj = new IDE(gp); break;
+            case Lightbulb.name : obj = new Lightbulb(gp); break;
+            case Mug.name : obj = new Mug(gp); break;
+        }
+
+        return obj;
     }
 }

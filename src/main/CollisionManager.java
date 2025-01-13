@@ -161,7 +161,7 @@ public class CollisionManager
     {
         for(int i = 0; i < objects.length; i++)
         {
-            if(objects[i] != null && player.hitbox.intersects(objects[i].hitbox))
+            if(objects[i] != null && player.hitbox.intersects(objects[i].hitbox) && !gp.restart)
             {
                 gp.player.setScore(gp.player.getScore() + objects[i].getPoint());
 
@@ -172,6 +172,7 @@ public class CollisionManager
                 }
                 else
                 {
+                    gp.collectedItems.add(objects[i].getName());
                     objects[i].setDisplayPoint(true);
                     //Disable hitbox
                     objects[i].hitbox = new Rectangle(0, 0 , 0 , 0);

@@ -43,6 +43,40 @@ public abstract class Entity extends Renderable
     public abstract void update();
 
     //Methods
+    /**
+     * Determines the appropriate image to display based on the entity's current direction
+     * and animation frame (sprite number).
+     *
+     * @return A BufferedImage representing the current frame of the entity's animation.
+     */
+    protected BufferedImage setDisplayedImage()
+    {
+        BufferedImage displayedImage = null;
+
+        //Select the appropriate sprite based on the direction and sprite number
+        switch(direction)
+        {
+            case Direction.UP:
+                if(spriteNum == 1) { displayedImage = up1; }
+                else if(spriteNum == 2) { displayedImage = up2; }
+                break;
+            case Direction.DOWN:
+                if(spriteNum == 1) { displayedImage = down1; }
+                else if(spriteNum == 2) { displayedImage = down2; }
+                break;
+            case Direction.LEFT:
+                if(spriteNum == 1) { displayedImage = left1; }
+                else if(spriteNum == 2) { displayedImage = left2; }
+                break;
+            case Direction.RIGHT:
+                if(spriteNum == 1) { displayedImage = right1; }
+                else if(spriteNum == 2) { displayedImage = right2; }
+                break;
+        }
+
+        return displayedImage;
+    }
+
     protected void move()
     {
         switch(this.direction)

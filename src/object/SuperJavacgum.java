@@ -6,6 +6,8 @@ import java.awt.*;
 
 public class SuperJavacgum extends Object
 {
+    public static final String name = "Super Javacgum";
+
     public SuperJavacgum(GamePanel gp, int x, int y)
     {
         super(gp, 50, false);
@@ -27,5 +29,11 @@ public class SuperJavacgum extends Object
     protected void getImage()
     {
         image = setup("collectible/super_javacgum", gp.tileSize, gp.tileSize);
+    }
+
+    @Override
+    public String getName()
+    {
+        return name;
     }
 }

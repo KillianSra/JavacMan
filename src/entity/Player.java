@@ -5,7 +5,6 @@ import main.GamePanel;
 import main.KeyHandler;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class Player extends Entity
 {
@@ -43,8 +42,12 @@ public class Player extends Entity
         direction = Direction.LEFT;
         worldX = gp.tileSize * 14;
         worldY = gp.tileSize * 19;
-        speed = 1;
+        speed = 2;
         defaultSpeed = speed;
+        if(gp.restart)
+        {
+            score = 0;
+        }
     }
 
     @Override
@@ -117,40 +120,6 @@ public class Player extends Entity
         left2 = setup("player/player_left_2", gp.tileSize, gp.tileSize);
         right1 = setup("player/player_right_1", gp.tileSize, gp.tileSize);
         right2 = setup("player/player_right_2", gp.tileSize, gp.tileSize);
-    }
-
-    /**
-     * Determines the appropriate image to display based on the entity's current direction
-     * and animation frame (sprite number).
-     *
-     * @return A BufferedImage representing the current frame of the entity's animation.
-     */
-    private BufferedImage setDisplayedImage()
-    {
-        BufferedImage displayedImage = null;
-
-        //Select the appropriate sprite based on the direction and sprite number
-        switch(direction)
-        {
-            case Direction.UP:
-                if(spriteNum == 1) { displayedImage = up1; }
-                else if(spriteNum == 2) { displayedImage = up2; }
-                break;
-            case Direction.DOWN:
-                if(spriteNum == 1) { displayedImage = down1; }
-                else if(spriteNum == 2) { displayedImage = down2; }
-                break;
-            case Direction.LEFT:
-                if(spriteNum == 1) { displayedImage = left1; }
-                else if(spriteNum == 2) { displayedImage = left2; }
-                break;
-            case Direction.RIGHT:
-                if(spriteNum == 1) { displayedImage = right1; }
-                else if(spriteNum == 2) { displayedImage = right2; }
-                break;
-        }
-
-        return displayedImage;
     }
 
     @Override

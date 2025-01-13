@@ -6,6 +6,8 @@ import java.awt.*;
 
 public class Coffee extends Object
 {
+    public static final String name = "Coffee";
+
     public Coffee(GamePanel gp, int x, int y, int arrayIndex)
     {
         super(gp, 500, true);
@@ -23,9 +25,22 @@ public class Coffee extends Object
         getImage();
     }
 
+    public Coffee(GamePanel gp)
+    {
+        super(gp, 0, false);
+
+        getImage();
+    }
+
     @Override
     protected void getImage()
     {
         image = setup("collectible/coffee", gp.tileSize, gp.tileSize);
+    }
+
+    @Override
+    public String getName()
+    {
+        return name;
     }
 }

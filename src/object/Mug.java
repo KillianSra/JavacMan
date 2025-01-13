@@ -6,6 +6,8 @@ import java.awt.*;
 
 public class Mug extends Object
 {
+    public static final String name = "Mug";
+
     public Mug(GamePanel gp, int x, int y, int arrayIndex)
     {
         super(gp, 300, true);
@@ -23,9 +25,22 @@ public class Mug extends Object
         getImage();
     }
 
+    public Mug(GamePanel gp)
+    {
+        super(gp, 0, false);
+
+        getImage();
+    }
+
     @Override
     protected void getImage()
     {
         image = setup("collectible/mug", gp.tileSize, gp.tileSize);
+    }
+
+    @Override
+    public String getName()
+    {
+        return name;
     }
 }

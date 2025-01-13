@@ -37,6 +37,7 @@ public abstract class Object extends Renderable
     public boolean getHasLimitedLifeSpan() { return this.hasLimitedLifeSpan; }
     public boolean getDisplayPoint() { return this.displayPoint; }
     public boolean getDelete() { return this.delete; }
+    public abstract String getName();
 
     //Setter
     public void setDisplayPoint(boolean displayPoint) { this.displayPoint = displayPoint; }
