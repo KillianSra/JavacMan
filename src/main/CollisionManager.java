@@ -180,4 +180,30 @@ public class CollisionManager
             }
         }
     }
+
+    /**
+     * Checks for a collision between the player and a ghost entity.
+     * If a collision is detected, the player's life is reduced, and all entities are reset to their starting positions.
+     *
+     * @param player The player character whose collision with the ghost is being checked.
+     * @param ghost The ghost entity to check for collision with the player.
+     */
+    public void checkEntityCollision(Player player, Entity ghost)
+    {
+        //Check if the player's hitbox intersects with the ghost's hitbox.
+        if(player.hitbox.intersects(ghost.hitbox))
+        {
+            //Reduce the player's life by one when a collision occurs.
+            gp.player.setLife(gp.player.getLife() - 1);
+
+            //Reset the player's position to their starting position.
+            gp.player.setStartPosition();
+
+            //Reset the positions of all ghosts to their starting positions.
+            gp.redGhost.setStartPosition();
+            gp.blueGhost.setStartPosition();
+            gp.pinkGhost.setStartPosition();
+            gp.orangeGhost.setStartPosition();
+        }
+    }
 }

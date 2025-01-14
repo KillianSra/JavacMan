@@ -125,22 +125,19 @@ public class Player extends Entity
     @Override
     public void draw(Graphics2D g2)
     {
-        g2.drawImage(setDisplayedImage(), worldX, worldY, null);
+        super.draw(g2);
 
         if(gp.isDebuggingEnabled)
         {
-            drawCoordinatesAndPlayerHitbox(g2);
+            drawPlayerCoordinates(g2);
         }
 
     }
 
     @DebugOnly
-    private void drawCoordinatesAndPlayerHitbox(Graphics2D g2)
+    private void drawPlayerCoordinates(Graphics2D g2)
     {
         g2.setColor(Color.WHITE);
-
-        //Display player's hitbox
-        g2.drawRect(getHitboxX(), getHitboxY(), getHitboxWidth(), getHitboxHeight());
 
         //Display player coordinates
         g2.drawString("x: " + getWorldX(), gp.tileSize * 2, gp.tileSize * 25);

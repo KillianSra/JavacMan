@@ -1,8 +1,10 @@
 package entity;
 
+import annotation.DebugOnly;
 import main.GamePanel;
 import main.Renderable;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public abstract class Entity extends Renderable
@@ -43,6 +45,18 @@ public abstract class Entity extends Renderable
     public abstract void update();
 
     //Methods
+
+    @Override
+    public void draw(Graphics2D g2)
+    {
+        g2.drawImage(setDisplayedImage(), worldX, worldY, null);
+
+        if(gp.isDebuggingEnabled)
+        {
+            drawEntityHitbox(g2);
+        }
+    }
+
     /**
      * Determines the appropriate image to display based on the entity's current direction
      * and animation frame (sprite number).
@@ -90,5 +104,14 @@ public abstract class Entity extends Renderable
         //Synchronize hitbox with entity position
         hitbox.x = worldX;
         hitbox.y = worldY;
+    }
+
+    @DebugOnly
+    private void drawEntityHitbox(Graphics2D g2)
+    {
+        g2.setColor(Color.WHITE);
+
+        //Display entity's hitbox
+        g2.drawRect(getHitboxX(), getHitboxY(), getHitboxWidth(), getHitboxHeight());
     }
 }

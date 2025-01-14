@@ -1,7 +1,6 @@
 package main;
 
-import entity.Player;
-import entity.PlayerAvatar;
+import entity.*;
 import object.Object;
 import tile.TileManager;
 
@@ -44,8 +43,11 @@ public class GamePanel extends JPanel implements Runnable
 
     //Entity
     public Player player = new Player(this, keyHandler);
-    //Animation in the title screen
     PlayerAvatar playerAvatar = new PlayerAvatar(this);
+    public RedGhost redGhost = new RedGhost(this);
+    public BlueGhost blueGhost = new BlueGhost(this);
+    public PinkGhost pinkGhost = new PinkGhost(this);
+    public OrangeGhost orangeGhost = new OrangeGhost(this);
 
     //Object
     public Object[] objects = new Object[167];
@@ -151,6 +153,10 @@ public class GamePanel extends JPanel implements Runnable
             {
                 setupGame();
                 player.setStartPosition();
+                redGhost.setStartPosition();
+                blueGhost.setStartPosition();
+                pinkGhost.setStartPosition();
+                orangeGhost.setStartPosition();
                 keyHandler.reset();
                 javacgumCollected = 0;
                 nbSpecialCollectible = 2;
@@ -158,6 +164,10 @@ public class GamePanel extends JPanel implements Runnable
             }
             else
             {
+                redGhost.update();
+                blueGhost.update();
+                pinkGhost.update();
+                orangeGhost.update();
                 player.update();
 
                 //Handle special collectibles spawn
@@ -223,6 +233,12 @@ public class GamePanel extends JPanel implements Runnable
                     object.draw(g2);
                 }
             }
+
+            //Draw ghosts
+            this.redGhost.draw(g2);
+            this.blueGhost.draw(g2);
+            this.pinkGhost.draw(g2);
+            this.orangeGhost.draw(g2);
 
             //Draw the player
             this.player.draw(g2);

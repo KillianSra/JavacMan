@@ -57,10 +57,4 @@ public class PlayerAvatar extends Entity
         right1 = setup("player/player_right_1", gp.tileSize * 3, gp.tileSize * 3);
         right2 = setup("player/player_right_2", gp.tileSize * 3, gp.tileSize * 3);
     }
-
-    @Override
-    public void draw(Graphics2D g2)
-    {
-        g2.drawImage(setDisplayedImage(), worldX, worldY, null);
-    }
 }
