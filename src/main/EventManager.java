@@ -1,8 +1,8 @@
 package main;
 
 import annotation.DebugOnly;
-import entity.Direction;
-import entity.Entity;
+import entity.enums.Direction;
+import entity.abstracts.Entity;
 
 import java.awt.*;
 

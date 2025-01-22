@@ -1,7 +1,7 @@
 package main;
 
-import entity.Direction;
-import entity.Entity;
+import entity.enums.Direction;
+import entity.abstracts.Entity;
 import entity.Player;
 import object.Javacgum;
 import object.Object;

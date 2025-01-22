@@ -1,5 +1,8 @@
 package entity;
 
+import entity.abstracts.Entity;
+import entity.enums.Direction;
+import entity.interfaces.Ghost;
 import main.GamePanel;
 
 import java.awt.*;

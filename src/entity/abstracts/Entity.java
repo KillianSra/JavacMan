@@ -1,6 +1,8 @@
-package entity;
+package entity.abstracts;
 
 import annotation.DebugOnly;
+import entity.enums.Direction;
+import entity.Player;
 import main.GamePanel;
 import main.Renderable;
 

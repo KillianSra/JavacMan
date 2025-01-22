@@ -1,6 +1,8 @@
 package entity;
 
 import annotation.DebugOnly;
+import entity.abstracts.Entity;
+import entity.enums.Direction;
 import main.GamePanel;
 import main.KeyHandler;
 
