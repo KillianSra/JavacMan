@@ -106,6 +106,60 @@ public abstract class Entity extends Renderable
         hitbox.y = worldY;
     }
 
+    /**
+     * Calculates and updates the entity's movement direction to follow the shortest path
+     * toward the specified goal position on the grid.
+     *
+     * @param goalCol the column index of the goal position on the grid
+     * @param goalRow the row index of the goal position on the grid
+     */
+    protected void searchPath(int goalCol, int goalRow)
+    {
+        int startCol = worldX / gp.tileSize;
+        int startRow = worldY / gp.tileSize;
+
+        gp.pathfinder.setNodes(startCol, startRow, goalCol, goalRow);
+
+        if(gp.pathfinder.search())
+        {
+            //Next worldX & worldY
+            int nextX = gp.pathfinder.pathList.getFirst().col * gp.tileSize;
+            int nextY = gp.pathfinder.pathList.getFirst().row * gp.tileSize;
+
+            if(hitbox.x > nextX && hitbox.y == nextY)
+            {
+                direction = Direction.LEFT;
+            }
+            else if(hitbox.x < nextX && hitbox.y == nextY)
+            {
+                direction = Direction.RIGHT;
+            }
+            else if(hitbox.x == nextX && hitbox.y < nextY)
+            {
+                direction = Direction.DOWN;
+            }
+            else if(hitbox.x == nextX && hitbox.y > nextY)
+            {
+                direction = Direction.UP;
+            }
+        }
+    }
+
+    /**
+     * Calculates the distance (in tiles) between this entity
+     * and the player based on their world coordinates.
+     *
+     * @param player The player entity used to calculate the distance.
+     * @return The distance in tiles between this entity and the player.
+     */
+    protected int getTileDistanceFromPlayer(Player player)
+    {
+        int xDist = Math.abs(worldX - player.worldX);
+        int yDist = Math.abs(worldY - player.worldY);
+
+        return (xDist + yDist) / gp.tileSize;
+    }
+
     @DebugOnly
     private void drawEntityHitbox(Graphics2D g2)
     {

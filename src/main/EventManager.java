@@ -2,6 +2,7 @@ package main;
 
 import annotation.DebugOnly;
 import entity.Direction;
+import entity.Entity;
 
 import java.awt.*;
 
@@ -48,33 +49,34 @@ public class EventManager
     }
 
     /**
-     * Checks for specific events based on the player's interaction with triggers.
+     * Checks for specific events based on the targeted entity's interaction with triggers.
      */
-    public void checkEvent()
+    public void checkEvent(Entity entity)
     {
-        if(hit(0, Direction.LEFT)) { teleport(gp.tileSize * 24, gp.tileSize * 9); }
-        else if(hit(1, Direction.LEFT)) { teleport(gp.tileSize * 24, gp.tileSize * 15); }
-        else if(hit(2, Direction.RIGHT)) { teleport(gp.tileSize * 4, gp.tileSize * 9); }
-        else if(hit(3, Direction.RIGHT)) { teleport(gp.tileSize * 4, gp.tileSize * 15); }
+        if(hit(entity, 0, Direction.LEFT)) { teleport(entity, gp.tileSize * 24, gp.tileSize * 9); }
+        else if(hit(entity, 1, Direction.LEFT)) { teleport(entity, gp.tileSize * 24, gp.tileSize * 15); }
+        else if(hit(entity, 2, Direction.RIGHT)) { teleport(entity, gp.tileSize * 4, gp.tileSize * 9); }
+        else if(hit(entity, 3, Direction.RIGHT)) { teleport(entity, gp.tileSize * 4, gp.tileSize * 15); }
     }
 
     /**
-     * Checks if the player has triggered a specific event based on their position and direction.
+     * Checks if the targeted entity has triggered a specific event based on their position and direction.
      *
+     * @param entity the targeted entity
      * @param triggerIndex Index of the event rectangle to check against.
      * @param requiredDirection The direction the player must face to trigger the event.
      * @return true if the event is triggered; false otherwise.
      */
-    private boolean hit(int triggerIndex, Direction requiredDirection)
+    private boolean hit(Entity entity, int triggerIndex, Direction requiredDirection)
     {
         boolean hit = false;
 
-        //Get the player's hitbox and check if it intersects with the event rectangle at the specified index.
-        Rectangle playerHitbox = gp.player.getHitbox();
-        if(playerHitbox.intersects(eventRectangles[triggerIndex]))
+        //Get the entity's hitbox and check if it intersects with the event rectangle at the specified index.
+        Rectangle entityHitbox = entity.getHitbox();
+        if(entityHitbox.intersects(eventRectangles[triggerIndex]))
         {
             //Ensure the player is facing the required direction to activate the event.
-            if(gp.player.getDirection() == requiredDirection)
+            if(entity.getDirection() == requiredDirection)
             {
                 hit = true;
             }
@@ -86,13 +88,14 @@ public class EventManager
     /**
      * Teleports the player to a specific location on the map.
      *
-     * @param x The x-coordinate to teleport the player to.
-     * @param y The y-coordinate to teleport the player to.
+     * @param entity The entity to be teleported
+     * @param x The x-coordinate to teleport the entity to.
+     * @param y The y-coordinate to teleport the entity to.
      */
-    private void teleport(int x, int y)
+    private void teleport(Entity entity, int x, int y)
     {
-        gp.player.setWorldX(x);
-        gp.player.setWorldY(y);
+        entity.setWorldX(x);
+        entity.setWorldY(y);
     }
 
     @DebugOnly

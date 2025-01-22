@@ -3,13 +3,9 @@ package entity;
 import main.GamePanel;
 
 import java.awt.*;
-import java.util.Random;
 
-public class BlueGhost extends Entity
+public class BlueGhost extends Entity implements Ghost
 {
-    //Counter
-    int directionCounter = 0;
-
     public BlueGhost(GamePanel gp)
     {
         super(gp);
@@ -38,31 +34,55 @@ public class BlueGhost extends Entity
     public void update()
     {
         //Check event
-        gp.eventManager.checkEvent();
+        gp.eventManager.checkEvent(this);
 
-        if(directionCounter == 100)
+        int refPointX = gp.player.getWorldX();
+        int refPointY = gp.player.getWorldY();
+        switch(gp.player.getDirection())
         {
-            int indexDirection = new Random().nextInt(4);
-            switch(indexDirection)
-            {
-                case 0: setDirection(Direction.UP); break;
-                case 1: setDirection(Direction.DOWN); break;
-                case 2: setDirection(Direction.LEFT); break;
-                case 3: setDirection(Direction.RIGHT); break;
-            }
-            directionCounter = 0;
+            case UP: refPointY -= gp.tileSize * 2; break;
+            case DOWN: refPointY += gp.tileSize * 2; break;
+            case LEFT: refPointX -= gp.tileSize * 2; break;
+            case RIGHT: refPointX += gp.tileSize * 2; break;
         }
-        directionCounter++;
+
+        int diffX = refPointX - gp.redGhost.getWorldX();
+        int diffY = refPointY - gp.redGhost.getWorldY();
+
+        int goalX = gp.redGhost.getWorldX() + diffX * 2;
+        int goalY = gp.redGhost.getWorldY() + diffY * 2;
+
+        int goalCol = goalX / gp.tileSize;
+        int goalRow = goalY / gp.tileSize;
+
+        if(goalCol > 24)
+        {
+            goalCol = 24;
+        }
+        else if(goalCol < 4)
+        {
+            goalCol = 4;
+        }
+        if(goalRow > 23)
+        {
+            goalRow = 23;
+        }
+        else if(goalRow < 4)
+        {
+            goalRow = 4;
+        }
+
+        searchPath(goalCol, goalRow);
+
+        //Check collisions
+        gp.collisionManager.checkTileCollision(this);
+        gp.collisionManager.checkEntityCollision(gp.player, this);
 
         if(!isCollision())
         {
             //If there is no collision, move in the new direction
             super.move();
         }
-
-        //Check collisions
-        gp.collisionManager.checkTileCollision(this);
-        gp.collisionManager.checkEntityCollision(gp.player, this);
 
         //Handle ghost's sprite animation
         spriteCounter++;
@@ -91,5 +111,11 @@ public class BlueGhost extends Entity
         left2 = setup("blue/blue_left_2", gp.tileSize, gp.tileSize);
         right1 = setup("blue/blue_right_1", gp.tileSize, gp.tileSize);
         right2 = setup("blue/blue_right_2", gp.tileSize, gp.tileSize);
+    }
+
+    @Override
+    public void scatterMode()
+    {
+        //TODO
     }
 }

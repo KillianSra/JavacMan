@@ -3,13 +3,9 @@ package entity;
 import main.GamePanel;
 
 import java.awt.*;
-import java.util.Random;
 
-public class RedGhost extends Entity
+public class RedGhost extends Entity implements Ghost
 {
-    //Counter
-    int directionCounter = 0;
-
     public RedGhost(GamePanel gp)
     {
         super(gp);
@@ -38,21 +34,11 @@ public class RedGhost extends Entity
     public void update()
     {
         //Check event
-        gp.eventManager.checkEvent();
+        gp.eventManager.checkEvent(this);
 
-        if(directionCounter == 100)
-        {
-            int indexDirection = new Random().nextInt(4);
-            switch(indexDirection)
-            {
-                case 0: setDirection(Direction.UP); break;
-                case 1: setDirection(Direction.DOWN); break;
-                case 2: setDirection(Direction.LEFT); break;
-                case 3: setDirection(Direction.RIGHT); break;
-            }
-            directionCounter = 0;
-        }
-        directionCounter++;
+        int goalCol = gp.player.getWorldX() / gp.tileSize;
+        int goalRow = gp.player.getWorldY() / gp.tileSize;
+        searchPath(goalCol, goalRow);
 
         if(!isCollision())
         {
@@ -91,5 +77,11 @@ public class RedGhost extends Entity
         left2 = setup("red/red_left_2", gp.tileSize, gp.tileSize);
         right1 = setup("red/red_right_1", gp.tileSize, gp.tileSize);
         right2 = setup("red/red_right_2", gp.tileSize, gp.tileSize);
+    }
+
+    @Override
+    public void scatterMode()
+    {
+        //TODO
     }
 }

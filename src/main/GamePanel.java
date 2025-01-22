@@ -1,5 +1,6 @@
 package main;
 
+import ai.Pathfinder;
 import entity.*;
 import object.Object;
 import tile.TileManager;
@@ -18,6 +19,10 @@ public class GamePanel extends JPanel implements Runnable
     public final int maxScreenRow = 28;
     public final int screenHeight = tileSize * maxScreenRow;    //720 pixels
     public final int screenWidth = tileSize * maxScreenCol;     //624 pixels
+    public final int minCol = 4;
+    public final int minRow = 4;
+    public final int maxCol = 24;
+    public final int maxRow = 23;
 
     //System
     public TileManager tileManager = new TileManager(this);
@@ -25,6 +30,7 @@ public class GamePanel extends JPanel implements Runnable
     public CollisionManager collisionManager = new CollisionManager(this);
     public EventManager eventManager = new EventManager(this);
     public AssetSetter assetSetter = new AssetSetter(this);
+    public Pathfinder pathfinder = new Pathfinder(this);
     Thread gameThread;
 
     //State
@@ -133,7 +139,7 @@ public class GamePanel extends JPanel implements Runnable
             //DEBUG
             if(timer >= 1000000000)
             {
-                System.out.println("FPS: " + drawCount);
+                //System.out.println("FPS: " + drawCount);
                 drawCount = 0;
                 timer = 0;
             }

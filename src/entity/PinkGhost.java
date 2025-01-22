@@ -3,13 +3,9 @@ package entity;
 import main.GamePanel;
 
 import java.awt.*;
-import java.util.Random;
 
-public class PinkGhost extends Entity
+public class PinkGhost extends Entity implements Ghost
 {
-    //Counter
-    int directionCounter = 0;
-
     public PinkGhost(GamePanel gp)
     {
         super(gp);
@@ -38,21 +34,44 @@ public class PinkGhost extends Entity
     public void update()
     {
         //Check event
-        gp.eventManager.checkEvent();
+        gp.eventManager.checkEvent(this);
 
-        if(directionCounter == 100)
+        int goalCol = gp.player.getWorldX() / gp.tileSize;
+        int goalRow = gp.player.getWorldY() / gp.tileSize;
+
+        switch(gp.player.getDirection())
         {
-            int indexDirection = new Random().nextInt(4);
-            switch(indexDirection)
-            {
-                case 0: setDirection(Direction.UP); break;
-                case 1: setDirection(Direction.DOWN); break;
-                case 2: setDirection(Direction.LEFT); break;
-                case 3: setDirection(Direction.RIGHT); break;
-            }
-            directionCounter = 0;
+            case Direction.UP:
+                goalRow -= 4;
+                if(goalRow < gp.minRow)
+                {
+                    goalRow = gp.minRow;
+                }
+                break;
+            case Direction.DOWN:
+                goalRow += 4;
+                if(goalRow > gp.maxRow)
+                {
+                    goalRow = gp.maxRow;
+                }
+                break;
+            case Direction.LEFT:
+                goalCol -= 4;
+                if(goalCol < gp.minCol)
+                {
+                    goalCol = gp.minCol;
+                }
+                break;
+            case Direction.RIGHT:
+                goalCol += 4;
+                if(goalCol > gp.maxRow)
+                {
+                    goalCol = gp.maxCol;
+                }
+                break;
         }
-        directionCounter++;
+
+        searchPath(goalCol, goalRow);
 
         if(!isCollision())
         {
@@ -91,5 +110,11 @@ public class PinkGhost extends Entity
         left2 = setup("pink/pink_left_2", gp.tileSize, gp.tileSize);
         right1 = setup("pink/pink_right_1", gp.tileSize, gp.tileSize);
         right2 = setup("pink/pink_right_2", gp.tileSize, gp.tileSize);
+    }
+
+    @Override
+    public void scatterMode()
+    {
+        //TODO
     }
 }

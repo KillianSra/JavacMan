@@ -3,12 +3,11 @@ package entity;
 import main.GamePanel;
 
 import java.awt.*;
-import java.util.Random;
 
-public class OrangeGhost extends Entity
+public class OrangeGhost extends Entity implements Ghost
 {
-    //Counter
-    int directionCounter = 0;
+    private boolean scatterModeOn = false;
+    private int scatterPhase = 0;
 
     public OrangeGhost(GamePanel gp)
     {
@@ -38,31 +37,49 @@ public class OrangeGhost extends Entity
     public void update()
     {
         //Check event
-        gp.eventManager.checkEvent();
+        gp.eventManager.checkEvent(this);
 
-        if(directionCounter == 100)
+        //If the orange close is close enough from the player, start chasing them.
+        if(getTileDistanceFromPlayer(gp.player) < 8)
         {
-            int indexDirection = new Random().nextInt(4);
-            switch(indexDirection)
-            {
-                case 0: setDirection(Direction.UP); break;
-                case 1: setDirection(Direction.DOWN); break;
-                case 2: setDirection(Direction.LEFT); break;
-                case 3: setDirection(Direction.RIGHT); break;
-            }
-            directionCounter = 0;
+            //Reset scatter mode properties
+            scatterModeOn = false;
+            scatterPhase = 0;
+
+            //Finds the best path to reach the player
+            int goalCol = gp.player.getWorldX() / gp.tileSize;
+            int goalRow = gp.player.getWorldY() / gp.tileSize;
+            searchPath(goalCol, goalRow);
         }
-        directionCounter++;
-
-        if(!isCollision())
+        //The ghost is too far from the player
+        else
         {
-            //If there is no collision, move in the new direction
-            super.move();
+            //The ghost heads to the bottom left corner
+            if((worldX != 96 || worldY != 552) && !scatterModeOn)
+            {
+                //Reach the bottom-left corner
+                searchPath(4, 23);
+            }
+            //The ghost has reached the bottom left corner, it goes into scatter mode
+            else
+            {
+                scatterModeOn = true;
+            }
+        }
+
+        if(scatterModeOn)
+        {
+            scatterMode();
         }
 
         //Check collisions
         gp.collisionManager.checkTileCollision(this);
         gp.collisionManager.checkEntityCollision(gp.player, this);
+
+        if(!isCollision())
+        {
+            super.move();
+        }
 
         //Handle ghost's sprite animation
         spriteCounter++;
@@ -91,5 +108,70 @@ public class OrangeGhost extends Entity
         left2 = setup("orange/orange_left_2", gp.tileSize, gp.tileSize);
         right1 = setup("orange/orange_right_1", gp.tileSize, gp.tileSize);
         right2 = setup("orange/orange_right_2", gp.tileSize, gp.tileSize);
+    }
+
+    @Override
+    public void scatterMode()
+    {
+        if(scatterPhase == 0)
+        {
+            this.direction = Direction.RIGHT;
+            if(worldX == 240)
+            {
+                worldX -= speed;
+                hitbox.x -= speed;
+                scatterPhase++;
+            }
+        }
+        else if (scatterPhase == 1)
+        {
+            this.direction = Direction.UP;
+            if(worldY == 504)
+            {
+                worldY += speed;
+                hitbox.y += speed;
+                scatterPhase++;
+            }
+        }
+        else if (scatterPhase == 2)
+        {
+            this.direction = Direction.RIGHT;
+            if(worldX == 312)
+            {
+                worldX -= speed;
+                hitbox.x -= speed;
+                scatterPhase++;
+            }
+        }
+        else if (scatterPhase == 3)
+        {
+            this.direction = Direction.UP;
+            if(worldY == 456)
+            {
+                worldY += speed;
+                hitbox.y += speed;
+                scatterPhase++;
+            }
+        }
+        else if (scatterPhase == 4)
+        {
+            this.direction = Direction.LEFT;
+            if(worldX == 96)
+            {
+                worldX += speed;
+                hitbox.x += speed;
+                scatterPhase++;
+            }
+        }
+        else if (scatterPhase == 5)
+        {
+            this.direction = Direction.DOWN;
+            if(worldY == 552)
+            {
+                worldY -= speed;
+                hitbox.y -= speed;
+                scatterPhase = 0;
+            }
+        }
     }
 }

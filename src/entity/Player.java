@@ -54,7 +54,7 @@ public class Player extends Entity
     public void update()
     {
         //Check event
-        gp.eventManager.checkEvent();
+        gp.eventManager.checkEvent(this);
 
         //Store the current direction
         Direction previousDirection = getDirection();
