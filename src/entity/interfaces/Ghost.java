@@ -10,4 +10,9 @@ public interface Ghost
      * to the next phase upon reaching the designated waypoint.
      */
     void scatterMode();
+
+    /**
+     * Executes the pathfinding logic for the ghost entity.
+     */
+    void pathfinding();
 }

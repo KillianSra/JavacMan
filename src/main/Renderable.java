@@ -9,10 +9,14 @@ import java.util.Objects;
 public abstract class Renderable
 {
     protected Rectangle hitbox;
+    public final int POINT_DISPLAYED_TIME = 60;     //1 second
 
     //State
-    protected int worldX, worldY;
+    protected int worldX, worldY = -1;
     protected boolean collision;
+
+    //Counter
+    protected int displayPointsWonCounter = 0;
 
     //Getters
     public Rectangle getHitbox() { return this.hitbox; }
@@ -42,6 +46,12 @@ public abstract class Renderable
      * @param g2 the Graphics2D object used for drawing.
      */
     public abstract void draw(Graphics2D g2);
+
+    /**
+     * Tracks the display duration of points on the screen.
+     * Increments the counter until it reaches the predefined limit.
+     */
+    public abstract void checkDisplayedPoint();
 
     /**
      * Loads an image from the given path, scales it to the specified dimensions, and returns the resulting BufferedImage.

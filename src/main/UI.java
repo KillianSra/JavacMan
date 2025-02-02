@@ -1,5 +1,6 @@
 package main;
 
+import entity.abstracts.Entity;
 import object.Object;
 
 import java.awt.*;
@@ -156,6 +157,41 @@ public class UI
     }
 
     /**
+     * Draws the points won when the player eats a ghost.
+     *
+     * @param g2 The Graphics2D object used to render the points on the screen.
+     */
+    private void drawPointsWon(Graphics2D g2)
+    {
+        g2.setColor(Color.WHITE);
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 12));
+
+
+        String points = String.valueOf(Entity.calculatePointsWon());
+
+        if(gp.redGhost.getDisplayPointsWon())
+        {
+            //Display points earned at the location where the player ate the ghost
+            g2.drawString(points, gp.redGhost.getWorldXDead(), gp.redGhost.getWorldYDead() + (gp.tileSize - g2.getFont().getSize() / 2));
+        }
+        if(gp.blueGhost.getDisplayPointsWon())
+        {
+            //Display points earned at the location where the player ate the ghost
+            g2.drawString(points, gp.blueGhost.getWorldXDead(), gp.blueGhost.getWorldYDead() + (gp.tileSize - g2.getFont().getSize() / 2));
+        }
+        if(gp.pinkGhost.getDisplayPointsWon())
+        {
+            //Display points earned at the location where the player ate the ghost
+            g2.drawString(points, gp.pinkGhost.getWorldXDead(), gp.pinkGhost.getWorldYDead() + (gp.tileSize - g2.getFont().getSize() / 2));
+        }
+        if(gp.orangeGhost.getDisplayPointsWon())
+        {
+            //Display points earned at the location where the player ate the ghost
+            g2.drawString(points, gp.orangeGhost.getWorldXDead(), gp.orangeGhost.getWorldYDead() + (gp.tileSize - g2.getFont().getSize() / 2));
+        }
+    }
+
+    /**
      * Calculates the x-coordinate to center the given text on the screen based on the position factor.
      *
      * @param text The text to be centered
@@ -183,6 +219,7 @@ public class UI
         if(gp.state == gp.playState)
         {
             drawHUD(g2);
+            drawPointsWon(g2);
         }
         //If the game is in the pause state, draw the pause menu
         else if(gp.state == gp.pauseState)

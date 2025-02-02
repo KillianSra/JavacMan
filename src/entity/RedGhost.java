@@ -2,13 +2,19 @@ package entity;
 
 import entity.abstracts.Entity;
 import entity.enums.Direction;
+import entity.enums.Mode;
 import entity.interfaces.Ghost;
 import main.GamePanel;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class RedGhost extends Entity implements Ghost
 {
+    private final int spawnCol = 14;
+    private final int spawnRow = 11;
+
     public RedGhost(GamePanel gp)
     {
         super(gp);
@@ -24,13 +30,30 @@ public class RedGhost extends Entity implements Ghost
     public void setStartPosition()
     {
         direction = Direction.LEFT;
-        worldX = gp.tileSize * 14;
-        worldY = gp.tileSize * 11;
+        worldX = gp.tileSize * spawnCol;
+        worldY = gp.tileSize * spawnRow;
         speed = 2;
+        defaultSpeed = speed;
 
         //Synchronize hitbox with entity position
         hitbox.x = worldX;
         hitbox.y = worldY;
+    }
+
+    @Override
+    public void pathfinding()
+    {
+        if(mode == Mode.EATEN)
+        {
+            eatenBehavior(spawnCol, spawnRow);
+        }
+        //A* algorithm
+        else
+        {
+            int goalCol = gp.player.getWorldX() / gp.tileSize;
+            int goalRow = gp.player.getWorldY() / gp.tileSize;
+            searchPath(goalCol, goalRow);
+        }
     }
 
     @Override
@@ -39,9 +62,31 @@ public class RedGhost extends Entity implements Ghost
         //Check event
         gp.eventManager.checkEvent(this);
 
-        int goalCol = gp.player.getWorldX() / gp.tileSize;
-        int goalRow = gp.player.getWorldY() / gp.tileSize;
-        searchPath(goalCol, goalRow);
+        //Pathfinding
+        if(mode == Mode.CHASE || mode == Mode.EATEN)
+        {
+            pathfinding();
+        }
+        else if(mode == Mode.FRIGHTENED && frightenedCounter == 0)
+        {
+            this.direction = getOppositeDirection(this);
+            speed = 1;
+        }
+        else if(worldX % gp.tileSize == 0 && worldY % gp.tileSize == 0)
+        {
+            if(changeDirectionCounter == 1)
+            {
+                ArrayList<Direction> possibleDirections = possibleDirections(this);
+                this.direction = possibleDirections.get(new Random().nextInt(possibleDirections.size()));
+                changeDirectionCounter = 0;
+            }
+            else
+            {
+                changeDirectionCounter++;
+            }
+        }
+
+        checkFrightened();
 
         if(!isCollision())
         {
@@ -52,6 +97,11 @@ public class RedGhost extends Entity implements Ghost
         //Check collisions
         gp.collisionManager.checkTileCollision(this);
         gp.collisionManager.checkEntityCollision(gp.player, this);
+
+        if(displayPointsWon)
+        {
+            checkDisplayedPoint();
+        }
 
         //Handle ghost's sprite animation
         spriteCounter++;

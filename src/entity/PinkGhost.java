@@ -2,13 +2,19 @@ package entity;
 
 import entity.abstracts.Entity;
 import entity.enums.Direction;
+import entity.enums.Mode;
 import entity.interfaces.Ghost;
 import main.GamePanel;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class PinkGhost extends Entity implements Ghost
 {
+    private final int spawnCol = 13;
+    private final int spawnRow = 13;
+
     public PinkGhost(GamePanel gp)
     {
         super(gp);
@@ -24,13 +30,63 @@ public class PinkGhost extends Entity implements Ghost
     public void setStartPosition()
     {
         direction = Direction.LEFT;
-        worldX = gp.tileSize * 13;
-        worldY = gp.tileSize * 13;
+        worldX = gp.tileSize * spawnCol;
+        worldY = gp.tileSize * spawnRow;
         speed = 2;
+        defaultSpeed = speed;
 
         //Synchronize hitbox with entity position
         hitbox.x = worldX;
         hitbox.y = worldY;
+    }
+
+    @Override
+    public void pathfinding()
+    {
+        if(mode == Mode.EATEN)
+        {
+            eatenBehavior(spawnCol, spawnRow);
+        }
+        //A* algorithm
+        else
+        {
+            int goalCol = gp.player.getWorldX() / gp.tileSize;
+            int goalRow = gp.player.getWorldY() / gp.tileSize;
+
+            switch(gp.player.getDirection())
+            {
+                case Direction.UP:
+                    goalRow -= 4;
+                    if(goalRow < gp.minRow)
+                    {
+                        goalRow = gp.minRow;
+                    }
+                    break;
+                case Direction.DOWN:
+                    goalRow += 4;
+                    if(goalRow > gp.maxRow)
+                    {
+                        goalRow = gp.maxRow;
+                    }
+                    break;
+                case Direction.LEFT:
+                    goalCol -= 4;
+                    if(goalCol < gp.minCol)
+                    {
+                        goalCol = gp.minCol;
+                    }
+                    break;
+                case Direction.RIGHT:
+                    goalCol += 4;
+                    if(goalCol > gp.maxRow)
+                    {
+                        goalCol = gp.maxCol;
+                    }
+                    break;
+            }
+
+            searchPath(goalCol, goalRow);
+        }
     }
 
     @Override
@@ -39,42 +95,31 @@ public class PinkGhost extends Entity implements Ghost
         //Check event
         gp.eventManager.checkEvent(this);
 
-        int goalCol = gp.player.getWorldX() / gp.tileSize;
-        int goalRow = gp.player.getWorldY() / gp.tileSize;
-
-        switch(gp.player.getDirection())
+        //Pathfinding
+        if(mode == Mode.CHASE || mode == Mode.EATEN)
         {
-            case Direction.UP:
-                goalRow -= 4;
-                if(goalRow < gp.minRow)
-                {
-                    goalRow = gp.minRow;
-                }
-                break;
-            case Direction.DOWN:
-                goalRow += 4;
-                if(goalRow > gp.maxRow)
-                {
-                    goalRow = gp.maxRow;
-                }
-                break;
-            case Direction.LEFT:
-                goalCol -= 4;
-                if(goalCol < gp.minCol)
-                {
-                    goalCol = gp.minCol;
-                }
-                break;
-            case Direction.RIGHT:
-                goalCol += 4;
-                if(goalCol > gp.maxRow)
-                {
-                    goalCol = gp.maxCol;
-                }
-                break;
+            pathfinding();
+        }
+        else if(mode == Mode.FRIGHTENED && frightenedCounter == 0)
+        {
+            this.direction = getOppositeDirection(this);
+            speed = 1;
+        }
+        else if(worldX % gp.tileSize == 0 && worldY % gp.tileSize == 0)
+        {
+            if(changeDirectionCounter == 1)
+            {
+                ArrayList<Direction> possibleDirections = possibleDirections(this);
+                this.direction = possibleDirections.get(new Random().nextInt(possibleDirections.size()));
+                changeDirectionCounter = 0;
+            }
+            else
+            {
+                changeDirectionCounter++;
+            }
         }
 
-        searchPath(goalCol, goalRow);
+        checkFrightened();
 
         if(!isCollision())
         {
@@ -85,6 +130,12 @@ public class PinkGhost extends Entity implements Ghost
         //Check collisions
         gp.collisionManager.checkTileCollision(this);
         gp.collisionManager.checkEntityCollision(gp.player, this);
+
+        //Manage the display of points
+        if(displayPointsWon)
+        {
+            checkDisplayedPoint();
+        }
 
         //Handle ghost's sprite animation
         spriteCounter++;
