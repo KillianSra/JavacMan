@@ -26,7 +26,7 @@ public class SuperJavacgum extends Object
 
     //Method
     @Override
-    protected void getImage()
+    public void getImage()
     {
         image = setup("collectible/super_javacgum", gp.tileSize, gp.tileSize);
     }

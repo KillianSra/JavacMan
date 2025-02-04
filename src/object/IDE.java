@@ -33,7 +33,7 @@ public class IDE extends Object
     }
 
     @Override
-    protected void getImage()
+    public void getImage()
     {
         image = setup("collectible/eclipse", gp.tileSize, gp.tileSize);
     }

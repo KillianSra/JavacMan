@@ -33,7 +33,7 @@ public class Lightbulb extends Object
     }
 
     @Override
-    protected void getImage()
+    public void getImage()
     {
         image = setup("collectible/lightbulb", gp.tileSize, gp.tileSize);
     }

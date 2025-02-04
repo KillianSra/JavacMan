@@ -33,7 +33,7 @@ public class Computer extends Object
     }
 
     @Override
-    protected void getImage()
+    public void getImage()
     {
         image = setup("collectible/computer", gp.tileSize, gp.tileSize);
     }

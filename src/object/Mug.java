@@ -33,7 +33,7 @@ public class Mug extends Object
     }
 
     @Override
-    protected void getImage()
+    public void getImage()
     {
         image = setup("collectible/mug", gp.tileSize, gp.tileSize);
     }

@@ -1,7 +1,7 @@
 package main;
 
-import entity.Player;
-import entity.PlayerAvatar;
+import ai.Pathfinder;
+import entity.*;
 import object.Object;
 import tile.TileManager;
 
@@ -19,6 +19,10 @@ public class GamePanel extends JPanel implements Runnable
     public final int maxScreenRow = 28;
     public final int screenHeight = tileSize * maxScreenRow;    //720 pixels
     public final int screenWidth = tileSize * maxScreenCol;     //624 pixels
+    public final int minCol = 4;
+    public final int minRow = 4;
+    public final int maxCol = 24;
+    public final int maxRow = 23;
 
     //System
     public TileManager tileManager = new TileManager(this);
@@ -26,6 +30,7 @@ public class GamePanel extends JPanel implements Runnable
     public CollisionManager collisionManager = new CollisionManager(this);
     public EventManager eventManager = new EventManager(this);
     public AssetSetter assetSetter = new AssetSetter(this);
+    public Pathfinder pathfinder = new Pathfinder(this);
     Thread gameThread;
 
     //State
@@ -44,8 +49,11 @@ public class GamePanel extends JPanel implements Runnable
 
     //Entity
     public Player player = new Player(this, keyHandler);
-    //Animation in the title screen
     PlayerAvatar playerAvatar = new PlayerAvatar(this);
+    public RedGhost redGhost = new RedGhost(this);
+    public BlueGhost blueGhost = new BlueGhost(this);
+    public PinkGhost pinkGhost = new PinkGhost(this);
+    public OrangeGhost orangeGhost = new OrangeGhost(this);
 
     //Object
     public Object[] objects = new Object[167];
@@ -131,7 +139,7 @@ public class GamePanel extends JPanel implements Runnable
             //DEBUG
             if(timer >= 1000000000)
             {
-                System.out.println("FPS: " + drawCount);
+                //System.out.println("FPS: " + drawCount);
                 drawCount = 0;
                 timer = 0;
             }
@@ -151,6 +159,10 @@ public class GamePanel extends JPanel implements Runnable
             {
                 setupGame();
                 player.setStartPosition();
+                redGhost.setStartPosition();
+                blueGhost.setStartPosition();
+                pinkGhost.setStartPosition();
+                orangeGhost.setStartPosition();
                 keyHandler.reset();
                 javacgumCollected = 0;
                 nbSpecialCollectible = 2;
@@ -158,6 +170,10 @@ public class GamePanel extends JPanel implements Runnable
             }
             else
             {
+                redGhost.update();
+                blueGhost.update();
+                pinkGhost.update();
+                orangeGhost.update();
                 player.update();
 
                 //Handle special collectibles spawn
@@ -223,6 +239,12 @@ public class GamePanel extends JPanel implements Runnable
                     object.draw(g2);
                 }
             }
+
+            //Draw ghosts
+            this.redGhost.draw(g2);
+            this.blueGhost.draw(g2);
+            this.pinkGhost.draw(g2);
+            this.orangeGhost.draw(g2);
 
             //Draw the player
             this.player.draw(g2);

@@ -1,5 +1,6 @@
 package tile;
 
+import annotation.DebugOnly;
 import main.GamePanel;
 import main.Tools;
 
@@ -164,5 +165,23 @@ public class TileManager
                 worldRow++;
             }
         }
+
+        if(gp.isDebuggingEnabled)
+        {
+            displayPath(g2);
+        }
+    }
+
+    @DebugOnly
+    private void displayPath(Graphics2D g2)
+    {
+        g2.setColor(new Color(255, 0, 0, 70));
+
+        for(int i = 0; i < gp.pathfinder.pathList.size(); i++)
+        {
+            g2.fillRect(gp.pathfinder.pathList.get(i).col * gp.tileSize, gp.pathfinder.pathList.get(i).row * gp.tileSize, gp.tileSize, gp.tileSize);
+        }
+
+        g2.setColor(Color.BLACK);
     }
 }

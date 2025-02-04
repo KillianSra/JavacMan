@@ -1,8 +1,9 @@
 package main;
 
-import entity.Direction;
-import entity.Entity;
+import entity.enums.Direction;
+import entity.abstracts.Entity;
 import entity.Player;
+import entity.enums.Mode;
 import object.Javacgum;
 import object.Object;
 import object.SuperJavacgum;
@@ -168,6 +169,13 @@ public class CollisionManager
                 if(objects[i] instanceof Javacgum || objects[i] instanceof SuperJavacgum)
                 {
                     gp.javacgumCollected++;
+                    if(objects[i] instanceof SuperJavacgum)
+                    {
+                        if(gp.redGhost.getMode() != Mode.EATEN) { gp.redGhost.setMode(Mode.FRIGHTENED); }
+                        if(gp.blueGhost.getMode() != Mode.EATEN) { gp.blueGhost.setMode(Mode.FRIGHTENED); }
+                        if(gp.pinkGhost.getMode() != Mode.EATEN) { gp.pinkGhost.setMode(Mode.FRIGHTENED); }
+                        if(gp.orangeGhost.getMode() != Mode.EATEN) { gp.orangeGhost.setMode(Mode.FRIGHTENED); }
+                    }
                     objects[i] = null;
                 }
                 else
@@ -178,6 +186,72 @@ public class CollisionManager
                     objects[i].hitbox = new Rectangle(0, 0 , 0 , 0);
                 }
             }
+        }
+    }
+
+    /**
+     * Checks for a collision between the player and a ghost entity.
+     * If a collision is detected, the player's life is reduced, and all entities are reset to their starting positions.
+     *
+     * @param player The player character whose collision with the ghost is being checked.
+     * @param ghost The ghost entity to check for collision with the player.
+     */
+    public void checkEntityCollision(Player player, Entity ghost)
+    {
+        if(ghost.getMode() == Mode.SCATTER || ghost.getMode() == Mode.CHASE)
+        {
+            //Check if the player's hitbox intersects with the ghost's hitbox.
+            if(player.hitbox.intersects(ghost.hitbox))
+            {
+                //Reduce the player's life by one when a collision occurs.
+                gp.player.setLife(gp.player.getLife() - 1);
+
+                //Reset the player's position to their starting position.
+                gp.player.setStartPosition();
+
+                //Reset the positions of all ghosts to their starting positions.
+                gp.redGhost.setStartPosition();
+                gp.blueGhost.setStartPosition();
+                gp.pinkGhost.setStartPosition();
+                gp.orangeGhost.setStartPosition();
+
+                //Load the correct images if necessary
+                if(gp.redGhost.getMode() == Mode.FRIGHTENED || gp.redGhost.getMode() == Mode.EATEN)
+                {
+                    gp.redGhost.getImage();
+                }
+                if(gp.blueGhost.getMode() == Mode.FRIGHTENED || gp.blueGhost.getMode() == Mode.EATEN)
+                {
+                    gp.blueGhost.getImage();
+                }
+                if(gp.pinkGhost.getMode() == Mode.FRIGHTENED || gp.pinkGhost.getMode() == Mode.EATEN)
+                {
+                    gp.pinkGhost.getImage();
+                }
+                if(gp.orangeGhost.getMode() == Mode.FRIGHTENED || gp.orangeGhost.getMode() == Mode.EATEN)
+                {
+                    gp.orangeGhost.getImage();
+                }
+
+                //Reset the mode of all ghosts
+                gp.redGhost.setMode(Mode.CHASE);
+                gp.blueGhost.setMode(Mode.CHASE);
+                gp.pinkGhost.setMode(Mode.CHASE);
+                gp.orangeGhost.setMode(Mode.CHASE);
+            }
+        }
+        else if(ghost.getMode() == Mode.FRIGHTENED && player.hitbox.intersects(ghost.hitbox))
+        {
+            //Update ghost's properties
+            ghost.setMode(Mode.EATEN);
+            ghost.setDisplayPointsWon(true);
+            ghost.setWorldXDead(ghost.worldX);
+            ghost.setWorldYDead(ghost.worldY);
+            ghost.resetFrightenedCounter();
+            Entity.GHOSTS_EATEN_IN_A_ROW++;
+
+            //Adding points to player's score
+            gp.player.setScore(gp.player.getScore() + Entity.calculatePointsWon());
         }
     }
 }

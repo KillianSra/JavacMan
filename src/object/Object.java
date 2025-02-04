@@ -10,7 +10,6 @@ import java.awt.image.BufferedImage;
 public abstract class Object extends Renderable
 {
     private final int LIFE_SPAN = 600;     //10 seconds
-    private final int DISPLATED_TEXT = 180;     //3 seconds
 
     protected GamePanel gp;
     protected BufferedImage image;
@@ -22,7 +21,6 @@ public abstract class Object extends Renderable
 
     //Counters
     private int lifeSpanCounter = 0;
-    private int displayPointCounter = 0;
 
     public Object(GamePanel gp, int point, boolean hasLimitedLifeSpan)
     {
@@ -84,17 +82,14 @@ public abstract class Object extends Renderable
         }
     }
 
-    /**
-     * Tracks the display duration of points on the screen.
-     * Increments the counter until it reaches the predefined limit.
-     */
+    @Override
     public void checkDisplayedPoint()
     {
-        displayPointCounter++;
-        if(displayPointCounter == DISPLATED_TEXT)
+        displayPointsWonCounter++;
+        if(displayPointsWonCounter == POINT_DISPLAYED_TIME)
         {
             displayPoint = false;
-            displayPointCounter = 0;
+            displayPointsWonCounter = 0;
             delete = true;
         }
     }
