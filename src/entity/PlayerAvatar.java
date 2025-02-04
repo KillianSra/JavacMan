@@ -54,7 +54,7 @@ public class PlayerAvatar extends Entity
     }
 
     @Override
-    protected void getImage()
+    public void getImage()
     {
         right1 = setup("player/player_right_1", gp.tileSize * 3, gp.tileSize * 3);
         right2 = setup("player/player_right_2", gp.tileSize * 3, gp.tileSize * 3);

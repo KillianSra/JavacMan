@@ -112,7 +112,7 @@ public class Player extends Entity
     }
 
     @Override
-    protected void getImage()
+    public void getImage()
     {
         up1 = setup("player/player_up_1", gp.tileSize, gp.tileSize);
         up2 = setup("player/player_up_2", gp.tileSize, gp.tileSize);

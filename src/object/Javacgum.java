@@ -25,7 +25,7 @@ public class Javacgum extends Object
     }
 
     @Override
-    protected void getImage()
+    public void getImage()
     {
         image = setup("collectible/javacgum", gp.tileSize, gp.tileSize);
     }

@@ -154,7 +154,7 @@ public class PinkGhost extends Entity implements Ghost
     }
 
     @Override
-    protected void getImage()
+    public void getImage()
     {
         up1 = setup("pink/pink_up_1", gp.tileSize, gp.tileSize);
         up2 = setup("pink/pink_up_2", gp.tileSize, gp.tileSize);

@@ -38,7 +38,7 @@ public abstract class Renderable
     /**
      * Reads images and stores them in BufferedImage
      */
-    protected abstract void getImage();
+    public abstract void getImage();
 
     /**
      * Renders the visual representation of the entity on the screen.

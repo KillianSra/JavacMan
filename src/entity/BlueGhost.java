@@ -153,7 +153,7 @@ public class BlueGhost extends Entity implements Ghost
     }
 
     @Override
-    protected void getImage()
+    public void getImage()
     {
         up1 = setup("blue/blue_up_1", gp.tileSize, gp.tileSize);
         up2 = setup("blue/blue_up_2", gp.tileSize, gp.tileSize);

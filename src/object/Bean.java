@@ -33,7 +33,7 @@ public class Bean extends Object
     }
 
     @Override
-    protected void getImage()
+    public void getImage()
     {
         image = setup("collectible/bean", gp.tileSize, gp.tileSize);
     }

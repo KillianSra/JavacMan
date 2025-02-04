@@ -33,7 +33,7 @@ public class Coffee extends Object
     }
 
     @Override
-    protected void getImage()
+    public void getImage()
     {
         image = setup("collectible/coffee", gp.tileSize, gp.tileSize);
     }

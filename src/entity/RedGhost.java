@@ -120,7 +120,7 @@ public class RedGhost extends Entity implements Ghost
     }
 
     @Override
-    protected void getImage()
+    public void getImage()
     {
         up1 = setup("red/red_up_1", gp.tileSize, gp.tileSize);
         up2 = setup("red/red_up_2", gp.tileSize, gp.tileSize);
