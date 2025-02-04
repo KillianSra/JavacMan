@@ -181,6 +181,7 @@ public abstract class Entity extends Renderable
             getImage();
             mode = Mode.CHASE;
             frightenedCounter = 0;
+            speed = defaultSpeed;
         }
     }
 
