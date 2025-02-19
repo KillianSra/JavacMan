@@ -39,7 +39,8 @@ public class CollisionManager
         int tileNum1, tileNum2;
 
         //Handle collision checks based on the entity's movement direction.
-        switch (entity.getDirection()) {
+        switch (entity.getDirection())
+        {
             case Direction.UP:
                 //Calculate the top row the entity will occupy after moving up.
                 entityTopRow = (entity.getHitboxY() - entity.getSpeed()) / gp.tileSize;
@@ -238,6 +239,12 @@ public class CollisionManager
                 gp.blueGhost.setMode(Mode.CHASE);
                 gp.pinkGhost.setMode(Mode.CHASE);
                 gp.orangeGhost.setMode(Mode.CHASE);
+
+                //Reset mode alternation
+                gp.redGhost.resetAlternation();
+                gp.blueGhost.resetAlternation();
+                gp.pinkGhost.resetAlternation();
+                gp.orangeGhost.resetAlternation();
             }
         }
         else if(ghost.getMode() == Mode.FRIGHTENED && player.hitbox.intersects(ghost.hitbox))

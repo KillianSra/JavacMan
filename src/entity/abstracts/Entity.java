@@ -19,8 +19,13 @@ public abstract class Entity extends Renderable
     public int hitboxDefaultX;
     public int hitboxDefaultY;
     protected int frightenedMaxTime = 1000;
-    private final static int POINT = 200;
     public static int GHOSTS_EATEN_IN_A_ROW = 0;
+
+    //Constant
+    private final static int POINT = 200;
+    private final int CHASE_MODE_DURATION = 1200;             //20 seconds
+    private final int SCATTER_MODE_DURATION = 420;            //7 seconds
+    private final int FINAL_SCATTER_MODE_DURATION = 300;      //5 seconds
 
     //State
     protected Direction direction = Direction.LEFT;
@@ -30,11 +35,15 @@ public abstract class Entity extends Renderable
     protected int worldXDead;
     protected int worldYDead;
     protected boolean displayPointsWon = false;
+    protected int scatterPhase = 0;
+    protected int alternationNumber = 0;
+    protected boolean transitionBetweenMode = false;
 
     //Counter
     protected int spriteCounter;
     protected int frightenedCounter = 0;
     protected int changeDirectionCounter = 0;
+    protected int modeAlternationCounter = 0;
 
     //Attribute
     public int speed;
@@ -399,6 +408,30 @@ public abstract class Entity extends Renderable
     }
 
     /**
+     * Retrieves the duration of the current ghost mode.
+     *
+     * @return The duration of the current mode (FPS * duration)
+     */
+    protected int getModeDuration()
+    {
+        int duration = 0;
+        if(this.mode == Mode.CHASE)
+        {
+            duration = CHASE_MODE_DURATION;
+        }
+        else if(this.mode == Mode.SCATTER && alternationNumber == 5)
+        {
+            duration = FINAL_SCATTER_MODE_DURATION;
+        }
+        else if(this.mode == Mode.SCATTER)
+        {
+            duration = SCATTER_MODE_DURATION;
+        }
+
+        return duration;
+    }
+
+    /**
      * Calculates the points earned when eating a ghost.
      * The points increase exponentially based on the number of ghosts eaten in a row.
      *
@@ -416,6 +449,58 @@ public abstract class Entity extends Renderable
         }
 
         return points;
+    }
+
+    /**
+     * Manages the alternation between CHASE and SCATTER modes.
+     * The mode alternates based on a duration counter. If the mode is CHASE,
+     * the entity transitions to SCATTER mode when reaching the specified (x, y) position.
+     * Otherwise, it switches back to CHASE mode after the SCATTER duration ends.
+     *
+     * @param x The target x-coordinate required for the mode transition.
+     * @param y The target y-coordinate required for the mode transition.
+     */
+    public void handleModeAlternation(int x, int y)
+    {
+        int duration = getModeDuration();
+
+        if(modeAlternationCounter < duration)
+        {
+            modeAlternationCounter++;
+        }
+        else
+        {
+            switch(mode)
+            {
+                case CHASE:
+                    transitionBetweenMode = true;
+                    if(worldX == x && worldY == y)
+                    {
+                        mode = Mode.SCATTER;
+                        modeAlternationCounter = 0;
+                        transitionBetweenMode = false;
+                        alternationNumber++;
+                        scatterPhase = 0;
+                    }
+                    break;
+
+                case SCATTER:
+                    mode = Mode.CHASE;
+                    modeAlternationCounter = 0;
+                    alternationNumber++;
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Resets the mode alternation state.
+     */
+    public void resetAlternation()
+    {
+        modeAlternationCounter = 0;
+        alternationNumber = 0;
+        transitionBetweenMode = false;
     }
 
     @DebugOnly

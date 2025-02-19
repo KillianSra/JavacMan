@@ -159,10 +159,20 @@ public class GamePanel extends JPanel implements Runnable
             {
                 setupGame();
                 player.setStartPosition();
+
+                //Reset ghosts state
                 redGhost.setStartPosition();
+                redGhost.resetAlternation();
+
                 blueGhost.setStartPosition();
+                blueGhost.resetAlternation();
+
                 pinkGhost.setStartPosition();
+                pinkGhost.resetAlternation();
+
                 orangeGhost.setStartPosition();
+                orangeGhost.resetAlternation();
+
                 keyHandler.reset();
                 javacgumCollected = 0;
                 nbSpecialCollectible = 2;
