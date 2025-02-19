@@ -32,19 +32,7 @@ public class PlayerAvatar extends Entity
         super.move();
 
         //Handle playerAvatar's sprite animation
-        spriteCounter++;
-        if(spriteCounter > 20)
-        {
-            if(spriteNum == 1)
-            {
-                spriteNum = 2;
-            }
-            else if(spriteNum == 2)
-            {
-                spriteNum = 1;
-            }
-            spriteCounter = 0;
-        }
+        spriteAnimation();
 
         if(worldX >= gp.tileSize * 31)
         {

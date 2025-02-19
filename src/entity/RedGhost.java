@@ -122,19 +122,7 @@ public class RedGhost extends Entity implements Ghost
         }
 
         //Handle ghost's sprite animation
-        spriteCounter++;
-        if(spriteCounter > 20)
-        {
-            if(spriteNum == 1)
-            {
-                spriteNum = 2;
-            }
-            else if(spriteNum == 2)
-            {
-                spriteNum = 1;
-            }
-            spriteCounter = 0;
-        }
+        spriteAnimation();
     }
 
     @Override

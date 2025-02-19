@@ -92,6 +92,28 @@ public abstract class Entity extends Renderable
     }
 
     /**
+     * Updates the sprite animation.
+     * Alternates between sprite frames to create an animation effect.
+     * The image displayed switches every 20 frames.
+     */
+    protected void spriteAnimation()
+    {
+        spriteCounter++;
+        if(spriteCounter > 20)
+        {
+            if(spriteNum == 1)
+            {
+                spriteNum = 2;
+            }
+            else if(spriteNum == 2)
+            {
+                spriteNum = 1;
+            }
+            spriteCounter = 0;
+        }
+    }
+
+    /**
      * Determines the appropriate image to display based on the entity's current direction
      * and animation frame (sprite number).
      *
