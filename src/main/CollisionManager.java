@@ -172,10 +172,10 @@ public class CollisionManager
                     gp.javacgumCollected++;
                     if(objects[i] instanceof SuperJavacgum)
                     {
-                        if(gp.redGhost.getMode() != Mode.EATEN) { gp.redGhost.setMode(Mode.FRIGHTENED); }
-                        if(gp.blueGhost.getMode() != Mode.EATEN) { gp.blueGhost.setMode(Mode.FRIGHTENED); }
-                        if(gp.pinkGhost.getMode() != Mode.EATEN) { gp.pinkGhost.setMode(Mode.FRIGHTENED); }
-                        if(gp.orangeGhost.getMode() != Mode.EATEN) { gp.orangeGhost.setMode(Mode.FRIGHTENED); }
+                        if(gp.redGhost.getMode() != Mode.EATEN && gp.redGhost.hasSpawn()) { gp.redGhost.setMode(Mode.FRIGHTENED); }
+                        if(gp.blueGhost.getMode() != Mode.EATEN && gp.blueGhost.hasSpawn()) { gp.blueGhost.setMode(Mode.FRIGHTENED); }
+                        if(gp.pinkGhost.getMode() != Mode.EATEN && gp.pinkGhost.hasSpawn()) { gp.pinkGhost.setMode(Mode.FRIGHTENED); }
+                        if(gp.orangeGhost.getMode() != Mode.EATEN && gp.orangeGhost.hasSpawn()) { gp.orangeGhost.setMode(Mode.FRIGHTENED); }
                     }
                     objects[i] = null;
                 }
@@ -245,6 +245,16 @@ public class CollisionManager
                 gp.blueGhost.resetAlternation();
                 gp.pinkGhost.resetAlternation();
                 gp.orangeGhost.resetAlternation();
+
+                //Reset counters
+                gp.blueGhost.resetSpawnProperties();
+                gp.pinkGhost.resetSpawnProperties();
+                gp.orangeGhost.resetSpawnProperties();
+
+                gp.redGhost.resetFrightenedCounter();
+                gp.blueGhost.resetFrightenedCounter();
+                gp.pinkGhost.resetFrightenedCounter();
+                gp.orangeGhost.resetFrightenedCounter();
             }
         }
         else if(ghost.getMode() == Mode.FRIGHTENED && player.hitbox.intersects(ghost.hitbox))

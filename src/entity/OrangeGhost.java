@@ -12,10 +12,9 @@ import java.util.Random;
 
 public class OrangeGhost extends Entity implements Ghost
 {
-    private final int spawnCol = 15;
-    private final int spawnRow = 13;
     private final int scatterModeBeginningWorldX = 96;
     private final int scatterModeBeginningWorldY = 552;
+    private final int spawnTime = 840;      //14 seconds
 
     private boolean onlyScatter = false;
     private boolean alternationEnabled = true;
@@ -27,6 +26,9 @@ public class OrangeGhost extends Entity implements Ghost
         //Hitbox settings
         hitbox = new Rectangle(worldX, worldY, gp.tileSize, gp.tileSize);
 
+        spawnCol = 15;
+        spawnRow = 13;
+
         setStartPosition();
         getImage();
     }
@@ -34,7 +36,7 @@ public class OrangeGhost extends Entity implements Ghost
     //Methods
     public void setStartPosition()
     {
-        direction = Direction.LEFT;
+        direction = Direction.DOWN;
         worldX = gp.tileSize * spawnCol;
         worldY = gp.tileSize * spawnRow;
         speed = 2;
@@ -87,70 +89,84 @@ public class OrangeGhost extends Entity implements Ghost
     @Override
     public void update()
     {
-        //Check event
-        gp.eventManager.checkEvent(this);
+        //Handle the start of the round
+        if(!hasSpawn)
+        {
+            handleSpawn(spawnTime);
+        }
+        //Handle respawn
+        else if(respawning)
+        {
+            handleRespawn();
+        }
+        //Handle the behavior of the pink ghost in game
+        else
+        {
+            //Check event
+            gp.eventManager.checkEvent(this);
 
-        if(alternationNumber != 6 && alternationEnabled)
-        {
-            handleModeAlternation(scatterModeBeginningWorldX, scatterModeBeginningWorldY);
-        }
-
-        //Pathfinding
-        if(mode == Mode.CHASE && transitionBetweenMode)
-        {
-            reachBottomLeftCorner();
-        }
-        else if(mode == Mode.CHASE || mode == Mode.EATEN)
-        {
-            pathfinding();
-        }
-        else if(mode == Mode.SCATTER)
-        {
-            if(getTileDistanceFromPlayer(gp.player) < 8 && !onlyScatter)
+            if(alternationNumber != 6 && alternationEnabled)
             {
-                this.mode = Mode.CHASE;
-                alternationEnabled = true;
+                handleModeAlternation(scatterModeBeginningWorldX, scatterModeBeginningWorldY);
             }
-            else
+
+            //Pathfinding
+            if(mode == Mode.CHASE && transitionBetweenMode)
             {
-                //modeAlternationCounter = 0;
-                scatterMode();
+                reachBottomLeftCorner();
             }
-        }
-        else if(frightenedCounter == 0)
-        {
-            this.direction = getOppositeDirection(this);
-            speed = 1;
-        }
-        else if(worldX % gp.tileSize == 0 && worldY % gp.tileSize == 0)
-        {
-            if(changeDirectionCounter == 1)
+            else if(mode == Mode.CHASE || mode == Mode.EATEN)
             {
-                ArrayList<Direction> possibleDirections = possibleDirections(this);
-                this.direction = possibleDirections.get(new Random().nextInt(possibleDirections.size()));
-                changeDirectionCounter = 0;
+                pathfinding();
             }
-            else
+            else if(mode == Mode.SCATTER)
             {
-                changeDirectionCounter++;
+                if(getTileDistanceFromPlayer(gp.player) < 8 && !onlyScatter)
+                {
+                    this.mode = Mode.CHASE;
+                    alternationEnabled = true;
+                }
+                else
+                {
+                    //modeAlternationCounter = 0;
+                    scatterMode();
+                }
             }
-        }
+            else if(frightenedCounter == 0)
+            {
+                this.direction = getOppositeDirection(this);
+                speed = 1;
+            }
+            else if(worldX % gp.tileSize == 0 && worldY % gp.tileSize == 0)
+            {
+                if(changeDirectionCounter == 1)
+                {
+                    ArrayList<Direction> possibleDirections = possibleDirections(this);
+                    this.direction = possibleDirections.get(new Random().nextInt(possibleDirections.size()));
+                    changeDirectionCounter = 0;
+                }
+                else
+                {
+                    changeDirectionCounter++;
+                }
+            }
 
-        checkFrightened();
+            checkFrightened();
 
-        //Check collisions
-        gp.collisionManager.checkTileCollision(this);
-        gp.collisionManager.checkEntityCollision(gp.player, this);
+            //Check collisions
+            gp.collisionManager.checkTileCollision(this);
+            gp.collisionManager.checkEntityCollision(gp.player, this);
 
-        if(!isCollision())
-        {
-            super.move();
-        }
+            if(!isCollision())
+            {
+                super.move();
+            }
 
-        //Manage the display of points
-        if(displayPointsWon)
-        {
-            checkDisplayedPoint();
+            //Manage the display of points
+            if(displayPointsWon)
+            {
+                checkDisplayedPoint();
+            }
         }
 
         spriteAnimation();

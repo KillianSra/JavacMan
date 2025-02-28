@@ -1,6 +1,7 @@
 package entity.abstracts;
 
 import annotation.DebugOnly;
+import entity.RedGhost;
 import entity.enums.Direction;
 import entity.Player;
 import entity.enums.Mode;
@@ -27,7 +28,13 @@ public abstract class Entity extends Renderable
     private final int SCATTER_MODE_DURATION = 420;            //7 seconds
     private final int FINAL_SCATTER_MODE_DURATION = 300;      //5 seconds
 
+    protected int respawnTime = 240;        //4 seconds
+
     //State
+    protected boolean hasSpawn = false;
+    protected boolean respawning = false;
+    protected int spawnCol;
+    protected int spawnRow;
     protected Direction direction = Direction.LEFT;
     protected Mode mode = Mode.CHASE;
     protected int spriteNum = 1;
@@ -44,6 +51,9 @@ public abstract class Entity extends Renderable
     protected int frightenedCounter = 0;
     protected int changeDirectionCounter = 0;
     protected int modeAlternationCounter = 0;
+    public int spawnCounter = 0;
+    public int respawnCounter = 0;
+
 
     //Attribute
     public int speed;
@@ -55,6 +65,7 @@ public abstract class Entity extends Renderable
     }
 
     //Getters
+    public boolean hasSpawn() { return this.hasSpawn; }
     public int getSpeed() { return this.speed; }
     public Direction getDirection() { return this.direction; }
     public BufferedImage getLeft2() { return this.left2; }
@@ -71,6 +82,11 @@ public abstract class Entity extends Renderable
     public void setWorldYDead(int y) { this.worldYDead = y; }
 
     public void resetFrightenedCounter(){ this.frightenedCounter = 0; }
+    public void resetSpawnProperties()
+    {
+        this.hasSpawn = false;
+        this.spawnCounter = 0;
+    }
 
     //Abstract method
     /**
@@ -190,6 +206,84 @@ public abstract class Entity extends Renderable
         //Synchronize hitbox with entity position
         hitbox.x = worldX;
         hitbox.y = worldY;
+    }
+
+    /**
+     * Handles the ghost's spawning process.
+     * During the spawn phase, the ghost moves up and down within the ghost house
+     * until the spawn counter reaches the required time.
+     */
+    protected void handleSpawn(int spawnTime)
+    {
+        if(spawnCounter != spawnTime)
+        {
+            spawnCounter++;
+
+            ghostHouseAnimation();
+
+            move();
+        }
+        else
+        {
+            hasSpawn = true;
+            spawnCounter = 0;
+        }
+    }
+
+    /**
+     * Handles the ghost's respawn process after being eaten by the player.
+     *
+     * <p>The ghost moves back to the ghost house and performs an animation while waiting
+     * for the respawn timer to complete. Once the timer expires, the ghost moves to
+     * its designated respawn position.</p>
+     *
+     */
+    protected void handleRespawn()
+    {
+        //For each ghosts (except the red one), yRespawn = 13 (spawnRow) * gp.tileSize
+        int yRespawn = 312;
+
+        if(respawnCounter != respawnTime)
+        {
+            respawnCounter++;
+
+            ghostHouseAnimation();
+
+            move();
+        }
+        //Once the counter ends, we position the ghost at y = 312 to prevent it from getting stuck in a solid tile
+        else if(this.worldY < yRespawn)
+        {
+            worldY += speed;
+        }
+        else if(this.worldY > yRespawn)
+        {
+            worldY -= speed;
+        }
+        //The counter is finished and the ghost is at Y = 312
+        else
+        {
+            respawning = false;
+            respawnCounter = 0;
+        }
+    }
+
+    /**
+     * Animates the ghost's movement inside the ghost house.
+     *
+     * <p>The ghost moves up and down within a small range while waiting to respawn or be released.</p>
+     */
+
+    private void ghostHouseAnimation()
+    {
+        if(worldY == spawnRow * gp.tileSize - 12)
+        {
+            direction = Direction.DOWN;
+        }
+        else if(worldY == spawnRow * gp.tileSize + 12)
+        {
+            direction = Direction.UP;
+        }
     }
 
     /**
@@ -410,11 +504,18 @@ public abstract class Entity extends Renderable
             resynchronizePosition(this);
         }
         //If the spawn point has been reached, return to the previous mode
-        else if(spawnCol == worldX / gp.tileSize && spawnRow == worldY / gp.tileSize)
+        else if(worldX == spawnCol * gp.tileSize && worldY == spawnRow * gp.tileSize)
         {
             mode = Mode.CHASE;
             getImage();
             eatenImageLoaded = false;
+
+            //Enables respawn logic for all ghosts except red
+            if(!(this instanceof RedGhost))
+            {
+                respawning = true;
+                direction = Direction.DOWN;
+            }
         }
     }
 

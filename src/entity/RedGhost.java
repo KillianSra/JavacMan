@@ -12,8 +12,6 @@ import java.util.Random;
 
 public class RedGhost extends Entity implements Ghost
 {
-    private final int spawnCol = 14;
-    private final int spawnRow = 11;
     private final int scatterModeBeginningWorldX = 576;
     private final int scatterModeBeginningWorldY = 96;
 
@@ -23,6 +21,11 @@ public class RedGhost extends Entity implements Ghost
 
         //Hitbox settings
         hitbox = new Rectangle(worldX, worldY, gp.tileSize, gp.tileSize);
+
+        spawnCol = 14;
+        spawnRow = 11;
+        respawnTime = 0;
+        hasSpawn = true;
 
         setStartPosition();
         getImage();
@@ -106,15 +109,15 @@ public class RedGhost extends Entity implements Ghost
 
         checkFrightened();
 
+        //Check collisions
+        gp.collisionManager.checkTileCollision(this);
+        gp.collisionManager.checkEntityCollision(gp.player, this);
+
         if(!isCollision())
         {
             //If there is no collision, move in the new direction
             super.move();
         }
-
-        //Check collisions
-        gp.collisionManager.checkTileCollision(this);
-        gp.collisionManager.checkEntityCollision(gp.player, this);
 
         if(displayPointsWon)
         {
