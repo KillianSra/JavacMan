@@ -7,8 +7,6 @@ import entity.interfaces.Ghost;
 import main.GamePanel;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Random;
 
 public class RedGhost extends Entity implements Ghost
 {
@@ -90,34 +88,16 @@ public class RedGhost extends Entity implements Ghost
         }
         else if(mode == Mode.FRIGHTENED && frightenedCounter == 0)
         {
-            this.direction = getOppositeDirection(this);
-            speed = 1;
+            enterFrightenedMode();
         }
         else if(worldX % gp.tileSize == 0 && worldY % gp.tileSize == 0)
         {
-            if(changeDirectionCounter == 1)
-            {
-                ArrayList<Direction> possibleDirections = possibleDirections(this);
-                this.direction = possibleDirections.get(new Random().nextInt(possibleDirections.size()));
-                changeDirectionCounter = 0;
-            }
-            else
-            {
-                changeDirectionCounter++;
-            }
+            handleRandomMovement();
         }
 
         checkFrightened();
 
-        //Check collisions
-        gp.collisionManager.checkTileCollision(this);
-        gp.collisionManager.checkEntityCollision(gp.player, this);
-
-        if(!isCollision())
-        {
-            //If there is no collision, move in the new direction
-            super.move();
-        }
+        handleCollision();
 
         if(displayPointsWon)
         {

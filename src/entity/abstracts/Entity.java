@@ -12,6 +12,7 @@ import tile.Tile;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Random;
 
 public abstract class Entity extends Renderable
 {
@@ -209,6 +210,26 @@ public abstract class Entity extends Renderable
     }
 
     /**
+     * Handles the ghost's collision detection and movement.
+     *
+     * <p>Checks for collisions with tiles and the player. If no collision is detected,
+     * the entity proceeds with its movement in the current direction.</p>
+     */
+
+    protected void handleCollision()
+    {
+        //Check collisions
+        gp.collisionManager.checkTileCollision(this);
+        gp.collisionManager.checkEntityCollision(gp.player, this);
+
+        if(!isCollision())
+        {
+            //If there is no collision, move in the new direction
+            move();
+        }
+    }
+
+    /**
      * Handles the ghost's spawning process.
      * During the spawn phase, the ghost moves up and down within the ghost house
      * until the spawn counter reaches the required time.
@@ -365,6 +386,17 @@ public abstract class Entity extends Renderable
     }
 
     /**
+     * Activates the frightened mode for the ghost.
+     *
+     * <p>The ghost reverses its direction and slows down to indicate that it is in frightened mode.</p>
+     */
+    protected void enterFrightenedMode()
+    {
+        this.direction = getOppositeDirection(this);
+        speed = 1;
+    }
+
+    /**
      * Determines the possible directions that an entity can move to based on its current position.
      * The method excludes the opposite direction to prevent U-turns.
      *
@@ -421,6 +453,26 @@ public abstract class Entity extends Renderable
         }
 
         return possibleDirections;
+    }
+
+    /**
+     * Handles the ghost's random movement.
+     *
+     * <p>The ghost selects a new random direction from the possible available directions.
+     * Otherwise, it increments the counter.</p>
+     */
+    protected void handleRandomMovement()
+    {
+        if(changeDirectionCounter == 1)
+        {
+            ArrayList<Direction> possibleDirections = possibleDirections(this);
+            this.direction = possibleDirections.get(new Random().nextInt(possibleDirections.size()));
+            changeDirectionCounter = 0;
+        }
+        else
+        {
+            changeDirectionCounter++;
+        }
     }
 
     /**
