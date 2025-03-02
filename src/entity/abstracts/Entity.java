@@ -1,6 +1,7 @@
 package entity.abstracts;
 
 import annotation.DebugOnly;
+import entity.RedGhost;
 import entity.enums.Direction;
 import entity.Player;
 import entity.enums.Mode;
@@ -11,6 +12,7 @@ import tile.Tile;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Random;
 
 public abstract class Entity extends Renderable
 {
@@ -19,10 +21,21 @@ public abstract class Entity extends Renderable
     public int hitboxDefaultX;
     public int hitboxDefaultY;
     protected int frightenedMaxTime = 1000;
-    private final static int POINT = 200;
     public static int GHOSTS_EATEN_IN_A_ROW = 0;
 
+    //Constant
+    private final static int POINT = 200;
+    private final int CHASE_MODE_DURATION = 1200;             //20 seconds
+    private final int SCATTER_MODE_DURATION = 420;            //7 seconds
+    private final int FINAL_SCATTER_MODE_DURATION = 300;      //5 seconds
+
+    protected int respawnTime = 240;        //4 seconds
+
     //State
+    protected boolean hasSpawn = false;
+    protected boolean respawning = false;
+    protected int spawnCol;
+    protected int spawnRow;
     protected Direction direction = Direction.LEFT;
     protected Mode mode = Mode.CHASE;
     protected int spriteNum = 1;
@@ -30,11 +43,18 @@ public abstract class Entity extends Renderable
     protected int worldXDead;
     protected int worldYDead;
     protected boolean displayPointsWon = false;
+    protected int scatterPhase = 0;
+    protected int alternationNumber = 0;
+    protected boolean transitionBetweenMode = false;
 
     //Counter
     protected int spriteCounter;
     protected int frightenedCounter = 0;
     protected int changeDirectionCounter = 0;
+    protected int modeAlternationCounter = 0;
+    public int spawnCounter = 0;
+    public int respawnCounter = 0;
+
 
     //Attribute
     public int speed;
@@ -46,6 +66,7 @@ public abstract class Entity extends Renderable
     }
 
     //Getters
+    public boolean hasSpawn() { return this.hasSpawn; }
     public int getSpeed() { return this.speed; }
     public Direction getDirection() { return this.direction; }
     public BufferedImage getLeft2() { return this.left2; }
@@ -62,6 +83,11 @@ public abstract class Entity extends Renderable
     public void setWorldYDead(int y) { this.worldYDead = y; }
 
     public void resetFrightenedCounter(){ this.frightenedCounter = 0; }
+    public void resetSpawnProperties()
+    {
+        this.hasSpawn = false;
+        this.spawnCounter = 0;
+    }
 
     //Abstract method
     /**
@@ -79,6 +105,28 @@ public abstract class Entity extends Renderable
         if(gp.isDebuggingEnabled)
         {
             drawEntityHitbox(g2);
+        }
+    }
+
+    /**
+     * Updates the sprite animation.
+     * Alternates between sprite frames to create an animation effect.
+     * The image displayed switches every 20 frames.
+     */
+    protected void spriteAnimation()
+    {
+        spriteCounter++;
+        if(spriteCounter > 20)
+        {
+            if(spriteNum == 1)
+            {
+                spriteNum = 2;
+            }
+            else if(spriteNum == 2)
+            {
+                spriteNum = 1;
+            }
+            spriteCounter = 0;
         }
     }
 
@@ -162,6 +210,104 @@ public abstract class Entity extends Renderable
     }
 
     /**
+     * Handles the ghost's collision detection and movement.
+     *
+     * <p>Checks for collisions with tiles and the player. If no collision is detected,
+     * the entity proceeds with its movement in the current direction.</p>
+     */
+
+    protected void handleCollision()
+    {
+        //Check collisions
+        gp.collisionManager.checkTileCollision(this);
+        gp.collisionManager.checkEntityCollision(gp.player, this);
+
+        if(!isCollision())
+        {
+            //If there is no collision, move in the new direction
+            move();
+        }
+    }
+
+    /**
+     * Handles the ghost's spawning process.
+     * During the spawn phase, the ghost moves up and down within the ghost house
+     * until the spawn counter reaches the required time.
+     */
+    protected void handleSpawn(int spawnTime)
+    {
+        if(spawnCounter != spawnTime)
+        {
+            spawnCounter++;
+
+            ghostHouseAnimation();
+
+            move();
+        }
+        else
+        {
+            hasSpawn = true;
+            spawnCounter = 0;
+        }
+    }
+
+    /**
+     * Handles the ghost's respawn process after being eaten by the player.
+     *
+     * <p>The ghost moves back to the ghost house and performs an animation while waiting
+     * for the respawn timer to complete. Once the timer expires, the ghost moves to
+     * its designated respawn position.</p>
+     *
+     */
+    protected void handleRespawn()
+    {
+        //For each ghosts (except the red one), yRespawn = 13 (spawnRow) * gp.tileSize
+        int yRespawn = 312;
+
+        if(respawnCounter != respawnTime)
+        {
+            respawnCounter++;
+
+            ghostHouseAnimation();
+
+            move();
+        }
+        //Once the counter ends, we position the ghost at y = 312 to prevent it from getting stuck in a solid tile
+        else if(this.worldY < yRespawn)
+        {
+            worldY += speed;
+        }
+        else if(this.worldY > yRespawn)
+        {
+            worldY -= speed;
+        }
+        //The counter is finished and the ghost is at Y = 312
+        else
+        {
+            respawning = false;
+            respawnCounter = 0;
+        }
+    }
+
+    /**
+     * Animates the ghost's movement inside the ghost house.
+     *
+     * <p>The ghost moves up and down within a small range while waiting to respawn or be released.</p>
+     */
+
+    private void ghostHouseAnimation()
+    {
+        if(worldY == spawnRow * gp.tileSize - 12)
+        {
+            direction = Direction.DOWN;
+        }
+        else if(worldY == spawnRow * gp.tileSize + 12)
+        {
+            direction = Direction.UP;
+        }
+    }
+
+    /**
      * Manages the behavior of the ghost entity during the FRIGHTENED mode.
      */
     protected void checkFrightened()
@@ -240,6 +386,17 @@ public abstract class Entity extends Renderable
     }
 
     /**
+     * Activates the frightened mode for the ghost.
+     *
+     * <p>The ghost reverses its direction and slows down to indicate that it is in frightened mode.</p>
+     */
+    protected void enterFrightenedMode()
+    {
+        this.direction = getOppositeDirection(this);
+        speed = 1;
+    }
+
+    /**
      * Determines the possible directions that an entity can move to based on its current position.
      * The method excludes the opposite direction to prevent U-turns.
      *
@@ -296,6 +453,26 @@ public abstract class Entity extends Renderable
         }
 
         return possibleDirections;
+    }
+
+    /**
+     * Handles the ghost's random movement.
+     *
+     * <p>The ghost selects a new random direction from the possible available directions.
+     * Otherwise, it increments the counter.</p>
+     */
+    protected void handleRandomMovement()
+    {
+        if(changeDirectionCounter == 1)
+        {
+            ArrayList<Direction> possibleDirections = possibleDirections(this);
+            this.direction = possibleDirections.get(new Random().nextInt(possibleDirections.size()));
+            changeDirectionCounter = 0;
+        }
+        else
+        {
+            changeDirectionCounter++;
+        }
     }
 
     /**
@@ -379,11 +556,18 @@ public abstract class Entity extends Renderable
             resynchronizePosition(this);
         }
         //If the spawn point has been reached, return to the previous mode
-        else if(spawnCol == worldX / gp.tileSize && spawnRow == worldY / gp.tileSize)
+        else if(worldX == spawnCol * gp.tileSize && worldY == spawnRow * gp.tileSize)
         {
             mode = Mode.CHASE;
             getImage();
             eatenImageLoaded = false;
+
+            //Enables respawn logic for all ghosts except red
+            if(!(this instanceof RedGhost))
+            {
+                respawning = true;
+                direction = Direction.DOWN;
+            }
         }
     }
 
@@ -396,6 +580,30 @@ public abstract class Entity extends Renderable
             displayPointsWon = false;
             displayPointsWonCounter = 0;
         }
+    }
+
+    /**
+     * Retrieves the duration of the current ghost mode.
+     *
+     * @return The duration of the current mode (FPS * duration)
+     */
+    protected int getModeDuration()
+    {
+        int duration = 0;
+        if(this.mode == Mode.CHASE)
+        {
+            duration = CHASE_MODE_DURATION;
+        }
+        else if(this.mode == Mode.SCATTER && alternationNumber == 5)
+        {
+            duration = FINAL_SCATTER_MODE_DURATION;
+        }
+        else if(this.mode == Mode.SCATTER)
+        {
+            duration = SCATTER_MODE_DURATION;
+        }
+
+        return duration;
     }
 
     /**
@@ -416,6 +624,58 @@ public abstract class Entity extends Renderable
         }
 
         return points;
+    }
+
+    /**
+     * Manages the alternation between CHASE and SCATTER modes.
+     * The mode alternates based on a duration counter. If the mode is CHASE,
+     * the entity transitions to SCATTER mode when reaching the specified (x, y) position.
+     * Otherwise, it switches back to CHASE mode after the SCATTER duration ends.
+     *
+     * @param x The target x-coordinate required for the mode transition.
+     * @param y The target y-coordinate required for the mode transition.
+     */
+    public void handleModeAlternation(int x, int y)
+    {
+        int duration = getModeDuration();
+
+        if(modeAlternationCounter < duration)
+        {
+            modeAlternationCounter++;
+        }
+        else
+        {
+            switch(mode)
+            {
+                case CHASE:
+                    transitionBetweenMode = true;
+                    if(worldX == x && worldY == y)
+                    {
+                        mode = Mode.SCATTER;
+                        modeAlternationCounter = 0;
+                        transitionBetweenMode = false;
+                        alternationNumber++;
+                        scatterPhase = 0;
+                    }
+                    break;
+
+                case SCATTER:
+                    mode = Mode.CHASE;
+                    modeAlternationCounter = 0;
+                    alternationNumber++;
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Resets the mode alternation state.
+     */
+    public void resetAlternation()
+    {
+        modeAlternationCounter = 0;
+        alternationNumber = 0;
+        transitionBetweenMode = false;
     }
 
     @DebugOnly

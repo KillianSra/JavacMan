@@ -7,14 +7,15 @@ import entity.interfaces.Ghost;
 import main.GamePanel;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Random;
 
 public class OrangeGhost extends Entity implements Ghost
 {
-    private final int spawnCol = 15;
-    private final int spawnRow = 13;
-    private int scatterPhase = 0;
+    private final int scatterModeBeginningWorldX = 96;
+    private final int scatterModeBeginningWorldY = 552;
+    private final int spawnTime = 840;      //14 seconds
+
+    private boolean onlyScatter = false;
+    private boolean alternationEnabled = true;
 
     public OrangeGhost(GamePanel gp)
     {
@@ -23,6 +24,9 @@ public class OrangeGhost extends Entity implements Ghost
         //Hitbox settings
         hitbox = new Rectangle(worldX, worldY, gp.tileSize, gp.tileSize);
 
+        spawnCol = 15;
+        spawnRow = 13;
+
         setStartPosition();
         getImage();
     }
@@ -30,7 +34,7 @@ public class OrangeGhost extends Entity implements Ghost
     //Methods
     public void setStartPosition()
     {
-        direction = Direction.LEFT;
+        direction = Direction.DOWN;
         worldX = gp.tileSize * spawnCol;
         worldY = gp.tileSize * spawnRow;
         speed = 2;
@@ -48,14 +52,10 @@ public class OrangeGhost extends Entity implements Ghost
         {
             eatenBehavior(spawnCol, spawnRow);
         }
-        else if(mode == Mode.SCATTER)
-        {
-            scatterMode();
-        }
         //A* algorithm
         else
         {
-            //If the orange close is close enough from the player, start chasing them.
+            //If the orange ghost is close enough from the player, start chasing them.
             if(getTileDistanceFromPlayer(gp.player) < 8)
             {
                 //Reset scatter mode properties
@@ -71,10 +71,9 @@ public class OrangeGhost extends Entity implements Ghost
             else
             {
                 //The ghost heads to the bottom left corner
-                if((worldX != 96 || worldY != 552) && mode != Mode.SCATTER)
+                if((worldX != scatterModeBeginningWorldX || worldY != scatterModeBeginningWorldY) && mode != Mode.SCATTER)
                 {
-                    //Reach the bottom-left corner
-                    searchPath(4, 23);
+                    reachBottomLeftCorner();
                 }
                 //The ghost has reached the bottom left corner, it goes into scatter mode
                 else
@@ -88,64 +87,80 @@ public class OrangeGhost extends Entity implements Ghost
     @Override
     public void update()
     {
-        //Check event
-        gp.eventManager.checkEvent(this);
+        //Handle the start of the round
+        if(!hasSpawn)
+        {
+            handleSpawn(spawnTime);
+        }
+        //Handle respawn
+        else if(respawning)
+        {
+            handleRespawn();
+        }
+        //Handle the behavior of the pink ghost in game
+        else
+        {
+            //Check event
+            gp.eventManager.checkEvent(this);
 
-        //Pathfinding
-        if(mode != Mode.FRIGHTENED)
-        {
-            pathfinding();
-        }
-        else if(frightenedCounter == 0)
-        {
-            this.direction = getOppositeDirection(this);
-            speed = 1;
-        }
-        else if(worldX % gp.tileSize == 0 && worldY % gp.tileSize == 0)
-        {
-            if(changeDirectionCounter == 1)
+            if(alternationNumber != 6 && alternationEnabled)
             {
-                ArrayList<Direction> possibleDirections = possibleDirections(this);
-                this.direction = possibleDirections.get(new Random().nextInt(possibleDirections.size()));
-                changeDirectionCounter = 0;
+                handleModeAlternation(scatterModeBeginningWorldX, scatterModeBeginningWorldY);
             }
-            else
+
+            //Pathfinding
+            if(mode == Mode.CHASE && transitionBetweenMode)
             {
-                changeDirectionCounter++;
+                reachBottomLeftCorner();
             }
-        }
-
-        checkFrightened();
-
-        //Check collisions
-        gp.collisionManager.checkTileCollision(this);
-        gp.collisionManager.checkEntityCollision(gp.player, this);
-
-        if(!isCollision())
-        {
-            super.move();
-        }
-
-        //Manage the display of points
-        if(displayPointsWon)
-        {
-            checkDisplayedPoint();
-        }
-
-        //Handle ghost's sprite animation
-        spriteCounter++;
-        if(spriteCounter > 20)
-        {
-            if(spriteNum == 1)
+            else if(mode == Mode.CHASE || mode == Mode.EATEN)
             {
-                spriteNum = 2;
+                pathfinding();
             }
-            else if(spriteNum == 2)
+            else if(mode == Mode.SCATTER)
             {
-                spriteNum = 1;
+                if(getTileDistanceFromPlayer(gp.player) < 8 && !onlyScatter)
+                {
+                    this.mode = Mode.CHASE;
+                    alternationEnabled = true;
+                }
+                else
+                {
+                    //modeAlternationCounter = 0;
+                    scatterMode();
+                }
             }
-            spriteCounter = 0;
+            else if(frightenedCounter == 0)
+            {
+                enterFrightenedMode();
+            }
+            else if(worldX % gp.tileSize == 0 && worldY % gp.tileSize == 0)
+            {
+                handleRandomMovement();
+            }
+
+            checkFrightened();
+
+            handleCollision();
+
+            //Manage the display of points
+            if(displayPointsWon)
+            {
+                checkDisplayedPoint();
+            }
         }
+
+        spriteAnimation();
+    }
+
+    /**
+     * Moves the orange ghost towards the bottom-left corner of the maze.
+     */
+    private void reachBottomLeftCorner()
+    {
+        int col = scatterModeBeginningWorldX / gp.tileSize;
+        int row = scatterModeBeginningWorldY / gp.tileSize;
+        searchPath(col, row);
     }
 
     @Override
@@ -222,6 +237,43 @@ public class OrangeGhost extends Entity implements Ghost
                 worldY -= speed;
                 hitbox.y -= speed;
                 scatterPhase = 0;
+            }
+        }
+    }
+
+    @Override
+    public void handleModeAlternation(int x, int y)
+    {
+        int duration = getModeDuration();
+
+        if(modeAlternationCounter < duration)
+        {
+            modeAlternationCounter++;
+        }
+        else
+        {
+            if(mode == Mode.CHASE)
+            {
+                transitionBetweenMode = true;
+                if(worldX == x && worldY == y)
+                {
+                    mode = Mode.SCATTER;
+                    modeAlternationCounter = 0;
+                    transitionBetweenMode = false;
+                    alternationNumber++;
+                    scatterPhase = 0;
+                    onlyScatter = true;
+                }
+            }
+            else if(mode == Mode.SCATTER && onlyScatter)
+            {
+                //Alternation is disabled until a new cycle has been initiated (player <= 8 orange ghost tiles).
+                //In the meantime, it will remain in scatter mode
+                alternationEnabled = false;
+
+                modeAlternationCounter = 0;
+                alternationNumber++;
+                onlyScatter = false;
             }
         }
     }
