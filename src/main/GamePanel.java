@@ -38,6 +38,7 @@ public class GamePanel extends JPanel implements Runnable
     public final int titleState = 0;
     public final int playState = 1;
     public final int pauseState = 2;
+    public final int gameOverState = 3;
 
     //Game state
     private final int JAVACGUMS_IN_LEVELS = 167;
@@ -239,7 +240,7 @@ public class GamePanel extends JPanel implements Runnable
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        if(state == playState || state == pauseState)
+        if(state == playState || state == pauseState || state == gameOverState)
         {
             //Draw the game board
             this.tileManager.draw(g2);

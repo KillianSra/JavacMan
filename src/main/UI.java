@@ -87,6 +87,19 @@ public class UI
     }
 
     /**
+     * Sets a dark transparent background overlay on the screen.
+     *
+     * @param g2 Graphics2D instance used for rendering the background.
+     */
+    private void setDarkTransparentBackground(Graphics2D g2)
+    {
+        g2.setColor(new Color(0, 0, 0));
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7F));
+        g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
+    }
+
+    /**
      * Draws the pause menu on the screen.
      *
      * @param g2 Graphics2D instance used for rendering the pause menu
@@ -94,10 +107,7 @@ public class UI
     private void drawPauseMenu(Graphics2D g2)
     {
         //Darkened the screen
-        g2.setColor(new Color(0, 0, 0));
-        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.7F));
-        g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
-        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
+        setDarkTransparentBackground(g2);
 
         //Draw the "PAUSED" title at the center of the screen
         g2.setColor(Color.WHITE);
@@ -153,6 +163,40 @@ public class UI
         if(commandNb == 1)
         {
             g2.drawRoundRect((int) (x - gp.tileSize * 2.75), (int) (y - gp.tileSize * 1.80), gp.tileSize * 8, (int) (gp.tileSize * 2.5), 70, 70);
+        }
+    }
+
+    /**
+     * Draws the game over screen of the game.
+     *
+     * @param g2 Graphics2D instance used for rendering the game over screen elements
+     */
+    private void drawGameOverMenu(Graphics2D g2)
+    {
+        //Darkened the screen
+        setDarkTransparentBackground(g2);
+
+        //Draw the "GAME OVER" title at the center of the screen
+        g2.setColor(Color.WHITE);
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 65F));
+        g2.drawString("GAME OVER", getXCentered("GAME OVER", g2, 2), gp.tileSize * 10);
+
+        //Draw the "RETRY" option
+        g2.setFont(g2.getFont().deriveFont(35F));
+        int x = getXCentered("RETRY", g2, 2);
+        int y = gp.tileSize * 15;
+        g2.drawString("RETRY",x , y);
+        if(commandNb == 0)
+        {
+            g2.drawRoundRect((int) (x - gp.tileSize * 2.5), (int) (y - gp.tileSize * 1.80), gp.tileSize * 8, (int) (gp.tileSize * 2.5), 70, 70);
+        }
+
+        //Draw the "QUIT" option
+        y += gp.tileSize * 3;
+        g2.drawString("QUIT", getXCentered("QUIT", g2, 2), y);
+        if(commandNb == 1)
+        {
+            g2.drawRoundRect((int) (x - gp.tileSize * 2.5), (int) (y - gp.tileSize * 1.80), gp.tileSize * 8, (int) (gp.tileSize * 2.5), 70, 70);
         }
     }
 
@@ -230,6 +274,11 @@ public class UI
         else if(gp.state == gp.titleState)
         {
             drawTitleSceen(g2);
+        }
+        else if(gp.state == gp.gameOverState)
+        {
+            drawHUD(g2);
+            drawGameOverMenu(g2);
         }
     }
 }

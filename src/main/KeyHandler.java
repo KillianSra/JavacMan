@@ -54,6 +54,10 @@ public class KeyHandler implements KeyListener
         {
             titleState(code);
         }
+        else if(gp.state == gp.gameOverState)
+        {
+            gameOverState(code);
+        }
     }
 
     @Override
@@ -151,7 +155,7 @@ public class KeyHandler implements KeyListener
         {
             switch(gp.UI.commandNb)
             {
-                //Start or resume gameplay
+                //Start gameplay
                 case 0:
                     gp.player.setStartPosition();
                     reset();
@@ -160,6 +164,35 @@ public class KeyHandler implements KeyListener
                     break;
                 //Exit the game
                 case 1: System.exit(0); break;
+            }
+        }
+    }
+
+    /**
+     * Handles the logic for the game over screen state based on user input
+     *
+     * @param code Key code representing the user input
+     */
+    private void gameOverState(int code)
+    {
+        handleMenuMovements(code, 1);
+
+        //Execute the selected command when the Enter key is pressed
+        if(code == KeyEvent.VK_ENTER)
+        {
+            switch(gp.UI.commandNb)
+            {
+                //Restart the game
+                case 0:
+                    gp.player.setStartPosition();
+                    reset();
+                    gp.restart = true;
+                    gp.state = gp.playState;
+                    break;
+                //Back to the main menu
+                case 1:
+                    gp.state = gp.titleState;
+                    gp.UI.commandNb = 0;
             }
         }
     }
