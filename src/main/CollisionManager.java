@@ -176,11 +176,20 @@ public class CollisionManager
                         if(gp.blueGhost.getMode() != Mode.EATEN && gp.blueGhost.hasSpawn()) { gp.blueGhost.setMode(Mode.FRIGHTENED); }
                         if(gp.pinkGhost.getMode() != Mode.EATEN && gp.pinkGhost.hasSpawn()) { gp.pinkGhost.setMode(Mode.FRIGHTENED); }
                         if(gp.orangeGhost.getMode() != Mode.EATEN && gp.orangeGhost.hasSpawn()) { gp.orangeGhost.setMode(Mode.FRIGHTENED); }
+
+                        gp.playSoundEffect(Sound.POWER_UP);
+                    }
+                    //Javacgum
+                    else
+                    {
+                        gp.playSoundEffect(Sound.PICK_UP);
                     }
                     objects[i] = null;
                 }
+                //Special objects
                 else
                 {
+                    gp.playSoundEffect(Sound.PICK_UP_ITEMS);
                     gp.collectedItems.add(objects[i].getName());
                     objects[i].setDisplayPoint(true);
                     //Disable hitbox
@@ -206,10 +215,12 @@ public class CollisionManager
             {
                 //Reduce the player's life by one when a collision occurs.
                 gp.player.setLife(gp.player.getLife() - 1);
+                gp.playSoundEffect(Sound.HIT);
 
                 if(gp.player.getLife() == 0)
                 {
                     gp.state = gp.gameOverState;
+                    gp.playSoundEffect(Sound.GAME_OVER);
                     gp.saveScore();
                 }
                 else
@@ -274,6 +285,8 @@ public class CollisionManager
             ghost.setWorldYDead(ghost.worldY);
             ghost.resetFrightenedCounter();
             Entity.GHOSTS_EATEN_IN_A_ROW++;
+
+            gp.playSoundEffect(Sound.EAT_GHOST);
 
             //Adding points to player's score
             gp.player.setScore(gp.player.getScore() + Entity.calculatePointsWon());

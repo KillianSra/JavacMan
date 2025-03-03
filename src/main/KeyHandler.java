@@ -138,6 +138,7 @@ public class KeyHandler implements KeyListener
                     gp.UI.commandNb = 0;
                     break;
             }
+            gp.playSoundEffect(Sound.MENU_SELECTION);
         }
     }
 
@@ -161,6 +162,7 @@ public class KeyHandler implements KeyListener
                     reset();
                     gp.restart = true;
                     gp.state = gp.playState;
+                    gp.playSoundEffect(Sound.MENU_SELECTION);
                     break;
                 //Exit the game
                 case 1: System.exit(0); break;
@@ -194,6 +196,7 @@ public class KeyHandler implements KeyListener
                     gp.state = gp.titleState;
                     gp.UI.commandNb = 0;
             }
+            gp.playSoundEffect(Sound.MENU_SELECTION);
         }
     }
 
@@ -214,6 +217,7 @@ public class KeyHandler implements KeyListener
             {
                 gp.UI.commandNb = max;
             }
+            gp.playSoundEffect(Sound.MENU_NAVIGATION);
         }
         //Move down in the menu
         else if(code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN)
@@ -223,6 +227,7 @@ public class KeyHandler implements KeyListener
             {
                 gp.UI.commandNb = 0;
             }
+            gp.playSoundEffect(Sound.MENU_NAVIGATION);
         }
     }
 }

@@ -35,6 +35,7 @@ public class GamePanel extends JPanel implements Runnable
     public EventManager eventManager = new EventManager(this);
     public AssetSetter assetSetter = new AssetSetter(this);
     public Pathfinder pathfinder = new Pathfinder(this);
+    public Sound sound = new Sound();
     Thread gameThread;
 
     //State
@@ -254,6 +255,20 @@ public class GamePanel extends JPanel implements Runnable
             ScoreManager.save(score);
             highestScore = score;
         }
+    }
+
+    /**
+     * Plays a sound effect from the specified index.
+     *
+     * <p>This method loads an audio file from the given index in the {@code sound} object
+     * and plays it immediately.</p>
+     *
+     * @param i the index of the sound effect in the {@code sound} object.
+     */
+    public void playSoundEffect(int i)
+    {
+        sound.setFile(i);
+        sound.play();
     }
 
     @Override
