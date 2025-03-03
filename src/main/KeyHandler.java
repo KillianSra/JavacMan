@@ -54,6 +54,10 @@ public class KeyHandler implements KeyListener
         {
             titleState(code);
         }
+        else if(gp.state == gp.settingsState)
+        {
+            settingsState(code);
+        }
         else if(gp.state == gp.gameOverState)
         {
             gameOverState(code);
@@ -123,7 +127,7 @@ public class KeyHandler implements KeyListener
      */
     private void pauseState(int code)
     {
-        handleMenuMovements(code, 1);
+        handleMenuMovements(code, 2);
 
         //Execute the selected command when the Enter key is pressed
         if(code == KeyEvent.VK_ENTER)
@@ -132,8 +136,13 @@ public class KeyHandler implements KeyListener
             {
                 //Resume gameplay
                 case 0: gp.state = gp.playState; break;
-                //Exit the game
+                //Display settings menu
                 case 1:
+                    gp.previousState = gp.state;
+                    gp.state = gp.settingsState;
+                    break;
+                //Exit the game
+                case 2:
                     gp.state = gp.titleState;
                     gp.UI.commandNb = 0;
                     break;
@@ -149,7 +158,7 @@ public class KeyHandler implements KeyListener
      */
     private void titleState(int code)
     {
-        handleMenuMovements(code, 1);
+        handleMenuMovements(code, 2);
 
         //Execute the selected command when the Enter key is pressed
         if(code == KeyEvent.VK_ENTER)
@@ -164,9 +173,49 @@ public class KeyHandler implements KeyListener
                     gp.state = gp.playState;
                     gp.playSoundEffect(Sound.MENU_SELECTION);
                     break;
+                //Display settings menu
+                case 1:
+                    gp.previousState = gp.state;
+                    gp.state = gp.settingsState;
+                    break;
                 //Exit the game
-                case 1: System.exit(0); break;
+                case 2: System.exit(0); break;
             }
+        }
+    }
+
+    /**
+     * Handles the logic for the settings state based on user input.
+     *
+     * @param code Key code representing the user input
+     */
+    private void settingsState(int code)
+    {
+        //handleMenuMovements();
+
+        //Sound effects volume
+        if(gp.UI.commandNb == 1)
+        {
+            //Decrease the sound effect volume
+            if((code == KeyEvent.VK_Q || code == KeyEvent.VK_LEFT) && gp.sound.volumeScale != 0)
+            {
+                gp.sound.volumeScale--;
+                gp.sound.setVolumeLevel();
+                gp.playSoundEffect(Sound.BAR_MOVEMENT);
+            }
+            //Increase the sound effect volume
+            else if((code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) && gp.sound.volumeScale != 5)
+            {
+                gp.sound.volumeScale++;
+                gp.sound.setVolumeLevel();
+                gp.playSoundEffect(Sound.BAR_MOVEMENT);
+            }
+        }
+
+        //Return to the previous state
+        if(code == KeyEvent.VK_ESCAPE)
+        {
+            gp.state = gp.previousState;
         }
     }
 

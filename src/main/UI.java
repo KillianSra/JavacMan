@@ -128,10 +128,18 @@ public class UI
             g2.drawRoundRect(x - gp.tileSize * 2, (int) (y - gp.tileSize * 1.80), gp.tileSize * 8, (int) (gp.tileSize * 2.5), 70, 70);
         }
 
-        // Draw the "QUIT" option
+        //Draw the "SETTINGS" option
+        y += gp.tileSize * 3;
+        g2.drawString("SETTINGS", getXCentered("SETTINGS", g2, 2), y);
+        if(commandNb == 1)
+        {
+            g2.drawRoundRect(x - gp.tileSize * 2, (int) (y - gp.tileSize * 1.80), gp.tileSize * 8, (int) (gp.tileSize * 2.5), 70, 70);
+        }
+
+        //Draw the "QUIT" option
         y += gp.tileSize * 3;
         g2.drawString("QUIT", getXCentered("QUIT", g2, 2), y);
-        if(commandNb == 1)
+        if(commandNb == 2)
         {
             g2.drawRoundRect(x - gp.tileSize * 2, (int) (y - gp.tileSize * 1.80), gp.tileSize * 8, (int) (gp.tileSize * 2.5), 70, 70);
         }
@@ -142,7 +150,7 @@ public class UI
      *
      * @param g2 Graphics2D instance used for rendering the title screen elements
      */
-    private void drawTitleSceen(Graphics2D g2)
+    private void drawTitleScreen(Graphics2D g2)
     {
         //Draw the title text
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, 65F));
@@ -161,13 +169,58 @@ public class UI
             g2.drawRoundRect((int) (x - gp.tileSize * 2.75), (int) (y - gp.tileSize * 1.80), gp.tileSize * 8, (int) (gp.tileSize * 2.5), 70, 70);
         }
 
-        //Draw the "QUIT" option
+        //Draw the "SETTINGS" option
         y += gp.tileSize * 3;
-        g2.drawString("QUIT", getXCentered("QUIT", g2, 2), y);
+        g2.drawString("SETTINGS", getXCentered("SETTINGS", g2, 2), y);
         if(commandNb == 1)
         {
             g2.drawRoundRect((int) (x - gp.tileSize * 2.75), (int) (y - gp.tileSize * 1.80), gp.tileSize * 8, (int) (gp.tileSize * 2.5), 70, 70);
         }
+
+        //Draw the "QUIT" option
+        y += gp.tileSize * 3;
+        g2.drawString("QUIT", getXCentered("QUIT", g2, 2), y);
+        if(commandNb == 2)
+        {
+            g2.drawRoundRect((int) (x - gp.tileSize * 2.75), (int) (y - gp.tileSize * 1.80), gp.tileSize * 8, (int) (gp.tileSize * 2.5), 70, 70);
+        }
+    }
+
+    /**
+     * Draws the settings screen.
+     *
+     * @param g2 Graphics2D instance used for rendering the settings screen elements
+     */
+    private void drawSettingsScreen(Graphics2D g2)
+    {
+        int x, y;
+
+        //Draw the settings text
+        y = gp.tileSize * 4;
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 65F));
+        g2.drawString("SETTINGS", getXCentered("SETTINGS", g2, 2), y);
+
+        //Sound label
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 32F));
+        x = gp.tileSize * 5;
+        y += gp.tileSize * 5;
+        g2.drawString("Sound effects : ", x, y);
+        if(commandNb == 1)
+        {
+            g2.drawString(">", x - gp.tileSize, y);
+        }
+
+        //Sound volume bar
+        x += gp.tileSize * 9;
+        y -= gp.tileSize - 2;
+        g2.drawRect(x, y, 240, 24);
+        int volumeWidth = 48 * gp.sound.volumeScale;
+        g2.fillRect(x, y, volumeWidth, 24);
+
+        //Command helper
+        x = gp.tileSize * 2;
+        y = gp.tileSize * 26 + 12;
+        g2.drawString("[ESC] Back", x, y);
     }
 
     /**
@@ -277,7 +330,11 @@ public class UI
         }
         else if(gp.state == gp.titleState)
         {
-            drawTitleSceen(g2);
+            drawTitleScreen(g2);
+        }
+        else if(gp.state == gp.settingsState)
+        {
+            drawSettingsScreen(g2);
         }
         else if(gp.state == gp.gameOverState)
         {

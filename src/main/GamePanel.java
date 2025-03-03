@@ -40,10 +40,13 @@ public class GamePanel extends JPanel implements Runnable
 
     //State
     public int state;
+    public int previousState;
+
     public final int titleState = 0;
     public final int playState = 1;
     public final int pauseState = 2;
     public final int gameOverState = 3;
+    public final int settingsState = 4;
 
     //Game state
     private final int JAVACGUMS_IN_LEVELS = 167;
