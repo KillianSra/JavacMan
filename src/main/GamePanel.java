@@ -1,6 +1,7 @@
 package main;
 
 import ai.Pathfinder;
+import data.ScoreManager;
 import entity.*;
 import object.Object;
 import tile.TileManager;
@@ -23,6 +24,9 @@ public class GamePanel extends JPanel implements Runnable
     public final int minRow = 4;
     public final int maxCol = 24;
     public final int maxRow = 23;
+
+    //Attribute
+    public int highestScore;
 
     //System
     public TileManager tileManager = new TileManager(this);
@@ -73,6 +77,10 @@ public class GamePanel extends JPanel implements Runnable
         this.setFocusable(true);
         this.addKeyListener(keyHandler);
         this.state = this.titleState;
+
+        //Create the highestScore.dat file if necessary
+        ScoreManager.initializeStorage();
+        this.highestScore = ScoreManager.load();
 
         setupGame();
     }
@@ -231,6 +239,20 @@ public class GamePanel extends JPanel implements Runnable
         {
             setupGame();
             restart = false;
+        }
+    }
+
+    /**
+     * Saves the player's score if it is higher than the current highest score.
+     */
+    public void saveScore()
+    {
+        int score = player.getScore();
+
+        if(score > highestScore)
+        {
+            ScoreManager.save(score);
+            highestScore = score;
         }
     }
 

@@ -53,10 +53,14 @@ public class UI
         g2.drawString("1UP", getXCentered("1UP", g2, 4), y);
         g2.drawString("HIGH SCORE", getXCentered("HIGH SCORE", g2, 2), y);
 
+        //Player's score
         y *= 2;
         String text = String.valueOf(gp.player.getScore());
         g2.drawString(text, getXCentered(text, g2, 4), y);
-        g2.drawString("100", getXCentered("100", g2, 2) , y);
+
+        //Highest score
+        String highestScore = String.valueOf(gp.highestScore);
+        g2.drawString(highestScore, getXCentered(highestScore, g2, 2) , y);
 
         //Player's life icons
         int x = gp.tileSize * 4;

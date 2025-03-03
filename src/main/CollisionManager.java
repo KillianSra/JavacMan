@@ -210,6 +210,7 @@ public class CollisionManager
                 if(gp.player.getLife() == 0)
                 {
                     gp.state = gp.gameOverState;
+                    gp.saveScore();
                 }
                 else
                 {
