@@ -205,7 +205,7 @@ public class UI
         x = gp.tileSize * 5;
         y += gp.tileSize * 5;
         g2.drawString("Sound effects : ", x, y);
-        if(commandNb == 1)
+        if(commandNb == 0)
         {
             g2.drawString(">", x - gp.tileSize, y);
         }
@@ -216,6 +216,24 @@ public class UI
         g2.drawRect(x, y, 240, 24);
         int volumeWidth = 48 * gp.sound.volumeScale;
         g2.fillRect(x, y, volumeWidth, 24);
+
+        //Full screen
+        x = gp.tileSize * 5;
+        y = gp.tileSize * 11;
+        g2.drawString("Full screen : ", x, y);
+        if(commandNb == 1)
+        {
+            g2.drawString(">", x - gp.tileSize, y);
+        }
+
+        //Full screen checkbox
+        x += gp.tileSize * 9;
+        y -= gp.tileSize - 2;
+        g2.drawRect(x, y, 24, 24);
+        if(gp.fullScreenOff)
+        {
+            g2.fillRect(x, y, 24, 24);
+        }
 
         //Command helper
         x = gp.tileSize * 2;
@@ -302,8 +320,14 @@ public class UI
      */
     private int getXCentered(String text, Graphics2D g2, int position)
     {
+        int width = gp.screenWidth;
         int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
-        return gp.screenWidth / position - length / position;
+
+        if(gp.fullScreenOff)
+        {
+            width = gp.originalScreenWidth;
+        }
+        return width / position - length / position;
     }
 
     /**

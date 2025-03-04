@@ -8,6 +8,7 @@ import tile.TileManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class GamePanel extends JPanel implements Runnable
@@ -18,12 +19,21 @@ public class GamePanel extends JPanel implements Runnable
     public final int tileSize = (int) (originalTileSize * scale);   //24x24 pixels = 1 tile
     public final int maxScreenCol = 29;
     public final int maxScreenRow = 28;
-    public final int screenHeight = tileSize * maxScreenRow;    //720 pixels
-    public final int screenWidth = tileSize * maxScreenCol;     //624 pixels
+    public int screenHeight = tileSize * maxScreenRow;    //672 pixels
+    public int screenWidth = tileSize * maxScreenCol;     //696 pixels
+    public final int originalScreenHeight = screenHeight;
+    public final int originalScreenWidth = screenWidth;
     public final int minCol = 4;
     public final int minRow = 4;
     public final int maxCol = 24;
     public final int maxRow = 23;
+
+    //Full screen settings
+    public boolean fullScreenOff = false;
+    public int screenHeightFS;
+    public int screenWidthFS;
+    public BufferedImage tempScreen;
+    private Graphics2D tempGraphics;
 
     //Attribute
     public int highestScore;
@@ -82,6 +92,10 @@ public class GamePanel extends JPanel implements Runnable
         this.addKeyListener(keyHandler);
         this.state = this.titleState;
 
+        //Full screen settings
+        tempScreen = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
+        tempGraphics = tempScreen.createGraphics();
+
         //Create the highestScore.dat file if necessary
         ScoreManager.initializeStorage();
         this.highestScore = ScoreManager.load();
@@ -112,6 +126,23 @@ public class GamePanel extends JPanel implements Runnable
         {
             collectedItems.clear();
             currentRound = 1;
+        }
+    }
+
+    /**
+     * Defines the game window dimensions based on the current screen mode.
+     */
+    public void defineWindowDimension()
+    {
+        if(fullScreenOff)
+        {
+            screenHeight = tileSize * maxScreenRow;
+            screenWidth = tileSize * maxScreenCol;
+        }
+        else
+        {
+            screenHeight = screenHeightFS;
+            screenWidth = screenWidthFS;
         }
     }
 
@@ -280,6 +311,37 @@ public class GamePanel extends JPanel implements Runnable
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
+        //Draw the game in a temp BufferedImage
+        drawGame(tempGraphics);
+
+        int offsetX = 0;
+        if(fullScreenOff)
+        {
+            //Calculate x-offset to center game in fullscreen mode
+            offsetX = (Main.DEVICE.getFullScreenWindow().getWidth() - Main.DEVICE.getFullScreenWindow().getHeight()) / 2 + tileSize;
+        }
+
+        //Draw the game
+        g2.drawImage(tempScreen, offsetX, 0, screenWidth, screenHeight, null);
+
+        g2.dispose();
+    }
+
+    /**
+     * Renders the game elements onto the provided Graphics2D context.
+     * <p>
+     * This method is responsible for drawing all the game components, including the tile map,
+     * objects, entities (player, ghosts), and the UI.
+     * </p>
+     *
+     * @param g2 The {@code Graphics2D} instance used for rendering.
+     */
+    private void drawGame(Graphics2D g2)
+    {
+        //Reset the tempScreen
+        g2.setColor(Color.BLACK);
+        g2.fillRect(0, 0, screenWidth, screenHeight);
+
         if(state == playState || state == pauseState || state == gameOverState)
         {
             //Draw the game board
@@ -313,7 +375,5 @@ public class GamePanel extends JPanel implements Runnable
             //Draw the triggers event area
             this.eventManager.draw(g2);
         }
-
-        g2.dispose();
     }
 }

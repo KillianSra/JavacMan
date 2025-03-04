@@ -140,6 +140,7 @@ public class KeyHandler implements KeyListener
                 case 1:
                     gp.previousState = gp.state;
                     gp.state = gp.settingsState;
+                    gp.UI.commandNb = 0;
                     break;
                 //Exit the game
                 case 2:
@@ -177,6 +178,7 @@ public class KeyHandler implements KeyListener
                 case 1:
                     gp.previousState = gp.state;
                     gp.state = gp.settingsState;
+                    gp.UI.commandNb = 0;
                     break;
                 //Exit the game
                 case 2: System.exit(0); break;
@@ -191,10 +193,10 @@ public class KeyHandler implements KeyListener
      */
     private void settingsState(int code)
     {
-        //handleMenuMovements();
+        handleMenuMovements(code, 1);
 
         //Sound effects volume
-        if(gp.UI.commandNb == 1)
+        if(gp.UI.commandNb == 0)
         {
             //Decrease the sound effect volume
             if((code == KeyEvent.VK_Q || code == KeyEvent.VK_LEFT) && gp.sound.volumeScale != 0)
@@ -209,6 +211,13 @@ public class KeyHandler implements KeyListener
                 gp.sound.volumeScale++;
                 gp.sound.setVolumeLevel();
                 gp.playSoundEffect(Sound.BAR_MOVEMENT);
+            }
+        }
+        else if(gp.UI.commandNb == 1)
+        {
+            if(code == KeyEvent.VK_ENTER)
+            {
+                Main.toggleFullScreen();
             }
         }
 
