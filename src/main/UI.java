@@ -230,7 +230,7 @@ public class UI
         x += gp.tileSize * 9;
         y -= gp.tileSize - 2;
         g2.drawRect(x, y, 24, 24);
-        if(gp.fullScreenOff)
+        if(gp.fullScreen)
         {
             g2.fillRect(x, y, 24, 24);
         }
@@ -251,6 +251,17 @@ public class UI
         if(gp.displayFPSCounter)
         {
             g2.fillRect(x, y, 24, 24);
+        }
+
+        //Save button
+        getXCentered("Save", g2, 2);
+        y = gp.tileSize * 23;
+        g2.setFont(g2.getFont().deriveFont(42f));
+        g2.drawString("Save", x, y);
+        g2.setFont(g2.getFont().deriveFont(32f));
+        if(commandNb == 3)
+        {
+            g2.drawRoundRect((int) (x - gp.tileSize * 2.75), (int) (y - gp.tileSize * 1.80), gp.tileSize * 8, (int) (gp.tileSize * 2.5), 70, 70);
         }
 
         //Command helper
@@ -341,7 +352,7 @@ public class UI
         int width = gp.screenWidth;
         int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
 
-        if(gp.fullScreenOff)
+        if(gp.fullScreen)
         {
             width = gp.originalScreenWidth;
         }

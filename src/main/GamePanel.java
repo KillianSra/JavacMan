@@ -4,6 +4,8 @@ import ai.Pathfinder;
 import data.ScoreManager;
 import entity.*;
 import object.Object;
+import settings.Settings;
+import settings.SettingsManager;
 import tile.TileManager;
 
 import javax.swing.*;
@@ -29,15 +31,16 @@ public class GamePanel extends JPanel implements Runnable
     public final int maxRow = 23;
 
     //Full screen settings
-    public boolean fullScreenOff = false;
+    public boolean fullScreen;
     public int screenHeightFS;
     public int screenWidthFS;
     public BufferedImage tempScreen;
     private Graphics2D tempGraphics;
 
     //Attribute
+    private boolean firstIteration = true;
     public int highestScore;
-    public boolean displayFPSCounter = false;
+    public boolean displayFPSCounter;
     private int FPS;
 
     //System
@@ -101,8 +104,34 @@ public class GamePanel extends JPanel implements Runnable
         //Create the highestScore.dat file if necessary
         ScoreManager.initializeStorage();
         this.highestScore = ScoreManager.load();
-
         setupGame();
+
+        //Create the settings.dat file if necessary
+        SettingsManager.initializeSettings();
+
+        //Load the saved settings
+        Settings settings = SettingsManager.load();
+        this.fullScreen = settings.fullScreen();
+        this.displayFPSCounter = settings.displayFPSCounter();
+        this.sound.volumeScale = settings.volumeScale();
+    }
+
+    /**
+     * Checks if fullscreen mode is enabled and applies it accordingly.
+     * If fullscreen is active, it switches to fullscreen mode and updates window dimensions.
+     *
+     * <p>
+     *     This method switches the window to fullscreen when starting the game if fullScreen = true is specified in
+     *     settings.dat.
+     * </p>
+     */
+    private void checkFullScreen()
+    {
+        if(fullScreen)
+        {
+            Main.setFullScreen();
+            defineWindowDimension();
+        }
     }
 
     /**
@@ -136,15 +165,15 @@ public class GamePanel extends JPanel implements Runnable
      */
     public void defineWindowDimension()
     {
-        if(fullScreenOff)
-        {
-            screenHeight = tileSize * maxScreenRow;
-            screenWidth = tileSize * maxScreenCol;
-        }
-        else
+        if(fullScreen)
         {
             screenHeight = screenHeightFS;
             screenWidth = screenWidthFS;
+        }
+        else
+        {
+            screenHeight = tileSize * maxScreenRow;
+            screenWidth = tileSize * maxScreenCol;
         }
     }
 
@@ -171,6 +200,13 @@ public class GamePanel extends JPanel implements Runnable
             //If enough time has passed to process a frame
             if(delta >= 1)
             {
+                //Check if the game should be in full screen when launched
+                if(firstIteration)
+                {
+                    checkFullScreen();
+                    firstIteration = false;
+                }
+
                 //Update game logic
                 update();
 
@@ -317,7 +353,8 @@ public class GamePanel extends JPanel implements Runnable
         drawGame(tempGraphics);
 
         int offsetX = 0;
-        if(fullScreenOff)
+        //We check if the full screen window has finished building with the second condition
+        if(fullScreen && Main.DEVICE.getFullScreenWindow() != null)
         {
             //Calculate x-offset to center game in fullscreen mode
             offsetX = (Main.DEVICE.getFullScreenWindow().getWidth() - Main.DEVICE.getFullScreenWindow().getHeight()) / 2 + tileSize;

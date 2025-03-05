@@ -1,5 +1,7 @@
 package main;
 
+import settings.SettingsManager;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -193,7 +195,7 @@ public class KeyHandler implements KeyListener
      */
     private void settingsState(int code)
     {
-        handleMenuMovements(code, 2);
+        handleMenuMovements(code, 3);
 
         //Sound effects volume
         if(gp.UI.commandNb == 0)
@@ -213,18 +215,31 @@ public class KeyHandler implements KeyListener
                 gp.playSoundEffect(Sound.BAR_MOVEMENT);
             }
         }
+        //Toggle between full screen and basic screen
         else if(gp.UI.commandNb == 1)
         {
             if(code == KeyEvent.VK_ENTER)
             {
+                gp.fullScreen = !gp.fullScreen;
                 Main.toggleFullScreen();
             }
         }
+        //Display FPS counter
         else if(gp.UI.commandNb == 2)
         {
             if(code == KeyEvent.VK_ENTER)
             {
                 gp.displayFPSCounter = !gp.displayFPSCounter;
+            }
+        }
+        //Save settings
+        else if(gp.UI.commandNb == 3)
+        {
+            if(code == KeyEvent.VK_ENTER)
+            {
+                SettingsManager.save(gp.sound.volumeScale, gp.fullScreen, gp.displayFPSCounter);
+                gp.state = gp.previousState;
+                gp.UI.commandNb = 0;
             }
         }
 

@@ -32,3 +32,6 @@ bin/
 
 ### Highest score ###
 src/data/highestScore.dat
+
+### Settings ###
+src/settings/settings.dat
