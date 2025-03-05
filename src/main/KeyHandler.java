@@ -193,7 +193,7 @@ public class KeyHandler implements KeyListener
      */
     private void settingsState(int code)
     {
-        handleMenuMovements(code, 1);
+        handleMenuMovements(code, 2);
 
         //Sound effects volume
         if(gp.UI.commandNb == 0)
@@ -218,6 +218,13 @@ public class KeyHandler implements KeyListener
             if(code == KeyEvent.VK_ENTER)
             {
                 Main.toggleFullScreen();
+            }
+        }
+        else if(gp.UI.commandNb == 2)
+        {
+            if(code == KeyEvent.VK_ENTER)
+            {
+                gp.displayFPSCounter = !gp.displayFPSCounter;
             }
         }
 

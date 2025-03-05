@@ -37,6 +37,8 @@ public class GamePanel extends JPanel implements Runnable
 
     //Attribute
     public int highestScore;
+    public boolean displayFPSCounter = false;
+    private int FPS;
 
     //System
     public TileManager tileManager = new TileManager(this);
@@ -183,7 +185,7 @@ public class GamePanel extends JPanel implements Runnable
             //DEBUG
             if(timer >= 1000000000)
             {
-                //System.out.println("FPS: " + drawCount);
+                this.FPS = (int) drawCount;
                 drawCount = 0;
                 timer = 0;
             }
@@ -368,6 +370,22 @@ public class GamePanel extends JPanel implements Runnable
 
         //Draw UI
         this.UI.draw(g2);
+
+        //Draw FPS counter
+        if(displayFPSCounter)
+        {
+            //Convert long to String
+            String fps = String.valueOf(this.FPS);
+
+            //Draw the fps counter
+            g2.setFont(g2.getFont().deriveFont(Font.PLAIN,20f));
+            g2.setColor(new Color(0, 255, 0));
+            g2.drawString(fps, (maxScreenRow - 1) * tileSize, (maxScreenCol - 2) * tileSize);
+
+            //Back to the previous g2 settings
+            g2.setFont(g2.getFont().deriveFont(Font.BOLD, 32f));
+            g2.setColor(Color.WHITE);
+        }
 
         //DEBUG
         if(isDebuggingEnabled)

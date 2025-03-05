@@ -235,6 +235,24 @@ public class UI
             g2.fillRect(x, y, 24, 24);
         }
 
+        //FPS counter
+        x = gp.tileSize * 5;
+        y = gp.tileSize * 13;
+        g2.drawString("Display FPS : ", x, y);
+        if(commandNb == 2)
+        {
+            g2.drawString(">", x - gp.tileSize, y);
+        }
+
+        //FPS counter checkbox
+        x += gp.tileSize * 9;
+        y -= gp.tileSize - 2;
+        g2.drawRect(x, y, 24, 24);
+        if(gp.displayFPSCounter)
+        {
+            g2.fillRect(x, y, 24, 24);
+        }
+
         //Command helper
         x = gp.tileSize * 2;
         y = gp.tileSize * 26 + 12;

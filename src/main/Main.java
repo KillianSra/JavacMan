@@ -49,6 +49,9 @@ public class Main
             DEVICE.setFullScreenWindow(WINDOW);
 
             GAME_PANEL.screenHeightFS = Main.DEVICE.getFullScreenWindow().getHeight();
+
+            //Adjust screen width dynamically while maintaining the original aspect ratio (672:696).
+            //This ensures the game scales proportionally regardless of the screen resolution.
             GAME_PANEL.screenWidthFS = (int) (GAME_PANEL.screenHeightFS * (672.0 / 696.0));
         }
 
