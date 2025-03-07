@@ -60,6 +60,10 @@ public class KeyHandler implements KeyListener
         {
             settingsState(code);
         }
+        else if(gp.state == gp.controlsState)
+        {
+            controlState(code);
+        }
         else if(gp.state == gp.gameOverState)
         {
             gameOverState(code);
@@ -195,7 +199,7 @@ public class KeyHandler implements KeyListener
      */
     private void settingsState(int code)
     {
-        handleMenuMovements(code, 3);
+        handleMenuMovements(code, 4);
 
         //Sound effects volume
         if(gp.UI.commandNb == 0)
@@ -232,8 +236,16 @@ public class KeyHandler implements KeyListener
                 gp.displayFPSCounter = !gp.displayFPSCounter;
             }
         }
-        //Save settings
         else if(gp.UI.commandNb == 3)
+        {
+            if(code == KeyEvent.VK_ENTER)
+            {
+                gp.UI.commandNb = 0;
+                gp.state = gp.controlsState;
+            }
+        }
+        //Save settings
+        else if(gp.UI.commandNb == 4)
         {
             if(code == KeyEvent.VK_ENTER)
             {
@@ -247,6 +259,20 @@ public class KeyHandler implements KeyListener
         if(code == KeyEvent.VK_ESCAPE)
         {
             gp.state = gp.previousState;
+        }
+    }
+
+    /**
+     * Handles the logic for the controls state based on user input.
+     *
+     * @param code Key code representing the user input
+     */
+    private void controlState(int code)
+    {
+        //Return to settings menu
+        if(code == KeyEvent.VK_ESCAPE)
+        {
+            gp.state = gp.settingsState;
         }
     }
 

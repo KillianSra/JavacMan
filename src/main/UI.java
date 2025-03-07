@@ -253,16 +253,76 @@ public class UI
             g2.fillRect(x, y, 24, 24);
         }
 
+        //Commands
+        x = gp.tileSize * 5;
+        y = gp.tileSize * 15;
+        g2.drawString("Controls", x, y);
+        if(commandNb == 3)
+        {
+            g2.drawString(">", x - gp.tileSize, y);
+        }
+
         //Save button
-        getXCentered("Save", g2, 2);
+        x = getXCentered("Save", g2, 2);
         y = gp.tileSize * 23;
         g2.setFont(g2.getFont().deriveFont(42f));
         g2.drawString("Save", x, y);
         g2.setFont(g2.getFont().deriveFont(32f));
-        if(commandNb == 3)
+        if(commandNb == 4)
         {
             g2.drawRoundRect((int) (x - gp.tileSize * 2.75), (int) (y - gp.tileSize * 1.80), gp.tileSize * 8, (int) (gp.tileSize * 2.5), 70, 70);
         }
+
+        //Command helper
+        x = gp.tileSize * 2;
+        y = gp.tileSize * 26 + 12;
+        g2.drawString("[ESC] Back", x, y);
+    }
+
+    /**
+     * Draws the controls screen.
+     *
+     * @param g2 Graphics2D instance used for rendering the settings screen elements
+     */
+    private void drawControlsScreen(Graphics2D g2)
+    {
+        int x, y;
+
+        //Draw the controls text
+        y = gp.tileSize * 4;
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 65F));
+        g2.drawString("Controls", getXCentered("Controls", g2, 2), y);
+
+        //Label
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 32F));
+        x = gp.tileSize * 5;
+        y += gp.tileSize * 5;
+        g2.drawString("//IN GAME", x, y);
+
+        //Up
+        y += gp.tileSize * 2;
+        g2.drawString("Up : ", x, y);
+        g2.drawString("[Z] or [↑]", x + gp.tileSize * 4, y);
+
+        //Down
+        y += gp.tileSize * 2;
+        g2.drawString("Down : ", x, y);
+        g2.drawString("[S] or [↓]", x + gp.tileSize * 4, y);
+
+        //Left
+        y += gp.tileSize * 2;
+        g2.drawString("Left : ", x, y);
+        g2.drawString("[Q] or [←]", x + gp.tileSize * 4, y);
+
+        //Right
+        y += gp.tileSize * 2;
+        g2.drawString("Right : ", x, y);
+        g2.drawString("[D] or [→]", x + gp.tileSize * 4, y);
+
+        //Pause
+        y += gp.tileSize * 2;
+        g2.drawString("Pause : ", x, y);
+        g2.drawString("[ESC]", x + gp.tileSize * 4, y);
 
         //Command helper
         x = gp.tileSize * 2;
@@ -388,6 +448,10 @@ public class UI
         else if(gp.state == gp.settingsState)
         {
             drawSettingsScreen(g2);
+        }
+        else if(gp.state == gp.controlsState)
+        {
+            drawControlsScreen(g2);
         }
         else if(gp.state == gp.gameOverState)
         {
