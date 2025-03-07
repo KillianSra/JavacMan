@@ -1,11 +1,11 @@
 package main;
 
 import ai.Pathfinder;
-import data.ScoreManager;
+import storage.highscore.HighscoreManager;
 import entity.*;
 import object.Object;
-import settings.Settings;
-import settings.SettingsManager;
+import storage.settings.Settings;
+import storage.settings.SettingsManager;
 import tile.TileManager;
 
 import javax.swing.*;
@@ -103,8 +103,8 @@ public class GamePanel extends JPanel implements Runnable
         tempGraphics = tempScreen.createGraphics();
 
         //Create the highestScore.dat file if necessary
-        ScoreManager.initializeStorage();
-        this.highestScore = ScoreManager.load();
+        HighscoreManager.initializeStorage();
+        this.highestScore = HighscoreManager.load();
         setupGame();
 
         //Create the settings.dat file if necessary
@@ -325,7 +325,7 @@ public class GamePanel extends JPanel implements Runnable
 
         if(score > highestScore)
         {
-            ScoreManager.save(score);
+            HighscoreManager.save(score);
             highestScore = score;
         }
     }

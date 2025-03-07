@@ -31,7 +31,7 @@ bin/
 .DS_Store
 
 ### Highest score ###
-src/data/highestScore.dat
+src/storage/highscore/highestScore.dat
 
 ### Settings ###
-src/settings/settings.dat
+src/storage/settings/settings.dat

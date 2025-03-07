@@ -1,6 +1,6 @@
 package main;
 
-import settings.SettingsManager;
+import storage.settings.SettingsManager;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

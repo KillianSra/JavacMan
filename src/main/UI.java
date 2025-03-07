@@ -282,7 +282,7 @@ public class UI
     /**
      * Draws the controls screen.
      *
-     * @param g2 Graphics2D instance used for rendering the settings screen elements
+     * @param g2 Graphics2D instance used for rendering the controls screen elements
      */
     private void drawControlsScreen(Graphics2D g2)
     {

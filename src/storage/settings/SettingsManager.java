@@ -1,10 +1,10 @@
-package settings;
+package storage.settings;
 
 import java.io.*;
 
 public class SettingsManager
 {
-    private static final String FILE_NAME = "src/settings/settings.dat";
+    private static final String FILE_NAME = "src/storage/settings/settings.dat";
 
     /**
      * Ensures that the settings file exists with a default values.

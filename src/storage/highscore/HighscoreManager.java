@@ -1,10 +1,10 @@
-package data;
+package storage.highscore;
 
 import java.io.*;
 
-public class ScoreManager
+public class HighscoreManager
 {
-    private static final String FILE_NAME = "src/data/highestScore.dat";
+    private static final String FILE_NAME = "src/storage/highscore/highestScore.dat";
 
     /**
      * Ensures that the score file exists with a default value.
@@ -35,10 +35,10 @@ public class ScoreManager
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(FILE_NAME)));
 
             //Create a Storage object to hold the score
-            Storage storage = new Storage(score);
+            Highscore highscore = new Highscore(score);
 
             //Write the Storage object to the file
-            oos.writeObject(storage);
+            oos.writeObject(highscore);
 
             //Close the stream to release resources
             oos.close();
@@ -57,7 +57,7 @@ public class ScoreManager
      */
     public static int load()
     {
-        Storage storage;
+        Highscore highscore;
 
         try
         {
@@ -65,7 +65,7 @@ public class ScoreManager
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File(FILE_NAME)));
 
             //Read the Storage object from the file
-            storage = (Storage) ois.readObject();
+            highscore = (Highscore) ois.readObject();
 
             //Close the stream to release resources
             ois.close();
@@ -76,6 +76,6 @@ public class ScoreManager
         }
 
         //Return the stored score
-        return storage.score();
+        return highscore.score();
     }
 }

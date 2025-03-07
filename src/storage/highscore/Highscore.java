@@ -1,9 +1,9 @@
-package data;
+package storage.highscore;
 
 import java.io.Serializable;
 
 /**
- * A record that stores a score value.
+ * A record that stores the highscore value.
  * <p>
  * This record is immutable and implements {@link Serializable}, allowing it
  * to be saved and loaded from a file.
@@ -11,4 +11,4 @@ import java.io.Serializable;
  *
  * @param score The score value to be stored.
  */
-public record Storage(int score) implements Serializable {}
+public record Highscore(int score) implements Serializable {}

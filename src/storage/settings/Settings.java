@@ -1,4 +1,4 @@
-package settings;
+package storage.settings;
 
 import java.io.Serializable;
 
