@@ -30,8 +30,7 @@ bin/
 ### Mac OS ###
 .DS_Store
 
-### Highest score ###
+### .dat Files ###
 src/storage/highscore/highestScore.dat
-
-### Settings ###
 src/storage/settings/settings.dat
+src/storage/controls/controls.dat

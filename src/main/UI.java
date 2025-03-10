@@ -17,8 +17,9 @@ public class UI
     //Selection menu
     final int pauseState = 1;
     int subState;
+    public int commandNb;
 
-    int commandNb;
+    public boolean changeKey = false;
 
     public UI(GamePanel gp)
     {
@@ -276,7 +277,7 @@ public class UI
         //Command helper
         x = gp.tileSize * 2;
         y = gp.tileSize * 26 + 12;
-        g2.drawString("[ESC] Back", x, y);
+        g2.drawString(gp.keyHandler.getKeyByKeycode(gp.keyHandler.pause) + " Back", x, y);
     }
 
     /**
@@ -302,32 +303,103 @@ public class UI
         //Up
         y += gp.tileSize * 2;
         g2.drawString("Up : ", x, y);
-        g2.drawString("[Z] or [↑]", x + gp.tileSize * 4, y);
+        g2.drawString(gp.keyHandler.getKeyByKeycode(gp.keyHandler.up) + " or [↑]", x + gp.tileSize * 4, y);
+        if(commandNb == 0 && !changeKey)
+        {
+            g2.drawString(">", x - gp.tileSize, y);
+        }
 
         //Down
         y += gp.tileSize * 2;
         g2.drawString("Down : ", x, y);
-        g2.drawString("[S] or [↓]", x + gp.tileSize * 4, y);
+        g2.drawString(gp.keyHandler.getKeyByKeycode(gp.keyHandler.down) + " or [↓]", x + gp.tileSize * 4, y);
+        if(commandNb == 1 && !changeKey)
+        {
+            g2.drawString(">", x - gp.tileSize, y);
+        }
 
         //Left
         y += gp.tileSize * 2;
         g2.drawString("Left : ", x, y);
-        g2.drawString("[Q] or [←]", x + gp.tileSize * 4, y);
+        g2.drawString(gp.keyHandler.getKeyByKeycode(gp.keyHandler.left) + " or [←]", x + gp.tileSize * 4, y);
+        if(commandNb == 2)
+        {
+            g2.drawString(">", x - gp.tileSize, y);
+        }
 
         //Right
         y += gp.tileSize * 2;
         g2.drawString("Right : ", x, y);
-        g2.drawString("[D] or [→]", x + gp.tileSize * 4, y);
+        g2.drawString(gp.keyHandler.getKeyByKeycode(gp.keyHandler.right) + " or [→]", x + gp.tileSize * 4, y);
+        if(commandNb == 3)
+        {
+            g2.drawString(">", x - gp.tileSize, y);
+        }
 
         //Pause
         y += gp.tileSize * 2;
         g2.drawString("Pause : ", x, y);
-        g2.drawString("[ESC]", x + gp.tileSize * 4, y);
+        g2.drawString(gp.keyHandler.getKeyByKeycode(gp.keyHandler.pause), x + gp.tileSize * 4, y);
+        if(commandNb == 4)
+        {
+            g2.drawString(">", x - gp.tileSize, y);
+        }
+
+        //Save button
+        x = getXCentered("Save", g2, 2);
+        y = gp.tileSize * 23;
+        g2.setFont(g2.getFont().deriveFont(42f));
+        g2.drawString("Save", x, y);
+        g2.setFont(g2.getFont().deriveFont(32f));
+        if(commandNb == 5)
+        {
+            g2.drawRoundRect((int) (x - gp.tileSize * 2.75), (int) (y - gp.tileSize * 1.80), gp.tileSize * 8, (int) (gp.tileSize * 2.5), 70, 70);
+        }
 
         //Command helper
         x = gp.tileSize * 2;
         y = gp.tileSize * 26 + 12;
-        g2.drawString("[ESC] Back", x, y);
+        g2.drawString(gp.keyHandler.getKeyByKeycode(gp.keyHandler.pause) + " Back", x, y);
+    }
+
+    /**
+     * Draws the ket change window.
+     *
+     * @param g2 Graphics2D instance used for rendering the key change window elements
+     */
+    private void drawKeyChangeWindow(Graphics2D g2)
+    {
+        //Sub window construction
+        int x = gp.tileSize * 9 + gp.tileSize / 2;
+        int y = gp.tileSize * 9 + gp.tileSize / 2;
+
+        //border
+        g2.fillRoundRect(x, y, gp.tileSize * 10, gp.tileSize * 7, 30, 30);
+
+        //Rectangle
+        g2.setColor(Color.DARK_GRAY);
+        g2.fillRoundRect(x + 2, y + 2, gp.tileSize * 10 - 4, gp.tileSize * 7 - 4, 30, 30);
+
+        //Title
+        g2.setColor(Color.WHITE);
+        g2.drawString("Press a key", getXCentered("Press a key", g2, 2), (int) (y + gp.tileSize * 1.5));
+
+        //Display the selected key
+        if(gp.keyHandler.keyCode != -1)
+        {
+            g2.setFont(g2.getFont().deriveFont(24f));
+
+            int keycode = gp.keyHandler.keyCode;
+            String key = gp.keyHandler.getKeyByKeycode(keycode);
+            int centerX = getXCentered(String.valueOf(key), g2, 2);
+            g2.drawString(key, centerX, y + gp.tileSize * 4);
+
+            //Command helper
+            y += gp.tileSize * 6;
+            g2.drawString("[Enter] Save", getXCentered("[Enter] Save", g2, 2), y);
+
+            g2.setFont(g2.getFont().deriveFont(32f));
+        }
     }
 
     /**
@@ -429,7 +501,6 @@ public class UI
         g2.setFont(maruMonica);
         g2.setColor(Color.WHITE);
 
-
         if(gp.state == gp.playState)
         {
             drawHUD(g2);
@@ -452,6 +523,10 @@ public class UI
         else if(gp.state == gp.controlsState)
         {
             drawControlsScreen(g2);
+            if(this.changeKey)
+            {
+                drawKeyChangeWindow(g2);
+            }
         }
         else if(gp.state == gp.gameOverState)
         {
