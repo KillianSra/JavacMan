@@ -29,3 +29,8 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### .dat Files ###
+src/storage/highscore/highestScore.dat
+src/storage/settings/settings.dat
+src/storage/controls/controls.dat

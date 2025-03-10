@@ -49,6 +49,7 @@ public class Player extends Entity
         if(gp.restart)
         {
             score = 0;
+            life = 3;
         }
     }
 

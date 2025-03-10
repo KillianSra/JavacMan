@@ -1,25 +1,68 @@
 package main;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class Main
 {
+    public final static JFrame WINDOW = new JFrame();;
+    private final static GamePanel GAME_PANEL = new GamePanel();
+    public final static GraphicsDevice DEVICE = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+
     public static void main(String[] args)
     {
-        //Window configuration
-        JFrame window = new JFrame();
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setResizable(false);
-        window.setTitle("JavacMan");
+        SwingUtilities.invokeLater(() -> {
+            //Window configuration
+            WINDOW.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            WINDOW.setResizable(false);
+            WINDOW.setTitle("JavacMan");
 
-        GamePanel gamePanel = new GamePanel();
-        window.add(gamePanel);
+            WINDOW.add(GAME_PANEL);
 
-        window.pack();
-        window.setLocationRelativeTo(null);
-        window.setVisible(true);
+            WINDOW.pack();
+            WINDOW.setLocationRelativeTo(null);
+            WINDOW.setVisible(true);
 
-        //Start game loop
-        gamePanel.startGameThread();
+            //Start game loop
+            GAME_PANEL.startGameThread();
+        });
+    }
+
+    /**
+     * Toggles between fullscreen and windowed mode.
+     */
+    public static void toggleFullScreen()
+    {
+        if(!GAME_PANEL.fullScreen)
+        {
+            //Default size
+            DEVICE.setFullScreenWindow(null);
+            WINDOW.dispose();
+            WINDOW.setUndecorated(false);
+            WINDOW.setVisible(true);
+        }
+        else
+        {
+            setFullScreen();
+        }
+
+        GAME_PANEL.defineWindowDimension();
+    }
+
+    /**
+     * Switches the game window to fullscreen mode.
+     */
+    public static void setFullScreen()
+    {
+        //Full screen mode
+        WINDOW.dispose();
+        WINDOW.setUndecorated(true);
+        DEVICE.setFullScreenWindow(WINDOW);
+
+        GAME_PANEL.screenHeightFS = Main.DEVICE.getFullScreenWindow().getHeight();
+
+        //Adjust screen width dynamically while maintaining the original aspect ratio (672:696).
+        //This ensures the game scales proportionally regardless of the screen resolution.
+        GAME_PANEL.screenWidthFS = (int) (GAME_PANEL.screenHeightFS * (672.0 / 696.0));
     }
 }

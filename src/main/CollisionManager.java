@@ -176,11 +176,20 @@ public class CollisionManager
                         if(gp.blueGhost.getMode() != Mode.EATEN && gp.blueGhost.hasSpawn()) { gp.blueGhost.setMode(Mode.FRIGHTENED); }
                         if(gp.pinkGhost.getMode() != Mode.EATEN && gp.pinkGhost.hasSpawn()) { gp.pinkGhost.setMode(Mode.FRIGHTENED); }
                         if(gp.orangeGhost.getMode() != Mode.EATEN && gp.orangeGhost.hasSpawn()) { gp.orangeGhost.setMode(Mode.FRIGHTENED); }
+
+                        gp.playSoundEffect(Sound.POWER_UP);
+                    }
+                    //Javacgum
+                    else
+                    {
+                        gp.playSoundEffect(Sound.PICK_UP);
                     }
                     objects[i] = null;
                 }
+                //Special objects
                 else
                 {
+                    gp.playSoundEffect(Sound.PICK_UP_ITEMS);
                     gp.collectedItems.add(objects[i].getName());
                     objects[i].setDisplayPoint(true);
                     //Disable hitbox
@@ -206,55 +215,65 @@ public class CollisionManager
             {
                 //Reduce the player's life by one when a collision occurs.
                 gp.player.setLife(gp.player.getLife() - 1);
+                gp.playSoundEffect(Sound.HIT);
 
-                //Reset the player's position to their starting position.
-                gp.player.setStartPosition();
-
-                //Reset the positions of all ghosts to their starting positions.
-                gp.redGhost.setStartPosition();
-                gp.blueGhost.setStartPosition();
-                gp.pinkGhost.setStartPosition();
-                gp.orangeGhost.setStartPosition();
-
-                //Load the correct images if necessary
-                if(gp.redGhost.getMode() == Mode.FRIGHTENED || gp.redGhost.getMode() == Mode.EATEN)
+                if(gp.player.getLife() == 0)
                 {
-                    gp.redGhost.getImage();
+                    gp.state = gp.gameOverState;
+                    gp.playSoundEffect(Sound.GAME_OVER);
+                    gp.saveScore();
                 }
-                if(gp.blueGhost.getMode() == Mode.FRIGHTENED || gp.blueGhost.getMode() == Mode.EATEN)
+                else
                 {
-                    gp.blueGhost.getImage();
+                    //Reset the player's position to their starting position.
+                    gp.player.setStartPosition();
+
+                    //Reset the positions of all ghosts to their starting positions.
+                    gp.redGhost.setStartPosition();
+                    gp.blueGhost.setStartPosition();
+                    gp.pinkGhost.setStartPosition();
+                    gp.orangeGhost.setStartPosition();
+
+                    //Load the correct images if necessary
+                    if(gp.redGhost.getMode() == Mode.FRIGHTENED || gp.redGhost.getMode() == Mode.EATEN)
+                    {
+                        gp.redGhost.getImage();
+                    }
+                    if(gp.blueGhost.getMode() == Mode.FRIGHTENED || gp.blueGhost.getMode() == Mode.EATEN)
+                    {
+                        gp.blueGhost.getImage();
+                    }
+                    if(gp.pinkGhost.getMode() == Mode.FRIGHTENED || gp.pinkGhost.getMode() == Mode.EATEN)
+                    {
+                        gp.pinkGhost.getImage();
+                    }
+                    if(gp.orangeGhost.getMode() == Mode.FRIGHTENED || gp.orangeGhost.getMode() == Mode.EATEN)
+                    {
+                        gp.orangeGhost.getImage();
+                    }
+
+                    //Reset the mode of all ghosts
+                    gp.redGhost.setMode(Mode.CHASE);
+                    gp.blueGhost.setMode(Mode.CHASE);
+                    gp.pinkGhost.setMode(Mode.CHASE);
+                    gp.orangeGhost.setMode(Mode.CHASE);
+
+                    //Reset mode alternation
+                    gp.redGhost.resetAlternation();
+                    gp.blueGhost.resetAlternation();
+                    gp.pinkGhost.resetAlternation();
+                    gp.orangeGhost.resetAlternation();
+
+                    //Reset counters
+                    gp.blueGhost.resetSpawnProperties();
+                    gp.pinkGhost.resetSpawnProperties();
+                    gp.orangeGhost.resetSpawnProperties();
+
+                    gp.redGhost.resetFrightenedCounter();
+                    gp.blueGhost.resetFrightenedCounter();
+                    gp.pinkGhost.resetFrightenedCounter();
+                    gp.orangeGhost.resetFrightenedCounter();
                 }
-                if(gp.pinkGhost.getMode() == Mode.FRIGHTENED || gp.pinkGhost.getMode() == Mode.EATEN)
-                {
-                    gp.pinkGhost.getImage();
-                }
-                if(gp.orangeGhost.getMode() == Mode.FRIGHTENED || gp.orangeGhost.getMode() == Mode.EATEN)
-                {
-                    gp.orangeGhost.getImage();
-                }
-
-                //Reset the mode of all ghosts
-                gp.redGhost.setMode(Mode.CHASE);
-                gp.blueGhost.setMode(Mode.CHASE);
-                gp.pinkGhost.setMode(Mode.CHASE);
-                gp.orangeGhost.setMode(Mode.CHASE);
-
-                //Reset mode alternation
-                gp.redGhost.resetAlternation();
-                gp.blueGhost.resetAlternation();
-                gp.pinkGhost.resetAlternation();
-                gp.orangeGhost.resetAlternation();
-
-                //Reset counters
-                gp.blueGhost.resetSpawnProperties();
-                gp.pinkGhost.resetSpawnProperties();
-                gp.orangeGhost.resetSpawnProperties();
-
-                gp.redGhost.resetFrightenedCounter();
-                gp.blueGhost.resetFrightenedCounter();
-                gp.pinkGhost.resetFrightenedCounter();
-                gp.orangeGhost.resetFrightenedCounter();
             }
         }
         else if(ghost.getMode() == Mode.FRIGHTENED && player.hitbox.intersects(ghost.hitbox))
@@ -266,6 +285,8 @@ public class CollisionManager
             ghost.setWorldYDead(ghost.worldY);
             ghost.resetFrightenedCounter();
             Entity.GHOSTS_EATEN_IN_A_ROW++;
+
+            gp.playSoundEffect(Sound.EAT_GHOST);
 
             //Adding points to player's score
             gp.player.setScore(gp.player.getScore() + Entity.calculatePointsWon());
