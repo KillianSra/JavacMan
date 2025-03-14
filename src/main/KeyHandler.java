@@ -368,9 +368,16 @@ public class KeyHandler implements KeyListener
             {
                 //Restart the game
                 case 0:
-                    gp.player.setStartPosition();
                     reset();
                     gp.restart = true;
+
+                    //Reset entities
+                    gp.player.setStartPosition();
+                    gp.redGhost.reset();
+                    gp.pinkGhost.reset();
+                    gp.blueGhost.reset();
+                    gp.orangeGhost.reset();
+
                     gp.state = gp.playState;
                     break;
                 //Back to the main menu
