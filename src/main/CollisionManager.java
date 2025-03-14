@@ -216,6 +216,8 @@ public class CollisionManager
                 //Reduce the player's life by one when a collision occurs.
                 gp.player.setLife(gp.player.getLife() - 1);
                 gp.playSoundEffect(Sound.HIT);
+                gp.player.setDirection(Direction.RIGHT);
+                gp.keyHandler.reset();
 
                 if(gp.player.getLife() == 0)
                 {

@@ -44,6 +44,8 @@ public class Player extends Entity
         direction = Direction.LEFT;
         worldX = gp.tileSize * 14;
         worldY = gp.tileSize * 19;
+        hitbox.x = worldX;
+        hitbox.y = worldY;
         speed = 2;
         defaultSpeed = speed;
         if(gp.restart)
