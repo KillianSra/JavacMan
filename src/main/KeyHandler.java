@@ -168,6 +168,12 @@ public class KeyHandler implements KeyListener
                 case 2:
                     gp.state = gp.titleState;
                     gp.UI.commandNb = 0;
+
+                    //Reset ghosts properties
+                    gp.redGhost.reset();
+                    gp.pinkGhost.reset();
+                    gp.blueGhost.reset();
+                    gp.orangeGhost.reset();
                     break;
             }
             gp.playSoundEffect(Sound.MENU_SELECTION);
@@ -191,6 +197,7 @@ public class KeyHandler implements KeyListener
                 //Start gameplay
                 case 0:
                     gp.player.setStartPosition();
+
                     reset();
                     gp.restart = true;
                     gp.state = gp.playState;

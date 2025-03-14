@@ -678,6 +678,36 @@ public abstract class Entity extends Renderable
         transitionBetweenMode = false;
     }
 
+    /**
+     * Reset all entity's counter.
+     */
+    private void resetCounters()
+    {
+        resetAlternation();
+        resetFrightenedCounter();
+        resetSpawnProperties();
+
+        changeDirectionCounter = 0;
+        respawnCounter = 0;
+
+    }
+
+    /**
+     * Reset entity's properties.
+     */
+    public void reset()
+    {
+        //Load the default images if needed
+        if(mode == Mode.FRIGHTENED || mode == Mode.EATEN)
+        {
+            getImage();
+        }
+        setMode(Mode.CHASE);
+        resetCounters();
+
+        hasSpawn = this instanceof RedGhost;
+    }
+
     @DebugOnly
     private void drawEntityHitbox(Graphics2D g2)
     {

@@ -222,4 +222,11 @@ public class BlueGhost extends Entity implements Ghost
             }
         }
     }
+
+    @Override
+    public void reset()
+    {
+        super.reset();
+        setStartPosition();
+    }
 }

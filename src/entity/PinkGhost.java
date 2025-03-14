@@ -206,4 +206,11 @@ public class PinkGhost extends Entity implements Ghost
             }
         }
     }
+
+    @Override
+    public void reset()
+    {
+        super.reset();
+        setStartPosition();
+    }
 }
