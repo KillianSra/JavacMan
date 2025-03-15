@@ -29,11 +29,15 @@ public abstract class Entity extends Renderable
     private final int SCATTER_MODE_DURATION = 420;            //7 seconds
     private final int FINAL_SCATTER_MODE_DURATION = 300;      //5 seconds
 
+    public static final int GHOST_HOUSE_ACCESS_X = 336;
+    public static final int GHOST_HOUSE_ACCESS_Y = 264;
+
     protected int respawnTime = 240;        //4 seconds
 
     //State
     protected boolean hasSpawn = false;
     protected boolean respawning = false;
+    private boolean arrivedInFrontOfTheHhostHouse = false;
     protected int spawnCol;
     protected int spawnRow;
     protected Direction direction = Direction.LEFT;
@@ -244,6 +248,11 @@ public abstract class Entity extends Renderable
 
             move();
         }
+        //The counter is finished but the ghost is not yet positioned outside the ghost house
+        else if(worldX != GHOST_HOUSE_ACCESS_X || worldY != GHOST_HOUSE_ACCESS_Y)
+        {
+            ghostHouseExit();
+        }
         else
         {
             hasSpawn = true;
@@ -272,16 +281,12 @@ public abstract class Entity extends Renderable
 
             move();
         }
-        //Once the counter ends, we position the ghost at y = 312 to prevent it from getting stuck in a solid tile
-        else if(this.worldY < yRespawn)
+        //The counter is finished but the ghost is not yet positioned outside the ghost house
+        else if(worldX != GHOST_HOUSE_ACCESS_X || worldY != GHOST_HOUSE_ACCESS_Y)
         {
-            worldY += speed;
+            ghostHouseExit();
         }
-        else if(this.worldY > yRespawn)
-        {
-            worldY -= speed;
-        }
-        //The counter is finished and the ghost is at Y = 312
+        //The counter is finished and the ghost is outside the ghost house
         else
         {
             respawning = false;
@@ -305,6 +310,26 @@ public abstract class Entity extends Renderable
         {
             direction = Direction.UP;
         }
+    }
+
+    /**
+     * Moves the ghost out of the ghost house by guiding it towards the exit point.
+     */
+    private void ghostHouseExit()
+    {
+        if(worldX < GHOST_HOUSE_ACCESS_X)
+        {
+            direction = Direction.RIGHT;
+        }
+        else if(worldX > GHOST_HOUSE_ACCESS_X)
+        {
+            direction = Direction.LEFT;
+        }
+        else
+        {
+            direction = Direction.UP;
+        }
+        move();
     }
 
     /**
@@ -537,16 +562,16 @@ public abstract class Entity extends Renderable
      * Handles the behavior of the ghost when it has been eaten by the player.
      * <p>
      * This method manages the transition of the ghost to the "eaten" state, guiding it
-     * back to its spawn point and restoring its previous mode once it arrives. During this state,
-     * the ghost's speed and appearance are adjusted accordingly.
+     * back to the ghost house entrance and then to its spawn point. Once the ghost reaches
+     * its spawn location, it is restored to its previous mode. During this state, the ghost's
+     * speed and appearance are adjusted accordingly.
+     * </p>
      *
      * @param spawnCol the column index of the spawn point on the map
      * @param spawnRow the row index of the spawn point on the map
      */
     protected void eatenBehavior(int spawnCol, int spawnRow)
     {
-        //Return to the spawn point
-        searchPath(spawnCol, spawnRow);
         if(!eatenImageLoaded)
         {
             getEatenImage();
@@ -555,12 +580,41 @@ public abstract class Entity extends Renderable
             //Correct the position if necessary
             resynchronizePosition(this);
         }
-        //If the spawn point has been reached, return to the previous mode
-        else if(worldX == spawnCol * gp.tileSize && worldY == spawnRow * gp.tileSize)
+
+        //If the ghost house entrance has been reached, return to the spawn point
+        if(arrivedInFrontOfTheHhostHouse)
+        {
+            if(worldY != spawnRow * gp.tileSize)
+            {
+                direction = Direction.DOWN;
+            }
+            else if(worldX > spawnCol * gp.tileSize)
+            {
+                direction = Direction.LEFT;
+            }
+            else if(worldX < spawnCol * gp.tileSize)
+            {
+                direction = Direction.RIGHT;
+            }
+            move();
+        }
+        else
+        {
+            //Return at the ghost house entry point
+            searchPath(Entity.GHOST_HOUSE_ACCESS_X / gp.tileSize, Entity.GHOST_HOUSE_ACCESS_Y / gp.tileSize);
+            if(worldX == Entity.GHOST_HOUSE_ACCESS_X && worldY == Entity.GHOST_HOUSE_ACCESS_Y)
+            {
+                arrivedInFrontOfTheHhostHouse = true;
+            }
+        }
+
+        //The ghost has arrived at its spawn point
+        if(worldX == spawnCol * gp.tileSize && worldY == spawnRow * gp.tileSize)
         {
             mode = Mode.CHASE;
             getImage();
             eatenImageLoaded = false;
+            arrivedInFrontOfTheHhostHouse = false;
 
             //Enables respawn logic for all ghosts except red
             if(!(this instanceof RedGhost))
