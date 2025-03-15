@@ -174,6 +174,9 @@ public class KeyHandler implements KeyListener
                     gp.pinkGhost.reset();
                     gp.blueGhost.reset();
                     gp.orangeGhost.reset();
+
+                    //Reset score
+                    gp.player.setScore(0);
                     break;
             }
             gp.playSoundEffect(Sound.MENU_SELECTION);
