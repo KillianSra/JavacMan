@@ -230,51 +230,10 @@ public class CollisionManager
                     //Reset the player's position to their starting position.
                     gp.player.setStartPosition();
 
-                    //Reset the positions of all ghosts to their starting positions.
-                    gp.redGhost.setStartPosition();
-                    gp.blueGhost.setStartPosition();
-                    gp.pinkGhost.setStartPosition();
-                    gp.orangeGhost.setStartPosition();
-
-                    //Load the correct images if necessary
-                    if(gp.redGhost.getMode() == Mode.FRIGHTENED || gp.redGhost.getMode() == Mode.EATEN)
-                    {
-                        gp.redGhost.getImage();
-                    }
-                    if(gp.blueGhost.getMode() == Mode.FRIGHTENED || gp.blueGhost.getMode() == Mode.EATEN)
-                    {
-                        gp.blueGhost.getImage();
-                    }
-                    if(gp.pinkGhost.getMode() == Mode.FRIGHTENED || gp.pinkGhost.getMode() == Mode.EATEN)
-                    {
-                        gp.pinkGhost.getImage();
-                    }
-                    if(gp.orangeGhost.getMode() == Mode.FRIGHTENED || gp.orangeGhost.getMode() == Mode.EATEN)
-                    {
-                        gp.orangeGhost.getImage();
-                    }
-
-                    //Reset the mode of all ghosts
-                    gp.redGhost.setMode(Mode.CHASE);
-                    gp.blueGhost.setMode(Mode.CHASE);
-                    gp.pinkGhost.setMode(Mode.CHASE);
-                    gp.orangeGhost.setMode(Mode.CHASE);
-
-                    //Reset mode alternation
-                    gp.redGhost.resetAlternation();
-                    gp.blueGhost.resetAlternation();
-                    gp.pinkGhost.resetAlternation();
-                    gp.orangeGhost.resetAlternation();
-
-                    //Reset counters
-                    gp.blueGhost.resetSpawnProperties();
-                    gp.pinkGhost.resetSpawnProperties();
-                    gp.orangeGhost.resetSpawnProperties();
-
-                    gp.redGhost.resetFrightenedCounter();
-                    gp.blueGhost.resetFrightenedCounter();
-                    gp.pinkGhost.resetFrightenedCounter();
-                    gp.orangeGhost.resetFrightenedCounter();
+                    gp.redGhost.reset();
+                    gp.pinkGhost.reset();
+                    gp.blueGhost.reset();
+                    gp.orangeGhost.reset();
                 }
             }
         }
