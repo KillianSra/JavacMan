@@ -353,6 +353,7 @@ public abstract class Entity extends Renderable
             mode = Mode.CHASE;
             frightenedCounter = 0;
             speed = defaultSpeed;
+            resynchronizePosition(this);
         }
     }
 
