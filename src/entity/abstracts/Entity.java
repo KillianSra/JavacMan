@@ -760,6 +760,7 @@ public abstract class Entity extends Renderable
         setMode(Mode.CHASE);
         resetCounters();
         eatenImageLoaded = false;
+        respawning = false;
 
         hasSpawn = this instanceof RedGhost;
     }
