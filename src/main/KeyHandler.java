@@ -203,7 +203,7 @@ public class KeyHandler implements KeyListener
 
                     reset();
                     gp.restart = true;
-                    gp.state = gp.playState;
+                    gp.state = gp.readyState;
                     gp.playSoundEffect(Sound.MENU_SELECTION);
                     break;
                 //Display settings menu
@@ -381,7 +381,7 @@ public class KeyHandler implements KeyListener
                     gp.blueGhost.reset();
                     gp.orangeGhost.reset();
 
-                    gp.state = gp.playState;
+                    gp.state = gp.readyState;
                     break;
                 //Back to the main menu
                 case 1:

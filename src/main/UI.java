@@ -41,6 +41,29 @@ public class UI
     }
 
     /**
+     * Draws the "READY!" message on the screen before the game starts.
+     *
+     * @param g2 the {@link Graphics2D} object used for rendering the text
+     */
+    private void drawReady(Graphics2D g2)
+    {
+        String text = "READY !";
+        int x = getXCentered(text, g2, 2);
+        int y = gp.tileSize * 16;
+
+        //Set text color to yellow and apply bold font with size 32
+        g2.setColor(Color.YELLOW);
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 32f));
+
+        //Draw the text
+        g2.drawString(text, x, y);
+
+        //Reset Graphics2D
+        g2.setColor(Color.WHITE);
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 25f));
+    }
+
+    /**
      * Draws the Heads-Up Display (HUD) on the screen.
      *
      * @param g2 Graphics2D instance used for rendering the HUD elements
@@ -513,7 +536,12 @@ public class UI
         g2.setFont(maruMonica);
         g2.setColor(Color.WHITE);
 
-        if(gp.state == gp.playState)
+        if(gp.state == gp.readyState)
+        {
+            drawHUD(g2);
+            drawReady(g2);
+        }
+        else if(gp.state == gp.playState)
         {
             drawHUD(g2);
             drawPointsWon(g2);

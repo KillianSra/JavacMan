@@ -227,13 +227,14 @@ public class CollisionManager
                 }
                 else
                 {
-                    //Reset the player's position to their starting position.
+                    //Reset the entities position to their starting position.
                     gp.player.setStartPosition();
-
                     gp.redGhost.reset();
                     gp.pinkGhost.reset();
                     gp.blueGhost.reset();
                     gp.orangeGhost.reset();
+
+                    gp.state = gp.readyState;
                 }
             }
         }
