@@ -759,6 +759,7 @@ public abstract class Entity extends Renderable
         }
         setMode(Mode.CHASE);
         resetCounters();
+        eatenImageLoaded = false;
 
         hasSpawn = this instanceof RedGhost;
     }
