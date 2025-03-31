@@ -270,9 +270,6 @@ public abstract class Entity extends Renderable
      */
     protected void handleRespawn()
     {
-        //For each ghosts (except the red one), yRespawn = 13 (spawnRow) * gp.tileSize
-        int yRespawn = 312;
-
         if(respawnCounter != respawnTime)
         {
             respawnCounter++;

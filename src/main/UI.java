@@ -144,6 +144,9 @@ public class UI
         {
             g2.drawRoundRect(x - gp.tileSize * 2, (int) (y - gp.tileSize * 1.80), gp.tileSize * 8, (int) (gp.tileSize * 2.5), 70, 70);
         }
+
+        //Reset Graphics2D
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 12F));
     }
 
     /**
@@ -446,28 +449,37 @@ public class UI
         g2.setColor(Color.WHITE);
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, 12));
 
-
+        FontMetrics fm = g2.getFontMetrics();
         String points = String.valueOf(Entity.calculatePointsWon());
+        int textWidth = fm.stringWidth(points);
+        int textHeight = fm.getHeight();
 
+        int xCentered, yCentered;
+
+        //Display points earned at the location where the player ate the ghost
         if(gp.redGhost.getDisplayPointsWon())
         {
-            //Display points earned at the location where the player ate the ghost
-            g2.drawString(points, gp.redGhost.getWorldXDead(), gp.redGhost.getWorldYDead() + (gp.tileSize - g2.getFont().getSize() / 2));
+            xCentered = gp.redGhost.getWorldXDead() + (gp.tileSize / 2) - (textWidth / 2);
+            yCentered = gp.redGhost.getWorldYDead() - (textHeight / 2) + gp.tileSize;
+            g2.drawString(points, xCentered, yCentered);
         }
         if(gp.blueGhost.getDisplayPointsWon())
         {
-            //Display points earned at the location where the player ate the ghost
-            g2.drawString(points, gp.blueGhost.getWorldXDead(), gp.blueGhost.getWorldYDead() + (gp.tileSize - g2.getFont().getSize() / 2));
+            xCentered = gp.blueGhost.getWorldXDead() + (gp.tileSize / 2) - (textWidth / 2);
+            yCentered = gp.blueGhost.getWorldYDead() - (textHeight / 2) + gp.tileSize;
+            g2.drawString(points, xCentered, yCentered);
         }
         if(gp.pinkGhost.getDisplayPointsWon())
         {
-            //Display points earned at the location where the player ate the ghost
-            g2.drawString(points, gp.pinkGhost.getWorldXDead(), gp.pinkGhost.getWorldYDead() + (gp.tileSize - g2.getFont().getSize() / 2));
+            xCentered = gp.pinkGhost.getWorldXDead() + (gp.tileSize / 2) - (textWidth / 2);
+            yCentered = gp.pinkGhost.getWorldYDead() - (textHeight / 2) + gp.tileSize;
+            g2.drawString(points, xCentered, yCentered);
         }
         if(gp.orangeGhost.getDisplayPointsWon())
         {
-            //Display points earned at the location where the player ate the ghost
-            g2.drawString(points, gp.orangeGhost.getWorldXDead(), gp.orangeGhost.getWorldYDead() + (gp.tileSize - g2.getFont().getSize() / 2));
+            xCentered = gp.orangeGhost.getWorldXDead() + (gp.tileSize / 2) - (textWidth / 2);
+            yCentered = gp.orangeGhost.getWorldYDead() - (textHeight / 2) + gp.tileSize;
+            g2.drawString(points, xCentered, yCentered);
         }
     }
 
