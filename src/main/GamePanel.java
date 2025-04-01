@@ -63,6 +63,11 @@ public class GamePanel extends JPanel implements Runnable
     public final int gameOverState = 3;
     public final int settingsState = 4;
     public final int controlsState = 5;
+    public final int readyState = 6;
+
+    //Counter
+    private final int readyStateTime = 120;     //2 seconds
+    public int readyCounter = 0;
 
     //Game state
     private final int JAVACGUMS_IN_LEVELS = 167;
@@ -235,7 +240,15 @@ public class GamePanel extends JPanel implements Runnable
      */
     private void update()
     {
-        if(this.state == this.playState)
+        if(this.state == this.readyState)
+        {
+            if(++readyCounter == readyStateTime)
+            {
+                this.state = this.playState;
+                readyCounter = 0;
+            }
+        }
+        else if(this.state == this.playState)
         {
             //If the round is finished, go to the next one
             if(javacgumCollected == JAVACGUMS_IN_LEVELS)
@@ -244,25 +257,17 @@ public class GamePanel extends JPanel implements Runnable
                 player.setStartPosition();
 
                 //Reset ghosts state
-                redGhost.setStartPosition();
-                redGhost.resetAlternation();
-
-                blueGhost.setStartPosition();
-                blueGhost.resetAlternation();
-                blueGhost.resetSpawnProperties();
-
-                pinkGhost.setStartPosition();
-                pinkGhost.resetAlternation();
-                pinkGhost.resetSpawnProperties();
-
-                orangeGhost.setStartPosition();
-                orangeGhost.resetAlternation();
-                pinkGhost.resetSpawnProperties();
+                redGhost.reset();
+                pinkGhost.reset();
+                blueGhost.reset();
+                orangeGhost.reset();
 
                 keyHandler.reset();
                 javacgumCollected = 0;
                 nbSpecialCollectible = 2;
                 currentRound++;
+
+                state = readyState;
             }
             else
             {
@@ -385,7 +390,7 @@ public class GamePanel extends JPanel implements Runnable
         g2.setColor(Color.BLACK);
         g2.fillRect(0, 0, screenWidth, screenHeight);
 
-        if(state == playState || state == pauseState || state == gameOverState)
+        if(state == playState || state == pauseState || state == gameOverState || state == readyState)
         {
             //Draw the game board
             this.tileManager.draw(g2);

@@ -277,4 +277,11 @@ public class OrangeGhost extends Entity implements Ghost
             }
         }
     }
+
+    @Override
+    public void reset()
+    {
+        super.reset();
+        setStartPosition();
+    }
 }

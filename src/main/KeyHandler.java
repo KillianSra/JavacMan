@@ -168,6 +168,15 @@ public class KeyHandler implements KeyListener
                 case 2:
                     gp.state = gp.titleState;
                     gp.UI.commandNb = 0;
+
+                    //Reset ghosts properties
+                    gp.redGhost.reset();
+                    gp.pinkGhost.reset();
+                    gp.blueGhost.reset();
+                    gp.orangeGhost.reset();
+
+                    //Reset score
+                    gp.player.setScore(0);
                     break;
             }
             gp.playSoundEffect(Sound.MENU_SELECTION);
@@ -191,9 +200,10 @@ public class KeyHandler implements KeyListener
                 //Start gameplay
                 case 0:
                     gp.player.setStartPosition();
+
                     reset();
                     gp.restart = true;
-                    gp.state = gp.playState;
+                    gp.state = gp.readyState;
                     gp.playSoundEffect(Sound.MENU_SELECTION);
                     break;
                 //Display settings menu
@@ -361,10 +371,17 @@ public class KeyHandler implements KeyListener
             {
                 //Restart the game
                 case 0:
-                    gp.player.setStartPosition();
                     reset();
                     gp.restart = true;
-                    gp.state = gp.playState;
+
+                    //Reset entities
+                    gp.player.setStartPosition();
+                    gp.redGhost.reset();
+                    gp.pinkGhost.reset();
+                    gp.blueGhost.reset();
+                    gp.orangeGhost.reset();
+
+                    gp.state = gp.readyState;
                     break;
                 //Back to the main menu
                 case 1:

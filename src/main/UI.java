@@ -41,6 +41,29 @@ public class UI
     }
 
     /**
+     * Draws the "READY!" message on the screen before the game starts.
+     *
+     * @param g2 the {@link Graphics2D} object used for rendering the text
+     */
+    private void drawReady(Graphics2D g2)
+    {
+        String text = "READY !";
+        int x = getXCentered(text, g2, 2);
+        int y = gp.tileSize * 16;
+
+        //Set text color to yellow and apply bold font with size 32
+        g2.setColor(Color.YELLOW);
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 32f));
+
+        //Draw the text
+        g2.drawString(text, x, y);
+
+        //Reset Graphics2D
+        g2.setColor(Color.WHITE);
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 25f));
+    }
+
+    /**
      * Draws the Heads-Up Display (HUD) on the screen.
      *
      * @param g2 Graphics2D instance used for rendering the HUD elements
@@ -144,6 +167,9 @@ public class UI
         {
             g2.drawRoundRect(x - gp.tileSize * 2, (int) (y - gp.tileSize * 1.80), gp.tileSize * 8, (int) (gp.tileSize * 2.5), 70, 70);
         }
+
+        //Reset Graphics2D
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 12F));
     }
 
     /**
@@ -446,29 +472,48 @@ public class UI
         g2.setColor(Color.WHITE);
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, 12));
 
+        //Retrieve font metrics for precise text positioning
+        FontMetrics fm = g2.getFontMetrics();
 
-        String points = String.valueOf(Entity.calculatePointsWon());
+        //Array containing all ghosts to iterate through
+        Entity[] ghosts = { gp.redGhost, gp.blueGhost, gp.pinkGhost, gp.orangeGhost };
 
-        if(gp.redGhost.getDisplayPointsWon())
+        //Loop through each ghost to check if points should be displayed
+        for(Entity ghost : ghosts)
         {
-            //Display points earned at the location where the player ate the ghost
-            g2.drawString(points, gp.redGhost.getWorldXDead(), gp.redGhost.getWorldYDead() + (gp.tileSize - g2.getFont().getSize() / 2));
+            //If the point value has not been set yet, calculate and store it
+            if(ghost.getDisplayPointsWon())
+            {
+                if(ghost.pointValue == null)
+                {
+                    ghost.pointValue = String.valueOf(Entity.calculatePointsWon());
+                }
+
+                //Get the dimensions of the score text for centering
+                int[] position = getScorePosition(fm, ghost.pointValue);
+
+                //Calculate the centered X and Y positions for rendering the points
+                int xCentered = ghost.getWorldXDead() + (gp.tileSize / 2) - (position[0] / 2);
+                int yCentered = ghost.getWorldYDead() - (position[1] / 2) + gp.tileSize;
+
+                g2.drawString(ghost.pointValue, xCentered, yCentered);
+            }
         }
-        if(gp.blueGhost.getDisplayPointsWon())
-        {
-            //Display points earned at the location where the player ate the ghost
-            g2.drawString(points, gp.blueGhost.getWorldXDead(), gp.blueGhost.getWorldYDead() + (gp.tileSize - g2.getFont().getSize() / 2));
-        }
-        if(gp.pinkGhost.getDisplayPointsWon())
-        {
-            //Display points earned at the location where the player ate the ghost
-            g2.drawString(points, gp.pinkGhost.getWorldXDead(), gp.pinkGhost.getWorldYDead() + (gp.tileSize - g2.getFont().getSize() / 2));
-        }
-        if(gp.orangeGhost.getDisplayPointsWon())
-        {
-            //Display points earned at the location where the player ate the ghost
-            g2.drawString(points, gp.orangeGhost.getWorldXDead(), gp.orangeGhost.getWorldYDead() + (gp.tileSize - g2.getFont().getSize() / 2));
-        }
+    }
+
+    /**
+     *
+     * @param fm
+     * @param points
+     * @return
+     */
+    private int[] getScorePosition(FontMetrics fm, String points)
+    {
+        int[] position = new int[2];
+        position[0] = fm.stringWidth(points);     //width
+        position[1] = fm.getHeight();            //height
+
+        return position;
     }
 
     /**
@@ -501,7 +546,12 @@ public class UI
         g2.setFont(maruMonica);
         g2.setColor(Color.WHITE);
 
-        if(gp.state == gp.playState)
+        if(gp.state == gp.readyState)
+        {
+            drawHUD(g2);
+            drawReady(g2);
+        }
+        else if(gp.state == gp.playState)
         {
             drawHUD(g2);
             drawPointsWon(g2);

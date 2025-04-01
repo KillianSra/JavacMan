@@ -8,7 +8,7 @@ public class Sound
 {
     //Properties
     private Clip clip;
-    private URL[] soundUrl = new URL[10];
+    private URL[] soundUrl = new URL[11];
     private FloatControl floatControl;
     public int volumeScale = 3;
     private float volume;
@@ -24,6 +24,7 @@ public class Sound
     public static final int GAME_OVER = 7;
     public static final int BAR_MOVEMENT = 8;
     public static final int ERROR = 9;
+    public static final int LIFE_EARNED = 10;
 
     public Sound()
     {
@@ -37,6 +38,7 @@ public class Sound
         soundUrl[7] = getClass().getResource("/sound/gameOver.wav");
         soundUrl[8] = getClass().getResource("/sound/barMovement.wav");
         soundUrl[9] = getClass().getResource("/sound/error.wav");
+        soundUrl[10] = getClass().getResource("/sound/lifeEarned.wav");
     }
 
     /**

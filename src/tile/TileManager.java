@@ -66,6 +66,7 @@ public class TileManager
         setup(32, "wall_vertical_to_horizontal", true);
         setup(33, "wall_vertical_to_right_horizontal_2", true);
         setup(34, "wall_vertical_to_left_horizontal_2", true);
+        setup(35, "door", true);
     }
 
     /**
