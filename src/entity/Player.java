@@ -5,6 +5,7 @@ import entity.abstracts.Entity;
 import entity.enums.Direction;
 import main.GamePanel;
 import main.KeyHandler;
+import main.Sound;
 
 import java.awt.*;
 
@@ -15,6 +16,7 @@ public class Player extends Entity
     //Attribute
     private int life = 3;
     private int score = 0;
+    private int nextExtraLifeScore = 10000;
 
     public Player(GamePanel gp, KeyHandler keyHandler)
     {
@@ -74,6 +76,9 @@ public class Player extends Entity
         gp.collisionManager.checkTileCollision(this);
         gp.collisionManager.checkObjectCollision(this, gp.objects);
 
+        //Check extra life
+        checkExtraLife();
+
         if(!isCollision())
         {
             //If there is no collision, move in the new direction
@@ -124,6 +129,19 @@ public class Player extends Entity
             drawPlayerCoordinates(g2);
         }
 
+    }
+
+    /**
+     * Checks if the player has reached the score threshold for an extra life.
+     */
+    private void checkExtraLife()
+    {
+        if(score >= nextExtraLifeScore)
+        {
+            life++;
+            nextExtraLifeScore += 10000;
+            gp.playSoundEffect(Sound.LIFE_EARNED);
+        }
     }
 
     @DebugOnly
