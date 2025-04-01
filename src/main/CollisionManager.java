@@ -254,8 +254,6 @@ public class CollisionManager
             ghost.resetFrightenedCounter();
             Entity.GHOSTS_EATEN_IN_A_ROW++;
 
-            System.out.println(Entity.GHOSTS_EATEN_IN_A_ROW);
-
             gp.playSoundEffect(Sound.EAT_GHOST);
 
             //Adding points to player's score
