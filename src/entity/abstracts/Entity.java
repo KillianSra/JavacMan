@@ -50,6 +50,7 @@ public abstract class Entity extends Renderable
     protected int scatterPhase = 0;
     protected int alternationNumber = 0;
     protected boolean transitionBetweenMode = false;
+    public String pointValue = null;
 
     //Counter
     protected int spriteCounter;
@@ -338,7 +339,6 @@ public abstract class Entity extends Renderable
         {
             getFrightenedImage();
             frightenedCounter++;
-            GHOSTS_EATEN_IN_A_ROW = 0;
         }
         else if(mode == Mode.FRIGHTENED)
         {

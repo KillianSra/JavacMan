@@ -472,38 +472,48 @@ public class UI
         g2.setColor(Color.WHITE);
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, 12));
 
+        //Retrieve font metrics for precise text positioning
         FontMetrics fm = g2.getFontMetrics();
-        String points = String.valueOf(Entity.calculatePointsWon());
-        int textWidth = fm.stringWidth(points);
-        int textHeight = fm.getHeight();
 
-        int xCentered, yCentered;
+        //Array containing all ghosts to iterate through
+        Entity[] ghosts = { gp.redGhost, gp.blueGhost, gp.pinkGhost, gp.orangeGhost };
 
-        //Display points earned at the location where the player ate the ghost
-        if(gp.redGhost.getDisplayPointsWon())
+        //Loop through each ghost to check if points should be displayed
+        for(Entity ghost : ghosts)
         {
-            xCentered = gp.redGhost.getWorldXDead() + (gp.tileSize / 2) - (textWidth / 2);
-            yCentered = gp.redGhost.getWorldYDead() - (textHeight / 2) + gp.tileSize;
-            g2.drawString(points, xCentered, yCentered);
+            //If the point value has not been set yet, calculate and store it
+            if(ghost.getDisplayPointsWon())
+            {
+                if(ghost.pointValue == null)
+                {
+                    ghost.pointValue = String.valueOf(Entity.calculatePointsWon());
+                }
+
+                //Get the dimensions of the score text for centering
+                int[] position = getScorePosition(fm, ghost.pointValue);
+
+                //Calculate the centered X and Y positions for rendering the points
+                int xCentered = ghost.getWorldXDead() + (gp.tileSize / 2) - (position[0] / 2);
+                int yCentered = ghost.getWorldYDead() - (position[1] / 2) + gp.tileSize;
+
+                g2.drawString(ghost.pointValue, xCentered, yCentered);
+            }
         }
-        if(gp.blueGhost.getDisplayPointsWon())
-        {
-            xCentered = gp.blueGhost.getWorldXDead() + (gp.tileSize / 2) - (textWidth / 2);
-            yCentered = gp.blueGhost.getWorldYDead() - (textHeight / 2) + gp.tileSize;
-            g2.drawString(points, xCentered, yCentered);
-        }
-        if(gp.pinkGhost.getDisplayPointsWon())
-        {
-            xCentered = gp.pinkGhost.getWorldXDead() + (gp.tileSize / 2) - (textWidth / 2);
-            yCentered = gp.pinkGhost.getWorldYDead() - (textHeight / 2) + gp.tileSize;
-            g2.drawString(points, xCentered, yCentered);
-        }
-        if(gp.orangeGhost.getDisplayPointsWon())
-        {
-            xCentered = gp.orangeGhost.getWorldXDead() + (gp.tileSize / 2) - (textWidth / 2);
-            yCentered = gp.orangeGhost.getWorldYDead() - (textHeight / 2) + gp.tileSize;
-            g2.drawString(points, xCentered, yCentered);
-        }
+    }
+
+    /**
+     *
+     * @param fm
+     * @param points
+     * @return
+     */
+    private int[] getScorePosition(FontMetrics fm, String points)
+    {
+        int[] position = new int[2];
+        position[0] = fm.stringWidth(points);     //width
+        position[1] = fm.getHeight();            //height
+
+        return position;
     }
 
     /**

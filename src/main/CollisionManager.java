@@ -172,12 +172,18 @@ public class CollisionManager
                     gp.javacgumCollected++;
                     if(objects[i] instanceof SuperJavacgum)
                     {
-                        if(gp.redGhost.getMode() != Mode.EATEN && gp.redGhost.hasSpawn()) { gp.redGhost.setMode(Mode.FRIGHTENED); }
-                        if(gp.blueGhost.getMode() != Mode.EATEN && gp.blueGhost.hasSpawn()) { gp.blueGhost.setMode(Mode.FRIGHTENED); }
-                        if(gp.pinkGhost.getMode() != Mode.EATEN && gp.pinkGhost.hasSpawn()) { gp.pinkGhost.setMode(Mode.FRIGHTENED); }
-                        if(gp.orangeGhost.getMode() != Mode.EATEN && gp.orangeGhost.hasSpawn()) { gp.orangeGhost.setMode(Mode.FRIGHTENED); }
+                        //Array containing all ghosts to iterate through
+                        Entity[] ghosts = { gp.redGhost, gp.blueGhost, gp.pinkGhost, gp.orangeGhost };
+
+                        for(Entity ghost : ghosts)
+                        {
+                            if(ghost.getMode() != Mode.EATEN && ghost.hasSpawn()) { ghost.setMode(Mode.FRIGHTENED); }
+                            ghost.pointValue = null;
+                        }
 
                         gp.playSoundEffect(Sound.POWER_UP);
+
+                        Entity.GHOSTS_EATEN_IN_A_ROW = 0;
                     }
                     //Javacgum
                     else
@@ -247,6 +253,8 @@ public class CollisionManager
             ghost.setWorldYDead(ghost.worldY);
             ghost.resetFrightenedCounter();
             Entity.GHOSTS_EATEN_IN_A_ROW++;
+
+            System.out.println(Entity.GHOSTS_EATEN_IN_A_ROW);
 
             gp.playSoundEffect(Sound.EAT_GHOST);
 
