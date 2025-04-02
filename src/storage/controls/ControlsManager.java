@@ -4,7 +4,7 @@ import java.io.*;
 
 public class ControlsManager
 {
-    private static final String FILE_NAME = "src/storage/controls/controls.dat";
+    private static final String FILE_NAME = System.getProperty("user.home") + "/javacman/controls.dat";
     private static final int UP_KEYCODE = 90;
     private static final int DOWN_KEYCODE = 83;
     private static final int LEFT_KEYCODE = 81;
@@ -31,6 +31,10 @@ public class ControlsManager
 
         if (!file.exists())
         {
+
+            //Create the folder if necessary
+            file.getParentFile().mkdirs();
+
             //Create the file with default settings
             save(UP_KEYCODE, DOWN_KEYCODE, LEFT_KEYCODE, RIGHT_KEYCODE, PAUSE_KEYCODE);
         }

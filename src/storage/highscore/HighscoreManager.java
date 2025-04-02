@@ -4,7 +4,7 @@ import java.io.*;
 
 public class HighscoreManager
 {
-    private static final String FILE_NAME = "src/storage/highscore/highestScore.dat";
+    private static final String FILE_NAME = System.getProperty("user.home") + "/javacman/highestScore.dat";
 
     /**
      * Ensures that the score file exists with a default value.
@@ -16,6 +16,9 @@ public class HighscoreManager
 
         if (!file.exists())
         {
+            //Create the folder if necessary
+            file.getParentFile().mkdirs();
+
             //Create the file with default score 0
             save(0);
         }

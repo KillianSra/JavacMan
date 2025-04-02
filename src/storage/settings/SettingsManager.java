@@ -4,7 +4,7 @@ import java.io.*;
 
 public class SettingsManager
 {
-    private static final String FILE_NAME = "src/storage/settings/settings.dat";
+    private static final String FILE_NAME = System.getProperty("user.home") + "/javacman/settings.dat";
 
     /**
      * Ensures that the settings file exists with a default values.
@@ -21,6 +21,9 @@ public class SettingsManager
 
         if (!file.exists())
         {
+            //Create the folder if necessary
+            file.getParentFile().mkdirs();
+
             //Create the file with default settings
             save(3, false, false);
         }
