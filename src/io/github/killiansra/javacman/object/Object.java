@@ -1,0 +1,105 @@
+package io.github.killiansra.javacman.object;
+
+import io.github.killiansra.javacman.annotation.DebugOnly;
+import io.github.killiansra.javacman.main.GamePanel;
+import io.github.killiansra.javacman.main.Renderable;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+
+public abstract class Object extends Renderable
+{
+    private final int LIFE_SPAN = 600;     //10 seconds
+
+    protected GamePanel gp;
+    protected BufferedImage image;
+    private final int point;
+    private final boolean hasLimitedLifeSpan;
+    protected int arrayIndex;
+    protected boolean displayPoint;
+    private boolean delete = false;
+
+    //Counters
+    private int lifeSpanCounter = 0;
+
+    public Object(GamePanel gp, int point, boolean hasLimitedLifeSpan)
+    {
+        this.gp = gp;
+        this.point = point;
+        this.hasLimitedLifeSpan = hasLimitedLifeSpan;
+    }
+
+    //Getter
+    public BufferedImage getObjectImage() { return this.image; }
+    public int getPoint() { return this.point; }
+    public boolean getHasLimitedLifeSpan() { return this.hasLimitedLifeSpan; }
+    public boolean getDisplayPoint() { return this.displayPoint; }
+    public boolean getDelete() { return this.delete; }
+    public abstract String getName();
+
+    //Setter
+    public void setDisplayPoint(boolean displayPoint) { this.displayPoint = displayPoint; }
+
+    @Override
+    public void draw(Graphics2D g2)
+    {
+        g2.setColor(Color.WHITE);
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD));
+
+        if(!displayPoint && !delete)
+        {
+            g2.drawImage(image, worldX, worldY, null);
+        }
+        //If the player took the collectible
+        else
+        {
+            int pointWorldX = worldX + 2;
+            int pointWorldY = worldY + (gp.tileSize / 2) + (g2.getFont().getSize() / 2);
+            //Display points awarded
+            g2.drawString(String.valueOf(point), pointWorldX, pointWorldY);
+        }
+
+        //DEBUG
+        if(gp.isDebuggingEnabled)
+        {
+            drawObjectHitbox(g2);
+        }
+    }
+
+    /**
+     * Increments the life span counter and checks if the io.github.killiansra.javacman.object has reached its maximum life span.
+     * If the life span has been reached, the io.github.killiansra.javacman.object is removed .
+     *
+     * @param index The index of the io.github.killiansra.javacman.object in the objects array to check and potentially remove.
+     */
+    public void checkLifeSpan(int index)
+    {
+        lifeSpanCounter++;
+        if(lifeSpanCounter == LIFE_SPAN)
+        {
+            gp.objects[index] = null;
+            lifeSpanCounter = 0;
+        }
+    }
+
+    @Override
+    public void checkDisplayedPoint()
+    {
+        displayPointsWonCounter++;
+        if(displayPointsWonCounter == POINT_DISPLAYED_TIME)
+        {
+            displayPoint = false;
+            displayPointsWonCounter = 0;
+            delete = true;
+        }
+    }
+
+    @DebugOnly
+    private void drawObjectHitbox(Graphics2D g2)
+    {
+        g2.setColor(Color.WHITE);
+
+        //Display io.github.killiansra.javacman.object's hitbox
+        g2.drawRect(getHitboxX(), getHitboxY(), getHitboxWidth(), getHitboxHeight());
+    }
+}
