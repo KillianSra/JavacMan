@@ -1,10 +1,12 @@
 package io.github.killiansra.javacman.storage.controls;
 
+import io.github.killiansra.javacman.storage.StorageManager;
+
 import java.io.*;
 
 public class ControlsManager
 {
-    private static final String FILE_NAME = System.getProperty("user.home") + "/javacman/controls.dat";
+    private static final String FILE_NAME = StorageManager.getUserConfigPath() + "/controls.conf";
     private static final int UP_KEYCODE = 90;
     private static final int DOWN_KEYCODE = 83;
     private static final int LEFT_KEYCODE = 81;

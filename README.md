@@ -11,8 +11,8 @@ This project is not affiliated with, endorsed by, or associated with Bandai Namc
 I learned how to develop video games in Java thanks to tutorials by [RyiSnow](https://www.youtube.com/watch?v=om59cwR7psI&list=PL_QPQmz5C6WUF-pOQDsbsKbaBZqXj4qSq&ab_channel=RyiSnow), and as a result, some parts of my code are similar to their tutorial.
 
 All assets used in this project were **created by me**:  
-🎵 **Sound Effects:** Generated using [sfxr.me](https://sfxr.me/) and [BeepBox](https://www.beepbox.co/).  
-🎨 **Graphics:** Designed with [Pixilart](https://www.pixilart.com/).
+ - **Sound Effects:** Generated using [sfxr.me](https://sfxr.me/) and [BeepBox](https://www.beepbox.co/).  
+ - **Graphics:** Designed with [Pixilart](https://www.pixilart.com/).
 
 ## Description
 
@@ -22,17 +22,27 @@ The goal of this project is to recreate the core gameplay mechanics while improv
 In **JavacMan**, players navigate a maze, collect items, and avoid enemies, just like in the original game.  
 However, this version includes custom assets and minor gameplay adjustments to give it a unique touch.
 
-## Game Configuration
+## Game Configuration & Data Storage
 
-When running **JavacMan**, the program automatically creates a configuration folder in the user's home directory:
+When running **JavacMan**, the program stores its files in standard OS-specific directories.
 
-- **Windows**: `C:\Users\YourName\JavacMan\`
-- **macOS**: `/Users/YourName/JavacMan/`
-- **Linux**: `/home/JavacMan/`
+- **Windows :**
+  - *Config :* `%APPDATA%\JavacMan\`
+  - *Data* : `%LOCALAPPDATA%\JavacMan\`
+- **macOS :**
+  - *Config :* `~/Library/Preferences/JavacMan/`
+  - *Data* : `~/Library/Application Support/JavacMan/`
+- **Linux / Unix :**
+  - *Config XDG :* `$XDG_CONFIG_HOME/javacman/`
+  - *Config default :* `~/.config/javacman/`
+  - *Data XDG* : `$XDG_DATA_HOME/javacman/`
+  - *Data default :* `~/.local/share/javacman/`
 
-This folder contains **three `.dat` files**, which store the game's configuration settings.
+These folders contain **two `.conf` files** and **one `.dat` file** :
+- Configuration files : Key bindings, Settings
+- Game data : Highscore
 
-You can safely delete this folder at any time. However, the game will automatically recreate it the next time the program is run.
+You can safely delete these folders at any time. However, the game will automatically recreate them the next time the program is run.
 
 # How to run
 

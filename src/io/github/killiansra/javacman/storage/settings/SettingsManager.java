@@ -1,10 +1,12 @@
 package io.github.killiansra.javacman.storage.settings;
 
+import io.github.killiansra.javacman.storage.StorageManager;
+
 import java.io.*;
 
 public class SettingsManager
 {
-    private static final String FILE_NAME = System.getProperty("user.home") + "/javacman/settings.dat";
+    private static final String FILE_NAME = StorageManager.getUserConfigPath() + "/settings.conf";
 
     /**
      * Ensures that the settings file exists with a default values.
