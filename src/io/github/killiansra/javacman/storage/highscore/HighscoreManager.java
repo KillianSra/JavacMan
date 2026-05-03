@@ -1,10 +1,12 @@
 package io.github.killiansra.javacman.storage.highscore;
 
+import io.github.killiansra.javacman.storage.StorageManager;
+
 import java.io.*;
 
 public class HighscoreManager
 {
-    private static final String FILE_NAME = System.getProperty("user.home") + "/javacman/highestScore.dat";
+    private static final String FILE_NAME = StorageManager.getUserDataPath() + "/highscore.dat";
 
     /**
      * Ensures that the score file exists with a default value.
