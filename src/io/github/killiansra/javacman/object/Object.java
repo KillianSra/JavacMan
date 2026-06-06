@@ -67,10 +67,10 @@ public abstract class Object extends Renderable
     }
 
     /**
-     * Increments the life span counter and checks if the io.github.killiansra.javacman.object has reached its maximum life span.
-     * If the life span has been reached, the io.github.killiansra.javacman.object is removed .
+     * Increments the life span counter and checks if the object has reached its maximum life span.
+     * If the life span has been reached, the object is removed .
      *
-     * @param index The index of the io.github.killiansra.javacman.object in the objects array to check and potentially remove.
+     * @param index The index of the object in the objects array to check and potentially remove.
      */
     public void checkLifeSpan(int index)
     {
@@ -99,7 +99,7 @@ public abstract class Object extends Renderable
     {
         g2.setColor(Color.WHITE);
 
-        //Display io.github.killiansra.javacman.object's hitbox
-        g2.drawRect(getHitboxX(), getHitboxY(), getHitboxWidth(), getHitboxHeight());
+        //Display object's hitbox
+        g2.drawRect(getCollisionHitboxX(), getCollisionHitboxY(), getCollisionHitboxWidth(), getCollisionHitboxHeight());
     }
 }

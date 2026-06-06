@@ -43,7 +43,7 @@ public class UI
     /**
      * Draws the "READY!" message on the screen before the game starts.
      *
-     * @param g2 the {@link Graphics2D} io.github.killiansra.javacman.object used for rendering the text
+     * @param g2 the {@link Graphics2D} object used for rendering the text
      */
     private void drawReady(Graphics2D g2)
     {
@@ -465,7 +465,7 @@ public class UI
     /**
      * Draws the points won when the player eats a ghost.
      *
-     * @param g2 The Graphics2D io.github.killiansra.javacman.object used to render the points on the screen.
+     * @param g2 The Graphics2D object used to render the points on the screen.
      */
     private void drawPointsWon(Graphics2D g2)
     {

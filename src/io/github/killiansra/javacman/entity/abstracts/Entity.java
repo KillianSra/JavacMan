@@ -5,6 +5,7 @@ import io.github.killiansra.javacman.entity.RedGhost;
 import io.github.killiansra.javacman.entity.enums.Direction;
 import io.github.killiansra.javacman.entity.Player;
 import io.github.killiansra.javacman.entity.enums.Mode;
+import io.github.killiansra.javacman.entity.interfaces.Ghost;
 import io.github.killiansra.javacman.main.GamePanel;
 import io.github.killiansra.javacman.main.Renderable;
 import io.github.killiansra.javacman.tile.Tile;
@@ -24,6 +25,7 @@ public abstract class Entity extends Renderable
     public static int GHOSTS_EATEN_IN_A_ROW = 0;
 
     //Constant
+    protected final static int COLLISION_HITBOX_OFFSET = 10;
     private final static int POINT = 200;
     private final int CHASE_MODE_DURATION = 1200;             //20 seconds
     private final int SCATTER_MODE_DURATION = 420;            //7 seconds
@@ -96,7 +98,7 @@ public abstract class Entity extends Renderable
 
     //Abstract method
     /**
-     * Updates the state or behavior of the io.github.killiansra.javacman.entity.
+     * Updates the state or behavior of the entity.
      */
     public abstract void update();
 
@@ -111,6 +113,21 @@ public abstract class Entity extends Renderable
         {
             drawEntityHitbox(g2);
         }
+    }
+
+    public void setStartPosition()
+    {
+        direction = this instanceof RedGhost ? Direction.LEFT : Direction.DOWN;
+        worldX = gp.tileSize * spawnCol;
+        worldY = gp.tileSize * spawnRow;
+        speed = 2;
+        defaultSpeed = speed;
+
+        //Synchronize movement hitbox with entity position
+        movementHitbox.x = worldX;
+        movementHitbox.y = worldY;
+        collisionHitbox.x = worldX + COLLISION_HITBOX_OFFSET / 2;
+        collisionHitbox.y = worldY + COLLISION_HITBOX_OFFSET / 2;
     }
 
     /**
@@ -136,10 +153,10 @@ public abstract class Entity extends Renderable
     }
 
     /**
-     * Determines the appropriate image to display based on the io.github.killiansra.javacman.entity's current direction
+     * Determines the appropriate image to display based on the entity's current direction
      * and animation frame (sprite number).
      *
-     * @return A BufferedImage representing the current frame of the io.github.killiansra.javacman.entity's animation.
+     * @return A BufferedImage representing the current frame of the entity's animation.
      */
     protected BufferedImage setDisplayedImage()
     {
@@ -209,16 +226,21 @@ public abstract class Entity extends Renderable
             case Direction.RIGHT: worldX = worldX + speed; break;
         }
 
-        //Synchronize hitbox with io.github.killiansra.javacman.entity position
-        hitbox.x = worldX;
-        hitbox.y = worldY;
+        //Synchronize hitbox with entity position
+        movementHitbox.x = worldX;
+        movementHitbox.y = worldY;
+
+        int offset = this instanceof Ghost ? COLLISION_HITBOX_OFFSET / 2 : 0;
+        collisionHitbox.x = worldX + offset;
+        collisionHitbox.y = worldY + offset;
+
     }
 
     /**
      * Handles the ghost's collision detection and movement.
      *
      * <p>Checks for collisions with tiles and the player. If no collision is detected,
-     * the io.github.killiansra.javacman.entity proceeds with its movement in the current direction.</p>
+     * the entity proceeds with its movement in the current direction.</p>
      */
 
     protected void handleCollision()
@@ -331,7 +353,7 @@ public abstract class Entity extends Renderable
     }
 
     /**
-     * Manages the behavior of the ghost io.github.killiansra.javacman.entity during the FRIGHTENED mode.
+     * Manages the behavior of the ghost entity during the FRIGHTENED mode.
      */
     protected void checkFrightened()
     {
@@ -355,7 +377,7 @@ public abstract class Entity extends Renderable
     }
 
     /**
-     * Calculates and updates the io.github.killiansra.javacman.entity's movement direction to follow the shortest path
+     * Calculates and updates the entity's movement direction to follow the shortest path
      * toward the specified goal position on the grid.
      *
      * @param goalCol the column index of the goal position on the grid
@@ -374,19 +396,19 @@ public abstract class Entity extends Renderable
             int nextX = gp.pathfinder.pathList.getFirst().col * gp.tileSize;
             int nextY = gp.pathfinder.pathList.getFirst().row * gp.tileSize;
 
-            if(hitbox.x > nextX && hitbox.y == nextY)
+            if(movementHitbox.x > nextX && movementHitbox.y == nextY)
             {
                 direction = Direction.LEFT;
             }
-            else if(hitbox.x < nextX && hitbox.y == nextY)
+            else if(movementHitbox.x < nextX && movementHitbox.y == nextY)
             {
                 direction = Direction.RIGHT;
             }
-            else if(hitbox.x == nextX && hitbox.y < nextY)
+            else if(movementHitbox.x == nextX && movementHitbox.y < nextY)
             {
                 direction = Direction.DOWN;
             }
-            else if(hitbox.x == nextX && hitbox.y > nextY)
+            else if(movementHitbox.x == nextX && movementHitbox.y > nextY)
             {
                 direction = Direction.UP;
             }
@@ -394,11 +416,11 @@ public abstract class Entity extends Renderable
     }
 
     /**
-     * Calculates the distance (in tiles) between this io.github.killiansra.javacman.entity
+     * Calculates the distance (in tiles) between this entity
      * and the player based on their world coordinates.
      *
-     * @param player The player io.github.killiansra.javacman.entity used to calculate the distance.
-     * @return The distance in tiles between this io.github.killiansra.javacman.entity and the player.
+     * @param player The player entity used to calculate the distance.
+     * @return The distance in tiles between this entity and the player.
      */
     protected int getTileDistanceFromPlayer(Player player)
     {
@@ -420,11 +442,11 @@ public abstract class Entity extends Renderable
     }
 
     /**
-     * Determines the possible directions that an io.github.killiansra.javacman.entity can move to based on its current position.
+     * Determines the possible directions that an entity can move to based on its current position.
      * The method excludes the opposite direction to prevent U-turns.
      *
-     * @param entity the io.github.killiansra.javacman.entity for which the possible directions are to be calculated
-     * @return a list of possible directions the io.github.killiansra.javacman.entity can move to, excluding the opposite direction
+     * @param entity the entity for which the possible directions are to be calculated
+     * @return a list of possible directions the entity can move to, excluding the opposite direction
      */
     protected ArrayList<Direction> possibleDirections(Entity entity)
     {
@@ -499,10 +521,10 @@ public abstract class Entity extends Renderable
     }
 
     /**
-     * Determines the opposite direction of the given io.github.killiansra.javacman.entity's current direction.
+     * Determines the opposite direction of the given entity's current direction.
      *
-     * @param entity the io.github.killiansra.javacman.entity whose opposite direction is to be determined
-     * @return the direction opposite to the io.github.killiansra.javacman.entity's current direction, or null if no direction is set
+     * @param entity the entity whose opposite direction is to be determined
+     * @return the direction opposite to the entity's current direction, or null if no direction is set
      */
     protected Direction getOppositeDirection(Entity entity)
     {
@@ -519,11 +541,11 @@ public abstract class Entity extends Renderable
     }
 
     /**
-     * Resynchronizes the position of the specified ghost io.github.killiansra.javacman.entity to align it
-     * with the grid defined by the io.github.killiansra.javacman.tile size.
+     * Resynchronizes the position of the specified ghost entity to align it
+     * with the grid defined by the tile size.
      *
-     * @param ghost The ghost io.github.killiansra.javacman.entity whose position needs to be resynchronized.
-     *              The io.github.killiansra.javacman.entity's current direction determines the adjustment.
+     * @param ghost The ghost entity whose position needs to be resynchronized.
+     *              The entity's current direction determines the adjustment.
      */
     protected void resynchronizePosition(Entity ghost)
     {
@@ -681,7 +703,7 @@ public abstract class Entity extends Renderable
     /**
      * Manages the alternation between CHASE and SCATTER modes.
      * The mode alternates based on a duration counter. If the mode is CHASE,
-     * the io.github.killiansra.javacman.entity transitions to SCATTER mode when reaching the specified (x, y) position.
+     * the entity transitions to SCATTER mode when reaching the specified (x, y) position.
      * Otherwise, it switches back to CHASE mode after the SCATTER duration ends.
      *
      * @param x The target x-coordinate required for the mode transition.
@@ -731,7 +753,7 @@ public abstract class Entity extends Renderable
     }
 
     /**
-     * Reset all io.github.killiansra.javacman.entity's counter.
+     * Reset all entity's counter.
      */
     private void resetCounters()
     {
@@ -745,7 +767,7 @@ public abstract class Entity extends Renderable
     }
 
     /**
-     * Reset io.github.killiansra.javacman.entity's properties.
+     * Reset entity's properties.
      */
     public void reset()
     {
@@ -767,7 +789,14 @@ public abstract class Entity extends Renderable
     {
         g2.setColor(Color.WHITE);
 
-        //Display io.github.killiansra.javacman.entity's hitbox
-        g2.drawRect(getHitboxX(), getHitboxY(), getHitboxWidth(), getHitboxHeight());
+        //Display entity's movement hitbox
+        g2.drawRect(getMovementHitboxX(), getMovementHitboxY(), getMovementHitboxWidth(), getMovementHitboxHeight());
+
+        //Display entity's movement hitbox
+        g2.setColor(Color.ORANGE);
+        g2.drawRect(getCollisionHitboxX(), getCollisionHitboxY(), getCollisionHitboxWidth(), getCollisionHitboxHeight());
+
+        //Reset color
+        g2.setColor(Color.WHITE);
     }
 }

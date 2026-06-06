@@ -16,11 +16,11 @@ public class Coffee extends Object
         super.arrayIndex = arrayIndex;
 
         //Hitbox settings
-        hitbox = new Rectangle();
-        hitbox.x = worldX + 2;
-        hitbox.y = worldY;
-        hitbox.width = gp.tileSize - 4;
-        hitbox.height = gp.tileSize;
+        collisionHitbox = new Rectangle();
+        collisionHitbox.x = worldX + 2;
+        collisionHitbox.y = worldY;
+        collisionHitbox.width = gp.tileSize - 4;
+        collisionHitbox.height = gp.tileSize;
 
         getImage();
     }

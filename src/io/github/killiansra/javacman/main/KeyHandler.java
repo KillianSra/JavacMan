@@ -383,7 +383,7 @@ public class KeyHandler implements KeyListener
 
                     gp.state = gp.readyState;
                     break;
-                //Back to the io.github.killiansra.javacman.main menu
+                //Back to the main menu
                 case 1:
                     gp.state = gp.titleState;
                     gp.UI.commandNb = 0;

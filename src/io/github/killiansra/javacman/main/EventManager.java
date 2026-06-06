@@ -49,7 +49,7 @@ public class EventManager
     }
 
     /**
-     * Checks for specific events based on the targeted io.github.killiansra.javacman.entity's interaction with triggers.
+     * Checks for specific events based on the targeted entity's interaction with triggers.
      */
     public void checkEvent(Entity entity)
     {
@@ -60,9 +60,9 @@ public class EventManager
     }
 
     /**
-     * Checks if the targeted io.github.killiansra.javacman.entity has triggered a specific event based on their position and direction.
+     * Checks if the targeted entity has triggered a specific event based on their position and direction.
      *
-     * @param entity the targeted io.github.killiansra.javacman.entity
+     * @param entity the targeted entity
      * @param triggerIndex Index of the event rectangle to check against.
      * @param requiredDirection The direction the player must face to trigger the event.
      * @return true if the event is triggered; false otherwise.
@@ -71,8 +71,8 @@ public class EventManager
     {
         boolean hit = false;
 
-        //Get the io.github.killiansra.javacman.entity's hitbox and check if it intersects with the event rectangle at the specified index.
-        Rectangle entityHitbox = entity.getHitbox();
+        //Get the entity's hitbox and check if it intersects with the event rectangle at the specified index.
+        Rectangle entityHitbox = entity.getMovementHitbox();
         if(entityHitbox.intersects(eventRectangles[triggerIndex]))
         {
             //Ensure the player is facing the required direction to activate the event.
@@ -88,9 +88,9 @@ public class EventManager
     /**
      * Teleports the player to a specific location on the map.
      *
-     * @param entity The io.github.killiansra.javacman.entity to be teleported
-     * @param x The x-coordinate to teleport the io.github.killiansra.javacman.entity to.
-     * @param y The y-coordinate to teleport the io.github.killiansra.javacman.entity to.
+     * @param entity The entity to be teleported
+     * @param x The x-coordinate to teleport the entity to.
+     * @param y The y-coordinate to teleport the entity to.
      */
     private void teleport(Entity entity, int x, int y)
     {

@@ -16,11 +16,11 @@ public class Mug extends Object
         super.arrayIndex = arrayIndex;
 
         //Hitbox settings
-        hitbox = new Rectangle();
-        hitbox.x = worldX + 2;
-        hitbox.y = worldY + 4;
-        hitbox.width = gp.tileSize - 6;
-        hitbox.height = gp.tileSize - 8;
+        collisionHitbox = new Rectangle();
+        collisionHitbox.x = worldX + 2;
+        collisionHitbox.y = worldY + 4;
+        collisionHitbox.width = gp.tileSize - 6;
+        collisionHitbox.height = gp.tileSize - 8;
 
         getImage();
     }

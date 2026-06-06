@@ -11,7 +11,8 @@ public class PlayerAvatar extends Entity
     public PlayerAvatar(GamePanel gp)
     {
         super(gp);
-        hitbox = new Rectangle(0, 0, 0, 0);
+        movementHitbox = new Rectangle(0, 0, 0, 0);
+        collisionHitbox = new Rectangle(0, 0, 0, 0);
         direction = Direction.RIGHT;
         speed = 2;
 
@@ -20,7 +21,8 @@ public class PlayerAvatar extends Entity
     }
 
     //Methods
-    private void setStartPosition()
+    @Override
+    public void setStartPosition()
     {
         worldX = gp.tileSize * -3;
         worldY = gp.tileSize * 10;

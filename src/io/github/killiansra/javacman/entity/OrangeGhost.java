@@ -22,7 +22,11 @@ public class OrangeGhost extends Entity implements Ghost
         super(gp);
 
         //Hitbox settings
-        hitbox = new Rectangle(worldX, worldY, gp.tileSize, gp.tileSize);
+        movementHitbox = new Rectangle(worldX, worldY, gp.tileSize, gp.tileSize);
+        int collisionHitboxWorldX = worldX - COLLISION_HITBOX_OFFSET / 2;
+        int collisionHitboxWorldY = worldY - COLLISION_HITBOX_OFFSET / 2;
+        int collisionHitboxDimension = gp.tileSize - COLLISION_HITBOX_OFFSET;
+        collisionHitbox = new Rectangle(collisionHitboxWorldX, collisionHitboxWorldY, collisionHitboxDimension, collisionHitboxDimension);
 
         spawnCol = 15;
         spawnRow = 13;
@@ -32,18 +36,7 @@ public class OrangeGhost extends Entity implements Ghost
     }
 
     //Methods
-    public void setStartPosition()
-    {
-        direction = Direction.DOWN;
-        worldX = gp.tileSize * spawnCol;
-        worldY = gp.tileSize * spawnRow;
-        speed = 2;
-        defaultSpeed = speed;
 
-        //Synchronize hitbox with io.github.killiansra.javacman.entity position
-        hitbox.x = worldX;
-        hitbox.y = worldY;
-    }
 
     @Override
     public void pathfinding()
@@ -185,7 +178,7 @@ public class OrangeGhost extends Entity implements Ghost
             if(worldX == 240)
             {
                 worldX -= speed;
-                hitbox.x -= speed;
+                movementHitbox.x -= speed;
                 scatterPhase++;
             }
         }
@@ -195,7 +188,7 @@ public class OrangeGhost extends Entity implements Ghost
             if(worldY == 504)
             {
                 worldY += speed;
-                hitbox.y += speed;
+                movementHitbox.y += speed;
                 scatterPhase++;
             }
         }
@@ -205,7 +198,7 @@ public class OrangeGhost extends Entity implements Ghost
             if(worldX == 312)
             {
                 worldX -= speed;
-                hitbox.x -= speed;
+                movementHitbox.x -= speed;
                 scatterPhase++;
             }
         }
@@ -215,7 +208,7 @@ public class OrangeGhost extends Entity implements Ghost
             if(worldY == 456)
             {
                 worldY += speed;
-                hitbox.y += speed;
+                movementHitbox.y += speed;
                 scatterPhase++;
             }
         }
@@ -225,7 +218,7 @@ public class OrangeGhost extends Entity implements Ghost
             if(worldX == 96)
             {
                 worldX += speed;
-                hitbox.x += speed;
+                movementHitbox.x += speed;
                 scatterPhase++;
             }
         }
@@ -235,7 +228,7 @@ public class OrangeGhost extends Entity implements Ghost
             if(worldY == 552)
             {
                 worldY -= speed;
-                hitbox.y -= speed;
+                movementHitbox.y -= speed;
                 scatterPhase = 0;
             }
         }
@@ -282,6 +275,6 @@ public class OrangeGhost extends Entity implements Ghost
     public void reset()
     {
         super.reset();
-        setStartPosition();
+        super.setStartPosition();
     }
 }

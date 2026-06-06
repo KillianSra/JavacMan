@@ -24,9 +24,10 @@ public class Player extends Entity
         this.keyHandler = keyHandler;
 
         //Hitbox settings
-        hitbox = new Rectangle(worldX, worldY, gp.tileSize, gp.tileSize);
-        hitboxDefaultX = hitbox.x;
-        hitboxDefaultY = hitbox.y;
+        movementHitbox = new Rectangle(worldX, worldY, gp.tileSize, gp.tileSize);
+        collisionHitbox = new Rectangle(worldX, worldY, gp.tileSize, gp.tileSize);
+        hitboxDefaultX = movementHitbox.x;
+        hitboxDefaultY = movementHitbox.y;
 
         setStartPosition();
         getImage();
@@ -41,13 +42,16 @@ public class Player extends Entity
     public void setLife(int life) { this.life = life; }
 
     //Methods
+    @Override
     public void setStartPosition()
     {
         direction = Direction.LEFT;
         worldX = gp.tileSize * 14;
         worldY = gp.tileSize * 19;
-        hitbox.x = worldX;
-        hitbox.y = worldY;
+        movementHitbox.x = worldX;
+        movementHitbox.y = worldY;
+        collisionHitbox.x = worldX;
+        collisionHitbox.y = worldY;
         speed = 2;
         defaultSpeed = speed;
         if(gp.restart)

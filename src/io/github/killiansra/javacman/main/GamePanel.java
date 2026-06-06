@@ -18,7 +18,7 @@ public class GamePanel extends JPanel implements Runnable
     //Screen settings
     private final int originalTileSize = 16;    //16 pixels
     private final float scale = 1.5F;
-    public final int tileSize = (int) (originalTileSize * scale);   //24x24 pixels = 1 io.github.killiansra.javacman.tile
+    public final int tileSize = (int) (originalTileSize * scale);   //24x24 pixels = 1 tile
     public final int maxScreenCol = 29;
     public final int maxScreenRow = 28;
     public int screenHeight = tileSize * maxScreenRow;    //672 pixels
@@ -141,7 +141,7 @@ public class GamePanel extends JPanel implements Runnable
     }
 
     /**
-     * Starts the game thread for the io.github.killiansra.javacman.main game loop.
+     * Starts the game thread for the main game loop.
      */
     public void startGameThread()
     {
@@ -285,9 +285,9 @@ public class GamePanel extends JPanel implements Runnable
                 }
 
                 //Manage special collectibles:
-                //1. Check if the io.github.killiansra.javacman.object has a limited life span and update it using `checkLifeSpan()`.
-                //2. If the io.github.killiansra.javacman.object is displaying points, manage its display duration with `checkDisplayedPoint()`.
-                //3. Remove the io.github.killiansra.javacman.object if it is marked for deletion.
+                //1. Check if the object has a limited life span and update it using `checkLifeSpan()`.
+                //2. If the object is displaying points, manage its display duration with `checkDisplayedPoint()`.
+                //3. Remove the object if it is marked for deletion.
                 for(int i = 0; i < objects.length; i++)
                 {
                     if(objects[i] != null)
@@ -338,10 +338,10 @@ public class GamePanel extends JPanel implements Runnable
     /**
      * Plays a sound effect from the specified index.
      *
-     * <p>This method loads an audio file from the given index in the {@code sound} io.github.killiansra.javacman.object
+     * <p>This method loads an audio file from the given index in the {@code sound} object
      * and plays it immediately.</p>
      *
-     * @param i the index of the sound effect in the {@code sound} io.github.killiansra.javacman.object.
+     * @param i the index of the sound effect in the {@code sound} object.
      */
     public void playSoundEffect(int i)
     {
@@ -378,7 +378,7 @@ public class GamePanel extends JPanel implements Runnable
     /**
      * Renders the game elements onto the provided Graphics2D context.
      * <p>
-     * This method is responsible for drawing all the game components, including the io.github.killiansra.javacman.tile map,
+     * This method is responsible for drawing all the game components, including the tile map,
      * objects, entities (player, ghosts), and the UI.
      * </p>
      *

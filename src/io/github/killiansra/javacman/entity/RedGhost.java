@@ -18,7 +18,11 @@ public class RedGhost extends Entity implements Ghost
         super(gp);
 
         //Hitbox settings
-        hitbox = new Rectangle(worldX, worldY, gp.tileSize, gp.tileSize);
+        movementHitbox = new Rectangle(worldX, worldY, gp.tileSize, gp.tileSize);
+        int collisionHitboxWorldX = worldX - COLLISION_HITBOX_OFFSET / 2;
+        int collisionHitboxWorldY = worldY - COLLISION_HITBOX_OFFSET / 2;
+        int collisionHitboxDimension = gp.tileSize - COLLISION_HITBOX_OFFSET;
+        collisionHitbox = new Rectangle(collisionHitboxWorldX, collisionHitboxWorldY, collisionHitboxDimension, collisionHitboxDimension);
 
         spawnCol = 14;
         spawnRow = 11;
@@ -30,19 +34,6 @@ public class RedGhost extends Entity implements Ghost
     }
 
     //Methods
-    public void setStartPosition()
-    {
-        direction = Direction.LEFT;
-        worldX = gp.tileSize * spawnCol;
-        worldY = gp.tileSize * spawnRow;
-        speed = 2;
-        defaultSpeed = speed;
-
-        //Synchronize hitbox with io.github.killiansra.javacman.entity position
-        hitbox.x = worldX;
-        hitbox.y = worldY;
-    }
-
     @Override
     public void pathfinding()
     {
@@ -138,7 +129,7 @@ public class RedGhost extends Entity implements Ghost
             if(worldY == 144)
             {
                 worldY -= speed;
-                hitbox.y -= speed;
+                movementHitbox.y -= speed;
                 scatterPhase++;
             }
         }
@@ -164,6 +155,6 @@ public class RedGhost extends Entity implements Ghost
     public void reset()
     {
         super.reset();
-        setStartPosition();
+        super.setStartPosition();
     }
 }

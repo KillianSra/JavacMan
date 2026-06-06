@@ -24,7 +24,7 @@ public class Pathfinder
      * Each node is initialized with its respective column and row index.
      * <p>
      * The method iterates through all columns and rows within the grid dimensions
-     * defined by the {@link GamePanel} and creates a new {@link Node} io.github.killiansra.javacman.object for each cell.
+     * defined by the {@link GamePanel} and creates a new {@link Node} object for each cell.
      */
     private void instantiateNodes()
     {
