@@ -39,10 +39,10 @@ public class HighscoreManager
             //Create an ObjectOutputStream to write objects to a file
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(FILE_NAME)));
 
-            //Create a Storage io.github.killiansra.javacman.object to hold the score
+            //Create a Storage object to hold the score
             Highscore highscore = new Highscore(score);
 
-            //Write the Storage io.github.killiansra.javacman.object to the file
+            //Write the Storage object to the file
             oos.writeObject(highscore);
 
             //Close the stream to release resources
@@ -69,7 +69,7 @@ public class HighscoreManager
             //Create an ObjectInputStream to read objects from the file
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File(FILE_NAME)));
 
-            //Read the Storage io.github.killiansra.javacman.object from the file
+            //Read the Storage object from the file
             highscore = (Highscore) ois.readObject();
 
             //Close the stream to release resources

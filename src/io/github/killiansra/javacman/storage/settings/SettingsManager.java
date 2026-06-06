@@ -46,10 +46,10 @@ public class SettingsManager
             //Create an ObjectOutputStream to write objects to a file
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(FILE_NAME)));
 
-            //Create a Settings io.github.killiansra.javacman.object to hold the settings configuration
+            //Create a Settings object to hold the settings configuration
             Settings settings = new Settings(volumeScale, fullScreen, displayFPSCounter);
 
-            //Write the Settings io.github.killiansra.javacman.object to the file
+            //Write the Settings object to the file
             oos.writeObject(settings);
 
             //Close the stream to release resources
@@ -64,7 +64,7 @@ public class SettingsManager
     /**
      * Loads the saved settings from the file.
      *
-     * @return The stored {@link Settings} io.github.killiansra.javacman.object.
+     * @return The stored {@link Settings} object.
      * @throws RuntimeException if an error occurs while loading the settings.
      */
     public static Settings load()
@@ -76,7 +76,7 @@ public class SettingsManager
             //Create an ObjectInputStream to read objects from the file
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File(FILE_NAME)));
 
-            //Read the Storage io.github.killiansra.javacman.object from the file
+            //Read the Storage object from the file
             settings = (Settings) ois.readObject();
 
             //Close the stream to release resources
@@ -87,7 +87,7 @@ public class SettingsManager
             throw new RuntimeException("Failed to load the settings : ", e);
         }
 
-        //Return the stored settings io.github.killiansra.javacman.object
+        //Return the stored settings object
         return settings;
     }
 }

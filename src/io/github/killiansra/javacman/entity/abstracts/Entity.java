@@ -98,7 +98,7 @@ public abstract class Entity extends Renderable
 
     //Abstract method
     /**
-     * Updates the state or behavior of the io.github.killiansra.javacman.entity.
+     * Updates the state or behavior of the entity.
      */
     public abstract void update();
 
@@ -153,10 +153,10 @@ public abstract class Entity extends Renderable
     }
 
     /**
-     * Determines the appropriate image to display based on the io.github.killiansra.javacman.entity's current direction
+     * Determines the appropriate image to display based on the entity's current direction
      * and animation frame (sprite number).
      *
-     * @return A BufferedImage representing the current frame of the io.github.killiansra.javacman.entity's animation.
+     * @return A BufferedImage representing the current frame of the entity's animation.
      */
     protected BufferedImage setDisplayedImage()
     {
@@ -240,7 +240,7 @@ public abstract class Entity extends Renderable
      * Handles the ghost's collision detection and movement.
      *
      * <p>Checks for collisions with tiles and the player. If no collision is detected,
-     * the io.github.killiansra.javacman.entity proceeds with its movement in the current direction.</p>
+     * the entity proceeds with its movement in the current direction.</p>
      */
 
     protected void handleCollision()
@@ -353,7 +353,7 @@ public abstract class Entity extends Renderable
     }
 
     /**
-     * Manages the behavior of the ghost io.github.killiansra.javacman.entity during the FRIGHTENED mode.
+     * Manages the behavior of the ghost entity during the FRIGHTENED mode.
      */
     protected void checkFrightened()
     {
@@ -377,7 +377,7 @@ public abstract class Entity extends Renderable
     }
 
     /**
-     * Calculates and updates the io.github.killiansra.javacman.entity's movement direction to follow the shortest path
+     * Calculates and updates the entity's movement direction to follow the shortest path
      * toward the specified goal position on the grid.
      *
      * @param goalCol the column index of the goal position on the grid
@@ -416,11 +416,11 @@ public abstract class Entity extends Renderable
     }
 
     /**
-     * Calculates the distance (in tiles) between this io.github.killiansra.javacman.entity
+     * Calculates the distance (in tiles) between this entity
      * and the player based on their world coordinates.
      *
-     * @param player The player io.github.killiansra.javacman.entity used to calculate the distance.
-     * @return The distance in tiles between this io.github.killiansra.javacman.entity and the player.
+     * @param player The player entity used to calculate the distance.
+     * @return The distance in tiles between this entity and the player.
      */
     protected int getTileDistanceFromPlayer(Player player)
     {
@@ -442,11 +442,11 @@ public abstract class Entity extends Renderable
     }
 
     /**
-     * Determines the possible directions that an io.github.killiansra.javacman.entity can move to based on its current position.
+     * Determines the possible directions that an entity can move to based on its current position.
      * The method excludes the opposite direction to prevent U-turns.
      *
-     * @param entity the io.github.killiansra.javacman.entity for which the possible directions are to be calculated
-     * @return a list of possible directions the io.github.killiansra.javacman.entity can move to, excluding the opposite direction
+     * @param entity the entity for which the possible directions are to be calculated
+     * @return a list of possible directions the entity can move to, excluding the opposite direction
      */
     protected ArrayList<Direction> possibleDirections(Entity entity)
     {
@@ -521,10 +521,10 @@ public abstract class Entity extends Renderable
     }
 
     /**
-     * Determines the opposite direction of the given io.github.killiansra.javacman.entity's current direction.
+     * Determines the opposite direction of the given entity's current direction.
      *
-     * @param entity the io.github.killiansra.javacman.entity whose opposite direction is to be determined
-     * @return the direction opposite to the io.github.killiansra.javacman.entity's current direction, or null if no direction is set
+     * @param entity the entity whose opposite direction is to be determined
+     * @return the direction opposite to the entity's current direction, or null if no direction is set
      */
     protected Direction getOppositeDirection(Entity entity)
     {
@@ -541,11 +541,11 @@ public abstract class Entity extends Renderable
     }
 
     /**
-     * Resynchronizes the position of the specified ghost io.github.killiansra.javacman.entity to align it
-     * with the grid defined by the io.github.killiansra.javacman.tile size.
+     * Resynchronizes the position of the specified ghost entity to align it
+     * with the grid defined by the tile size.
      *
-     * @param ghost The ghost io.github.killiansra.javacman.entity whose position needs to be resynchronized.
-     *              The io.github.killiansra.javacman.entity's current direction determines the adjustment.
+     * @param ghost The ghost entity whose position needs to be resynchronized.
+     *              The entity's current direction determines the adjustment.
      */
     protected void resynchronizePosition(Entity ghost)
     {
@@ -703,7 +703,7 @@ public abstract class Entity extends Renderable
     /**
      * Manages the alternation between CHASE and SCATTER modes.
      * The mode alternates based on a duration counter. If the mode is CHASE,
-     * the io.github.killiansra.javacman.entity transitions to SCATTER mode when reaching the specified (x, y) position.
+     * the entity transitions to SCATTER mode when reaching the specified (x, y) position.
      * Otherwise, it switches back to CHASE mode after the SCATTER duration ends.
      *
      * @param x The target x-coordinate required for the mode transition.
@@ -753,7 +753,7 @@ public abstract class Entity extends Renderable
     }
 
     /**
-     * Reset all io.github.killiansra.javacman.entity's counter.
+     * Reset all entity's counter.
      */
     private void resetCounters()
     {
@@ -767,7 +767,7 @@ public abstract class Entity extends Renderable
     }
 
     /**
-     * Reset io.github.killiansra.javacman.entity's properties.
+     * Reset entity's properties.
      */
     public void reset()
     {

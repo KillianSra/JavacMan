@@ -5,7 +5,7 @@ import java.awt.*;
 
 public class Main
 {
-    public final static JFrame WINDOW = new JFrame();;
+    public final static JFrame WINDOW = new JFrame();
     private final static GamePanel GAME_PANEL = new GamePanel();
     public final static GraphicsDevice DEVICE = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 

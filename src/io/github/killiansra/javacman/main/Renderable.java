@@ -47,9 +47,9 @@ public abstract class Renderable
     public abstract void getImage();
 
     /**
-     * Renders the visual representation of the io.github.killiansra.javacman.entity on the screen.
+     * Renders the visual representation of the entity on the screen.
      *
-     * @param g2 the Graphics2D io.github.killiansra.javacman.object used for drawing.
+     * @param g2 the Graphics2D object used for drawing.
      */
     public abstract void draw(Graphics2D g2);
 
@@ -65,7 +65,7 @@ public abstract class Renderable
      * @param imagePath The relative path to the image file (without the .png extension).
      * @param width The desired width of the scaled image.
      * @param height The desired height of the scaled image.
-     * @return A BufferedImage io.github.killiansra.javacman.object representing the scaled image.
+     * @return A BufferedImage object representing the scaled image.
      * @throws RuntimeException if an IOException occurs while reading the image file or if the file cannot be found.
      */
     protected BufferedImage setup(String imagePath, int width, int height)

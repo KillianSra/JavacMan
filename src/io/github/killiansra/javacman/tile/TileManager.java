@@ -29,7 +29,7 @@ public class TileManager
     }
 
     /**
-     * Loads and sets up all the io.github.killiansra.javacman.tile images into the `tiles` array.
+     * Loads and sets up all the tile images into the `tiles` array.
      * Assigns placeholder images to unused tiles to prevent NullPointerExceptions.
      */
     private void getTileImage()
@@ -70,11 +70,11 @@ public class TileManager
     }
 
     /**
-     * Helper method to configure a io.github.killiansra.javacman.tile with its image and collision property.
+     * Helper method to configure a tile with its image and collision property.
      *
-     * @param index The index of the io.github.killiansra.javacman.tile in the `tiles` array.
-     * @param imageName The name of the image file (without extension) for the io.github.killiansra.javacman.tile.
-     * @param collision Whether the io.github.killiansra.javacman.tile should block movement.
+     * @param index The index of the tile in the `tiles` array.
+     * @param imageName The name of the image file (without extension) for the tile.
+     * @param collision Whether the tile should block movement.
      */
     private void setup(int index, String imageName, boolean collision)
     {
@@ -92,7 +92,7 @@ public class TileManager
     }
 
     /**
-     * Loads the io.github.killiansra.javacman.tile map layout from a text file and stores it in the `mapTileNum` array.
+     * Loads the tile map layout from a text file and stores it in the `mapTileNum` array.
      *
      * @param filePath The path to the map file.
      */
@@ -111,7 +111,7 @@ public class TileManager
             {
                 String line = br.readLine();
 
-                //Split the line into individual io.github.killiansra.javacman.tile numbers
+                //Split the line into individual tile numbers
                 while(col < gp.maxScreenCol)
                 {
                     String[] numbers = line.split(" ");
@@ -139,7 +139,7 @@ public class TileManager
     /**
      * Draws all the tiles on the screen based on the map configuration.
      *
-     * @param g2 The Graphics2D io.github.killiansra.javacman.object used for drawing the tiles.
+     * @param g2 The Graphics2D object used for drawing the tiles.
      */
     public void draw(Graphics2D g2)
     {
@@ -151,11 +151,11 @@ public class TileManager
         {
             int tileNum = mapTileNum[worldCol][worldRow];
 
-            //Calculate the world coordinates for the current io.github.killiansra.javacman.tile
+            //Calculate the world coordinates for the current tile
             int worldX = worldCol * gp.tileSize;
             int worldY = worldRow * gp.tileSize;
 
-            //Draw the io.github.killiansra.javacman.tile's image at the calculated position
+            //Draw the tile's image at the calculated position
             g2.drawImage(tiles[tileNum].getImage(), worldX, worldY, null);
             worldCol++;
 

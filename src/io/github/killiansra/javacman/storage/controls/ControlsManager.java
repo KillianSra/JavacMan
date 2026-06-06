@@ -59,10 +59,10 @@ public class ControlsManager
             //Create an ObjectOutputStream to write objects to a file
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File(FILE_NAME)));
 
-            //Create a Controls io.github.killiansra.javacman.object to hold the settings configuration
+            //Create a Controls object to hold the settings configuration
             Controls controls = new Controls(up, down, left, right, pause);
 
-            //Write the Settings io.github.killiansra.javacman.object to the file
+            //Write the Settings object to the file
             oos.writeObject(controls);
 
             //Close the stream to release resources
@@ -77,7 +77,7 @@ public class ControlsManager
     /**
      * Loads the saved controls from the file.
      *
-     * @return The stored {@link Controls} io.github.killiansra.javacman.object.
+     * @return The stored {@link Controls} object.
      * @throws RuntimeException if an error occurs while loading the controls.
      */
     public static Controls load()
@@ -89,7 +89,7 @@ public class ControlsManager
             //Create an ObjectInputStream to read objects from the file
             ObjectInputStream ois = new ObjectInputStream(new FileInputStream(new File(FILE_NAME)));
 
-            //Read the Controls io.github.killiansra.javacman.object from the file
+            //Read the Controls object from the file
             controls = (Controls) ois.readObject();
 
             //Close the stream to release resources
@@ -100,7 +100,7 @@ public class ControlsManager
             throw new RuntimeException("Failed to load the controls : ", e);
         }
 
-        //Return the stored controls io.github.killiansra.javacman.object
+        //Return the stored controls object
         return controls;
     }
 }
