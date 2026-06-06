@@ -8,7 +8,8 @@ import java.util.Objects;
 
 public abstract class Renderable
 {
-    protected Rectangle hitbox;
+    protected Rectangle movementHitbox;
+    protected Rectangle collisionHitbox;
     public final int POINT_DISPLAYED_TIME = 60;     //1 second
 
     //State
@@ -19,11 +20,16 @@ public abstract class Renderable
     protected int displayPointsWonCounter = 0;
 
     //Getters
-    public Rectangle getHitbox() { return this.hitbox; }
-    public int getHitboxX() { return this.hitbox.x; }
-    public int getHitboxY() { return this.hitbox.y; }
-    public int getHitboxHeight() { return this.hitbox.height; }
-    public int getHitboxWidth() { return this.hitbox.width; }
+    public Rectangle getMovementHitbox() { return this.movementHitbox; }
+    public int getMovementHitboxX() { return this.movementHitbox.x; }
+    public int getMovementHitboxY() { return this.movementHitbox.y; }
+    public int getMovementHitboxHeight() { return this.movementHitbox.height; }
+    public int getMovementHitboxWidth() { return this.movementHitbox.width; }
+    public Rectangle getCollisionHitbox() { return this.collisionHitbox; }
+    public int getCollisionHitboxX() { return this.collisionHitbox.x; }
+    public int getCollisionHitboxY() { return this.collisionHitbox.y; };
+    public int getCollisionHitboxHeight() { return this.collisionHitbox.height; }
+    public int getCollisionHitboxWidth() { return this.collisionHitbox.width; }
     public int getWorldX() { return this.worldX; }
     public int getWorldY() { return this.worldY; }
     public boolean isCollision() { return collision; }

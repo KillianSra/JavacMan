@@ -16,11 +16,11 @@ public class Lightbulb extends Object
         super.arrayIndex = arrayIndex;
 
         //Hitbox settings
-        hitbox = new Rectangle();
-        hitbox.x = worldX;
-        hitbox.y = worldY;
-        hitbox.width = gp.tileSize;
-        hitbox.height = gp.tileSize;
+        collisionHitbox = new Rectangle();
+        collisionHitbox.x = worldX;
+        collisionHitbox.y = worldY;
+        collisionHitbox.width = gp.tileSize;
+        collisionHitbox.height = gp.tileSize;
 
         getImage();
     }

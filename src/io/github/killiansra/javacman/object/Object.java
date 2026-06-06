@@ -100,6 +100,6 @@ public abstract class Object extends Renderable
         g2.setColor(Color.WHITE);
 
         //Display io.github.killiansra.javacman.object's hitbox
-        g2.drawRect(getHitboxX(), getHitboxY(), getHitboxWidth(), getHitboxHeight());
+        g2.drawRect(getCollisionHitboxX(), getCollisionHitboxY(), getCollisionHitboxWidth(), getCollisionHitboxHeight());
     }
 }

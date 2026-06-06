@@ -72,7 +72,7 @@ public class EventManager
         boolean hit = false;
 
         //Get the io.github.killiansra.javacman.entity's hitbox and check if it intersects with the event rectangle at the specified index.
-        Rectangle entityHitbox = entity.getHitbox();
+        Rectangle entityHitbox = entity.getMovementHitbox();
         if(entityHitbox.intersects(eventRectangles[triggerIndex]))
         {
             //Ensure the player is facing the required direction to activate the event.

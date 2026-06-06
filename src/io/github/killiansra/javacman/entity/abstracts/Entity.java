@@ -5,6 +5,7 @@ import io.github.killiansra.javacman.entity.RedGhost;
 import io.github.killiansra.javacman.entity.enums.Direction;
 import io.github.killiansra.javacman.entity.Player;
 import io.github.killiansra.javacman.entity.enums.Mode;
+import io.github.killiansra.javacman.entity.interfaces.Ghost;
 import io.github.killiansra.javacman.main.GamePanel;
 import io.github.killiansra.javacman.main.Renderable;
 import io.github.killiansra.javacman.tile.Tile;
@@ -24,6 +25,7 @@ public abstract class Entity extends Renderable
     public static int GHOSTS_EATEN_IN_A_ROW = 0;
 
     //Constant
+    protected final static int COLLISION_HITBOX_OFFSET = 10;
     private final static int POINT = 200;
     private final int CHASE_MODE_DURATION = 1200;             //20 seconds
     private final int SCATTER_MODE_DURATION = 420;            //7 seconds
@@ -111,6 +113,21 @@ public abstract class Entity extends Renderable
         {
             drawEntityHitbox(g2);
         }
+    }
+
+    public void setStartPosition()
+    {
+        direction = this instanceof RedGhost ? Direction.LEFT : Direction.DOWN;
+        worldX = gp.tileSize * spawnCol;
+        worldY = gp.tileSize * spawnRow;
+        speed = 2;
+        defaultSpeed = speed;
+
+        //Synchronize movement hitbox with entity position
+        movementHitbox.x = worldX;
+        movementHitbox.y = worldY;
+        collisionHitbox.x = worldX + COLLISION_HITBOX_OFFSET / 2;
+        collisionHitbox.y = worldY + COLLISION_HITBOX_OFFSET / 2;
     }
 
     /**
@@ -209,9 +226,14 @@ public abstract class Entity extends Renderable
             case Direction.RIGHT: worldX = worldX + speed; break;
         }
 
-        //Synchronize hitbox with io.github.killiansra.javacman.entity position
-        hitbox.x = worldX;
-        hitbox.y = worldY;
+        //Synchronize hitbox with entity position
+        movementHitbox.x = worldX;
+        movementHitbox.y = worldY;
+
+        int offset = this instanceof Ghost ? COLLISION_HITBOX_OFFSET / 2 : 0;
+        collisionHitbox.x = worldX + offset;
+        collisionHitbox.y = worldY + offset;
+
     }
 
     /**
@@ -374,19 +396,19 @@ public abstract class Entity extends Renderable
             int nextX = gp.pathfinder.pathList.getFirst().col * gp.tileSize;
             int nextY = gp.pathfinder.pathList.getFirst().row * gp.tileSize;
 
-            if(hitbox.x > nextX && hitbox.y == nextY)
+            if(movementHitbox.x > nextX && movementHitbox.y == nextY)
             {
                 direction = Direction.LEFT;
             }
-            else if(hitbox.x < nextX && hitbox.y == nextY)
+            else if(movementHitbox.x < nextX && movementHitbox.y == nextY)
             {
                 direction = Direction.RIGHT;
             }
-            else if(hitbox.x == nextX && hitbox.y < nextY)
+            else if(movementHitbox.x == nextX && movementHitbox.y < nextY)
             {
                 direction = Direction.DOWN;
             }
-            else if(hitbox.x == nextX && hitbox.y > nextY)
+            else if(movementHitbox.x == nextX && movementHitbox.y > nextY)
             {
                 direction = Direction.UP;
             }
@@ -767,7 +789,14 @@ public abstract class Entity extends Renderable
     {
         g2.setColor(Color.WHITE);
 
-        //Display io.github.killiansra.javacman.entity's hitbox
-        g2.drawRect(getHitboxX(), getHitboxY(), getHitboxWidth(), getHitboxHeight());
+        //Display entity's movement hitbox
+        g2.drawRect(getMovementHitboxX(), getMovementHitboxY(), getMovementHitboxWidth(), getMovementHitboxHeight());
+
+        //Display entity's movement hitbox
+        g2.setColor(Color.ORANGE);
+        g2.drawRect(getCollisionHitboxX(), getCollisionHitboxY(), getCollisionHitboxWidth(), getCollisionHitboxHeight());
+
+        //Reset color
+        g2.setColor(Color.WHITE);
     }
 }

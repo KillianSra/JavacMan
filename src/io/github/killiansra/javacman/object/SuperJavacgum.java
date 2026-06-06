@@ -15,11 +15,11 @@ public class SuperJavacgum extends Object
         super.worldY = y;
 
         //Hitbox settings
-        hitbox = new Rectangle();
-        hitbox.x = worldX + (gp.tileSize / 2) - 4;
-        hitbox.y = worldY + (gp.tileSize / 2) - 4;
-        hitbox.width = 8;
-        hitbox.height = 8;
+        collisionHitbox = new Rectangle();
+        collisionHitbox.x = worldX + (gp.tileSize / 2) - 4;
+        collisionHitbox.y = worldY + (gp.tileSize / 2) - 4;
+        collisionHitbox.width = 8;
+        collisionHitbox.height = 8;
 
         getImage();
     }

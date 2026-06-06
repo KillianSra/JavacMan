@@ -31,10 +31,10 @@ public class CollisionManager
         entity.setCollision(false);
 
         // Calculate the grid column and row indices for the io.github.killiansra.javacman.entity's current hitbox position
-        int entityLeftCol = entity.getHitboxX() / gp.tileSize;
-        int entityRightCol = (entity.getHitboxX() + entity.getHitboxWidth()) / gp.tileSize;
-        int entityTopRow = entity.getHitboxY() / gp.tileSize;
-        int entityBottomRow = (entity.getHitboxY() + entity.getHitboxHeight()) / gp.tileSize;
+        int entityLeftCol = entity.getMovementHitboxX() / gp.tileSize;
+        int entityRightCol = (entity.getMovementHitboxX() + entity.getMovementHitboxWidth()) / gp.tileSize;
+        int entityTopRow = entity.getMovementHitboxY() / gp.tileSize;
+        int entityBottomRow = (entity.getMovementHitboxY() + entity.getMovementHitboxHeight()) / gp.tileSize;
 
         int tileNum1, tileNum2;
 
@@ -43,7 +43,7 @@ public class CollisionManager
         {
             case Direction.UP:
                 //Calculate the top row the io.github.killiansra.javacman.entity will occupy after moving up.
-                entityTopRow = (entity.getHitboxY() - entity.getSpeed()) / gp.tileSize;
+                entityTopRow = (entity.getMovementHitboxY() - entity.getSpeed()) / gp.tileSize;
 
                 //Get the io.github.killiansra.javacman.tile indices for the top-left and top-right corners of the hitbox.
                 tileNum1 = gp.tileManager.mapTileNum[entityLeftCol][entityTopRow];
@@ -67,7 +67,7 @@ public class CollisionManager
 
             case Direction.DOWN:
                 //Calculate the bottom row the io.github.killiansra.javacman.entity will occupy after moving down.
-                entityBottomRow = (entity.getHitboxY() + entity.getHitboxHeight() + entity.getSpeed() - 1) / gp.tileSize;
+                entityBottomRow = (entity.getMovementHitboxY() + entity.getMovementHitboxHeight() + entity.getSpeed() - 1) / gp.tileSize;
 
                 //Get the io.github.killiansra.javacman.tile indices for the bottom-left and bottom-right corners of the hitbox.
                 tileNum1 = gp.tileManager.mapTileNum[entityLeftCol][entityBottomRow];
@@ -91,7 +91,7 @@ public class CollisionManager
 
             case Direction.LEFT:
                 //Calculate the left column the io.github.killiansra.javacman.entity will occupy after moving left.
-                entityLeftCol = (entity.getHitboxX() - entity.getSpeed()) / gp.tileSize;
+                entityLeftCol = (entity.getMovementHitboxX() - entity.getSpeed()) / gp.tileSize;
 
                 //Get the io.github.killiansra.javacman.tile indices for the top-left and bottom-left corners of the hitbox.
                 tileNum1 = gp.tileManager.mapTileNum[entityLeftCol][entityTopRow];
@@ -115,7 +115,7 @@ public class CollisionManager
 
             case Direction.RIGHT:
                 //Calculate the right column the io.github.killiansra.javacman.entity will occupy after moving right.
-                entityRightCol = (entity.getHitboxX() + entity.getHitboxWidth() + entity.getSpeed() - 1) / gp.tileSize;
+                entityRightCol = (entity.getMovementHitboxX() + entity.getMovementHitboxWidth() + entity.getSpeed() - 1) / gp.tileSize;
 
                 //Get the io.github.killiansra.javacman.tile indices for the top-right and bottom-right corners of the hitbox.
                 tileNum1 = gp.tileManager.mapTileNum[entityRightCol][entityTopRow];
@@ -163,7 +163,7 @@ public class CollisionManager
     {
         for(int i = 0; i < objects.length; i++)
         {
-            if(objects[i] != null && player.hitbox.intersects(objects[i].hitbox) && !gp.restart)
+            if(objects[i] != null && player.collisionHitbox.intersects(objects[i].collisionHitbox) && !gp.restart)
             {
                 gp.player.setScore(gp.player.getScore() + objects[i].getPoint());
 
@@ -199,7 +199,7 @@ public class CollisionManager
                     gp.collectedItems.add(objects[i].getName());
                     objects[i].setDisplayPoint(true);
                     //Disable hitbox
-                    objects[i].hitbox = new Rectangle(0, 0 , 0 , 0);
+                    objects[i].collisionHitbox = new Rectangle(0, 0 , 0 , 0);
                 }
             }
         }
@@ -217,7 +217,7 @@ public class CollisionManager
         if(ghost.getMode() == Mode.SCATTER || ghost.getMode() == Mode.CHASE)
         {
             //Check if the player's hitbox intersects with the ghost's hitbox.
-            if(player.hitbox.intersects(ghost.hitbox))
+            if(player.collisionHitbox.intersects(ghost.collisionHitbox))
             {
                 //Reduce the player's life by one when a collision occurs.
                 gp.player.setLife(gp.player.getLife() - 1);
@@ -244,7 +244,7 @@ public class CollisionManager
                 }
             }
         }
-        else if(ghost.getMode() == Mode.FRIGHTENED && player.hitbox.intersects(ghost.hitbox))
+        else if(ghost.getMode() == Mode.FRIGHTENED && player.collisionHitbox.intersects(ghost.collisionHitbox))
         {
             //Update ghost's properties
             ghost.setMode(Mode.EATEN);
