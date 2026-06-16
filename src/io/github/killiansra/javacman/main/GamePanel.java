@@ -345,10 +345,10 @@ public class GamePanel extends JPanel implements Runnable
      */
     public void playSoundEffect(int i)
     {
-        sound.setFile(i);
+        //sound.setFile(i);
         if(sound.volumeScale != 0)
         {
-            sound.play();
+            sound.play(i);
         }
     }
 
