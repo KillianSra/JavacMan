@@ -3,17 +3,23 @@ package io.github.killiansra.javacman.main;
 import javax.sound.sampled.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 
 public class Sound
 {
     //Properties
-    private Clip clip;
-    private URL[] soundUrl = new URL[11];
+    private Clip[][] clips = new Clip[SOUND_NUMBER][INSTANCES_PER_SOUNDS];
+    private int[] nextClip = new int[SOUND_NUMBER];
+    //private Clip clip;
+    private URL[] soundUrl = new URL[SOUND_NUMBER];
     private FloatControl floatControl;
     public int volumeScale = 3;
     private float volume;
 
     //Constants
+    private static final int SOUND_NUMBER = 11;
+    private static final int INSTANCES_PER_SOUNDS = 2;
+
     public static final int MENU_NAVIGATION = 0;
     public static final int MENU_SELECTION = 1;
     public static final int PICK_UP = 2;
@@ -39,40 +45,52 @@ public class Sound
         soundUrl[8] = getClass().getResource("/sound/barMovement.wav");
         soundUrl[9] = getClass().getResource("/sound/error.wav");
         soundUrl[10] = getClass().getResource("/sound/lifeEarned.wav");
+
+        loadSounds();
+        Arrays.fill(nextClip, 0);
     }
 
     /**
-     * Loads an audio file from the specified index.
+     * Loads all audio files from resources and creates multiple Clip instances for each sound to allow simultaneous playback.
      *
-     * @param i the index of the audio file in the {@code soundUrl} array.
-     * @throws RuntimeException if the audio file cannot be opened due to an unsupported format,
-     *                          I/O error, or unavailable audio line.
+     * @throws RuntimeException if an audio file cannot be loaded or a clip cannot be created.
      */
-    public void setFile(int i)
+    private void loadSounds()
     {
-        try
+        for(int i = 0; i < soundUrl.length; i++)
         {
-            //Open audio file
-            AudioInputStream ais = AudioSystem.getAudioInputStream(soundUrl[i]);
-            clip = AudioSystem.getClip();
-            clip.open(ais);
-
-            //Handle volume level
-            floatControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            setVolumeLevel();
-        }
-        catch (UnsupportedAudioFileException | IOException | LineUnavailableException e)
-        {
-            throw new RuntimeException("Failed to open the sound file : " + e);
+            try
+            {
+                for(int j = 0; j < INSTANCES_PER_SOUNDS; j++)
+                {
+                    AudioInputStream ais = AudioSystem.getAudioInputStream(soundUrl[i]);
+                    clips[i][j] = AudioSystem.getClip();
+                    clips[i][j].open(ais);
+                    ais.close();
+                }
+            }
+            catch (UnsupportedAudioFileException | IOException | LineUnavailableException e)
+            {
+                throw new RuntimeException(e);
+            }
         }
     }
 
     /**
-     * Plays the currently loaded audio file.
+     * Plays the specified sound effect.
      */
-    public void play()
+    public void play(int i)
     {
+        Clip clip = clips[i][nextClip[i]];
+
+        floatControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        setVolumeLevel();
+
+        clip.setFramePosition(0);
         clip.start();
+
+        nextClip[i]++;
+        if(nextClip[i] == INSTANCES_PER_SOUNDS) nextClip[i] = 0;
     }
 
     /**
